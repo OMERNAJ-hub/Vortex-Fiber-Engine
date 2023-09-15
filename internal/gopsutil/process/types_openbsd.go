@@ -101,3 +101,4 @@ type KinfoProc C.struct_kinfo_proc
 type Priority C.struct_priority
 
 type KinfoVmentry C.struct_kinfo_vmentry
+

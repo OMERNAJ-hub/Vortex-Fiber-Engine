@@ -6,56 +6,56 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 func Test_Redirect(t *testing.T) {
-	app := *fiber.New()
+	app := *Vortex.New()
 
 	app.Use(New(Config{
 		Rules: map[string]string{
 			"/default": "google.com",
 		},
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 	app.Use(New(Config{
 		Rules: map[string]string{
-			"/default/*": "fiber.wiki",
+			"/default/*": "Vortex.wiki",
 		},
-		StatusCode: fiber.StatusTemporaryRedirect,
+		StatusCode: Vortex.StatusTemporaryRedirect,
 	}))
 	app.Use(New(Config{
 		Rules: map[string]string{
 			"/redirect/*": "$1",
 		},
-		StatusCode: fiber.StatusSeeOther,
+		StatusCode: Vortex.StatusSeeOther,
 	}))
 	app.Use(New(Config{
 		Rules: map[string]string{
 			"/pattern/*": "golang.org",
 		},
-		StatusCode: fiber.StatusFound,
+		StatusCode: Vortex.StatusFound,
 	}))
 
 	app.Use(New(Config{
 		Rules: map[string]string{
 			"/": "/swagger",
 		},
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 	app.Use(New(Config{
 		Rules: map[string]string{
 			"/params": "/with_params",
 		},
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 
-	app.Get("/api/*", func(c *fiber.Ctx) error {
+	app.Get("/api/*", func(c *Vortex.Ctx) error {
 		return c.SendString("API")
 	})
 
-	app.Get("/new", func(c *fiber.Ctx) error {
+	app.Get("/new", func(c *Vortex.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
 
@@ -69,59 +69,59 @@ func Test_Redirect(t *testing.T) {
 			name:       "should be returns status StatusFound without a wildcard",
 			url:        "/default",
 			redirectTo: "google.com",
-			statusCode: fiber.StatusMovedPermanently,
+			statusCode: Vortex.StatusMovedPermanently,
 		},
 		{
 			name:       "should be returns status StatusTemporaryRedirect  using wildcard",
 			url:        "/default/xyz",
-			redirectTo: "fiber.wiki",
-			statusCode: fiber.StatusTemporaryRedirect,
+			redirectTo: "Vortex.wiki",
+			statusCode: Vortex.StatusTemporaryRedirect,
 		},
 		{
 			name:       "should be returns status StatusSeeOther without set redirectTo to use the default",
-			url:        "/redirect/github.com/gofiber/redirect",
-			redirectTo: "github.com/gofiber/redirect",
-			statusCode: fiber.StatusSeeOther,
+			url:        "/redirect/github.com/goVortex/redirect",
+			redirectTo: "github.com/goVortex/redirect",
+			statusCode: Vortex.StatusSeeOther,
 		},
 		{
 			name:       "should return the status code default",
 			url:        "/pattern/xyz",
 			redirectTo: "golang.org",
-			statusCode: fiber.StatusFound,
+			statusCode: Vortex.StatusFound,
 		},
 		{
 			name:       "access URL without rule",
 			url:        "/new",
-			statusCode: fiber.StatusOK,
+			statusCode: Vortex.StatusOK,
 		},
 		{
 			name:       "redirect to swagger route",
 			url:        "/",
 			redirectTo: "/swagger",
-			statusCode: fiber.StatusMovedPermanently,
+			statusCode: Vortex.StatusMovedPermanently,
 		},
 		{
 			name:       "no redirect to swagger route",
 			url:        "/api/",
-			statusCode: fiber.StatusOK,
+			statusCode: Vortex.StatusOK,
 		},
 		{
 			name:       "no redirect to swagger route #2",
 			url:        "/api/test",
-			statusCode: fiber.StatusOK,
+			statusCode: Vortex.StatusOK,
 		},
 		{
 			name:       "redirect with query params",
 			url:        "/params?query=abc",
 			redirectTo: "/with_params?query=abc",
-			statusCode: fiber.StatusMovedPermanently,
+			statusCode: Vortex.StatusMovedPermanently,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			req, err := http.NewRequestWithContext(context.Background(), fiber.MethodGet, tt.url, nil)
+			req, err := http.NewRequestWithContext(context.Background(), Vortex.MethodGet, tt.url, nil)
 			utils.AssertEqual(t, err, nil)
-			req.Header.Set("Location", "github.com/gofiber/redirect")
+			req.Header.Set("Location", "github.com/goVortex/redirect")
 			resp, err := app.Test(req)
 
 			utils.AssertEqual(t, err, nil)
@@ -133,148 +133,148 @@ func Test_Redirect(t *testing.T) {
 
 func Test_Next(t *testing.T) {
 	// Case 1 : Next function always returns true
-	app := *fiber.New()
+	app := *Vortex.New()
 	app.Use(New(Config{
-		Next: func(*fiber.Ctx) bool {
+		Next: func(*Vortex.Ctx) bool {
 			return true
 		},
 		Rules: map[string]string{
 			"/default": "google.com",
 		},
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 
-	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Use(func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	req, err := http.NewRequestWithContext(context.Background(), fiber.MethodGet, "/default", nil)
+	req, err := http.NewRequestWithContext(context.Background(), Vortex.MethodGet, "/default", nil)
 	utils.AssertEqual(t, err, nil)
 	resp, err := app.Test(req)
 	utils.AssertEqual(t, err, nil)
 
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 	// Case 2 : Next function always returns false
-	app = *fiber.New()
+	app = *Vortex.New()
 	app.Use(New(Config{
-		Next: func(*fiber.Ctx) bool {
+		Next: func(*Vortex.Ctx) bool {
 			return false
 		},
 		Rules: map[string]string{
 			"/default": "google.com",
 		},
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 
-	req, err = http.NewRequestWithContext(context.Background(), fiber.MethodGet, "/default", nil)
+	req, err = http.NewRequestWithContext(context.Background(), Vortex.MethodGet, "/default", nil)
 	utils.AssertEqual(t, err, nil)
 	resp, err = app.Test(req)
 	utils.AssertEqual(t, err, nil)
 
-	utils.AssertEqual(t, fiber.StatusMovedPermanently, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusMovedPermanently, resp.StatusCode)
 	utils.AssertEqual(t, "google.com", resp.Header.Get("Location"))
 }
 
 func Test_NoRules(t *testing.T) {
 	// Case 1: No rules with default route defined
-	app := *fiber.New()
+	app := *Vortex.New()
 
 	app.Use(New(Config{
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 
-	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Use(func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	req, err := http.NewRequestWithContext(context.Background(), fiber.MethodGet, "/default", nil)
+	req, err := http.NewRequestWithContext(context.Background(), Vortex.MethodGet, "/default", nil)
 	utils.AssertEqual(t, err, nil)
 	resp, err := app.Test(req)
 	utils.AssertEqual(t, err, nil)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 	// Case 2: No rules and no default route defined
-	app = *fiber.New()
+	app = *Vortex.New()
 
 	app.Use(New(Config{
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 
-	req, err = http.NewRequestWithContext(context.Background(), fiber.MethodGet, "/default", nil)
+	req, err = http.NewRequestWithContext(context.Background(), Vortex.MethodGet, "/default", nil)
 	utils.AssertEqual(t, err, nil)
 	resp, err = app.Test(req)
 	utils.AssertEqual(t, err, nil)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 }
 
 func Test_DefaultConfig(t *testing.T) {
 	// Case 1: Default config and no default route
-	app := *fiber.New()
+	app := *Vortex.New()
 
 	app.Use(New())
 
-	req, err := http.NewRequestWithContext(context.Background(), fiber.MethodGet, "/default", nil)
+	req, err := http.NewRequestWithContext(context.Background(), Vortex.MethodGet, "/default", nil)
 	utils.AssertEqual(t, err, nil)
 	resp, err := app.Test(req)
 
 	utils.AssertEqual(t, err, nil)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 
 	// Case 2: Default config and default route
-	app = *fiber.New()
+	app = *Vortex.New()
 
 	app.Use(New())
-	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Use(func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	req, err = http.NewRequestWithContext(context.Background(), fiber.MethodGet, "/default", nil)
+	req, err = http.NewRequestWithContext(context.Background(), Vortex.MethodGet, "/default", nil)
 	utils.AssertEqual(t, err, nil)
 	resp, err = app.Test(req)
 
 	utils.AssertEqual(t, err, nil)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 }
 
 func Test_RegexRules(t *testing.T) {
 	// Case 1: Rules regex is empty
-	app := *fiber.New()
+	app := *Vortex.New()
 	app.Use(New(Config{
 		Rules:      map[string]string{},
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 
-	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Use(func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	req, err := http.NewRequestWithContext(context.Background(), fiber.MethodGet, "/default", nil)
+	req, err := http.NewRequestWithContext(context.Background(), Vortex.MethodGet, "/default", nil)
 	utils.AssertEqual(t, err, nil)
 	resp, err := app.Test(req)
 
 	utils.AssertEqual(t, err, nil)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 	// Case 2: Rules regex map contains valid regex and well-formed replacement URLs
-	app = *fiber.New()
+	app = *Vortex.New()
 	app.Use(New(Config{
 		Rules: map[string]string{
 			"/default": "google.com",
 		},
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 
-	app.Use(func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Use(func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	req, err = http.NewRequestWithContext(context.Background(), fiber.MethodGet, "/default", nil)
+	req, err = http.NewRequestWithContext(context.Background(), Vortex.MethodGet, "/default", nil)
 	utils.AssertEqual(t, err, nil)
 	resp, err = app.Test(req)
 
 	utils.AssertEqual(t, err, nil)
-	utils.AssertEqual(t, fiber.StatusMovedPermanently, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusMovedPermanently, resp.StatusCode)
 	utils.AssertEqual(t, "google.com", resp.Header.Get("Location"))
 
 	// Case 3: Test invalid regex throws panic
@@ -284,12 +284,13 @@ func Test_RegexRules(t *testing.T) {
 		}
 	}()
 
-	app = *fiber.New()
+	app = *Vortex.New()
 	app.Use(New(Config{
 		Rules: map[string]string{
 			"(": "google.com",
 		},
-		StatusCode: fiber.StatusMovedPermanently,
+		StatusCode: Vortex.StatusMovedPermanently,
 	}))
 	t.Error("Expected panic, got nil")
 }
+

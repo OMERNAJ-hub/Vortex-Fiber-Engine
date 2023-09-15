@@ -17,3 +17,4 @@ type IEnumVARIANTVtbl struct {
 func (v *IEnumVARIANT) VTable() *IEnumVARIANTVtbl {
 	return (*IEnumVARIANTVtbl)(unsafe.Pointer(v.RawVTable))
 }
+

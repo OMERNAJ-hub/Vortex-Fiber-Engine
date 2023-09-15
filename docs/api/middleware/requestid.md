@@ -4,26 +4,26 @@ id: requestid
 
 # RequestID
 
-RequestID middleware for [Fiber](https://github.com/gofiber/fiber) that adds an identifier to the response.
+RequestID middleware for [Vortex](https://github.com/goVortex/Vortex) that adds an identifier to the response.
 
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Examples
 
-Import the middleware package that is part of the Fiber web framework
+Import the middleware package that is part of the Vortex web framework
 
 ```go
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/requestid"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/requestid"
 )
 ```
 
-After you initiate your Fiber app, you can use the following possibilities:
+After you initiate your Vortex app, you can use the following possibilities:
 
 ```go
 // Initialize default config
@@ -42,7 +42,7 @@ app.Use(requestid.New(requestid.Config{
 
 | Property   | Type                    | Description                                                                                       | Default        |
 |:-----------|:------------------------|:--------------------------------------------------------------------------------------------------|:---------------|
-| Next       | `func(*fiber.Ctx) bool` | Next defines a function to skip this middleware when returned true.                               | `nil`          |
+| Next       | `func(*Vortex.Ctx) bool` | Next defines a function to skip this middleware when returned true.                               | `nil`          |
 | Header     | `string`                | Header is the header key where to get/set the unique request ID.                                  | "X-Request-ID" |
 | Generator  | `func() string`         | Generator defines a function to generate the unique identifier.                                   | utils.UUID     |
 | ContextKey | `interface{}`           | ContextKey defines the key used when storing the request ID in the locals for a specific request. | "requestid"    |
@@ -55,8 +55,9 @@ requests made to the server. To conceal this value for better privacy, use the
 ```go
 var ConfigDefault = Config{
     Next:       nil,
-    Header:     fiber.HeaderXRequestID,
+    Header:     Vortex.HeaderXRequestID,
 	Generator:  utils.UUID,
 	ContextKey: "requestid",
 }
 ```
+

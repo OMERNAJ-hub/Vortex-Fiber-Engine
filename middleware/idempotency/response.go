@@ -8,3 +8,4 @@ type response struct {
 
 	Body []byte `msg:"b"`
 }
+

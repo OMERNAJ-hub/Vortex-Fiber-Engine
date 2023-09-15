@@ -1,6 +1,6 @@
 package oleutil
 
-import ole "github.com/gofiber/fiber/v2/internal/go-ole"
+import ole "github.com/goVortex/Vortex/v2/internal/go-ole"
 
 // ClassIDFrom retrieves class ID whether given is program ID or application string.
 func ClassIDFrom(programID string) (classID *ole.GUID, err error) {
@@ -125,3 +125,4 @@ func ForEach(disp *ole.IDispatch, f func(v *ole.VARIANT) error) error {
 	}
 	return nil
 }
+

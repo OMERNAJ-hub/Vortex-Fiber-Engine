@@ -14,3 +14,4 @@ func GetBytes(s string) []byte {
 func ImmutableString(s string) string {
 	return CopyString(s)
 }
+

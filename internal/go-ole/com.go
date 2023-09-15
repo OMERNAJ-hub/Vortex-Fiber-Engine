@@ -342,3 +342,4 @@ func DispatchMessage(msg *Msg) (ret int32) {
 	ret = int32(r0)
 	return
 }
+

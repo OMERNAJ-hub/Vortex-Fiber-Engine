@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 func (l *MemoryLock) size() int {
@@ -54,3 +54,4 @@ func Test_MemoryLock_NoKeyLeak(t *testing.T) {
 
 	utils.AssertEqual(t, 0, l.size())
 }
+

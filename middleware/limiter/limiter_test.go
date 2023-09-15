@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/internal/storage/memory"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/internal/storage/memory"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -75,7 +75,7 @@ func Test_Limiter_Concurrency_Store(t *testing.T) {
 	t.Parallel()
 	// Test concurrency using a custom store
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:        50,
@@ -83,16 +83,16 @@ func Test_Limiter_Concurrency_Store(t *testing.T) {
 		Storage:    memory.New(),
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Hello tester!")
 	})
 
 	var wg sync.WaitGroup
 	singleRequest := func(wg *sync.WaitGroup) {
 		defer wg.Done()
-		resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+		resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 		utils.AssertEqual(t, nil, err)
-		utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+		utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 		body, err := io.ReadAll(resp.Body)
 		utils.AssertEqual(t, nil, err)
@@ -106,13 +106,13 @@ func Test_Limiter_Concurrency_Store(t *testing.T) {
 
 	wg.Wait()
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(3 * time.Second)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
@@ -122,23 +122,23 @@ func Test_Limiter_Concurrency(t *testing.T) {
 	t.Parallel()
 	// Test concurrency using a default store
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:        50,
 		Expiration: 2 * time.Second,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Hello tester!")
 	})
 
 	var wg sync.WaitGroup
 	singleRequest := func(wg *sync.WaitGroup) {
 		defer wg.Done()
-		resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+		resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 		utils.AssertEqual(t, nil, err)
-		utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+		utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 		body, err := io.ReadAll(resp.Body)
 		utils.AssertEqual(t, nil, err)
@@ -152,13 +152,13 @@ func Test_Limiter_Concurrency(t *testing.T) {
 
 	wg.Wait()
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(3 * time.Second)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
@@ -166,7 +166,7 @@ func Test_Limiter_Concurrency(t *testing.T) {
 // go test -run Test_Limiter_Fixed_Window_No_Skip_Choices -v
 func Test_Limiter_Fixed_Window_No_Skip_Choices(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    2,
@@ -176,28 +176,28 @@ func Test_Limiter_Fixed_Window_No_Skip_Choices(t *testing.T) {
 		LimiterMiddleware:      FixedWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" { //nolint:goconst // False positive
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(3 * time.Second)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
@@ -205,7 +205,7 @@ func Test_Limiter_Fixed_Window_No_Skip_Choices(t *testing.T) {
 // go test -run Test_Limiter_Fixed_Window_Custom_Storage_No_Skip_Choices -v
 func Test_Limiter_Fixed_Window_Custom_Storage_No_Skip_Choices(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    2,
@@ -216,28 +216,28 @@ func Test_Limiter_Fixed_Window_Custom_Storage_No_Skip_Choices(t *testing.T) {
 		LimiterMiddleware:      FixedWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(3 * time.Second)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
@@ -245,7 +245,7 @@ func Test_Limiter_Fixed_Window_Custom_Storage_No_Skip_Choices(t *testing.T) {
 // go test -run Test_Limiter_Sliding_Window_No_Skip_Choices -v
 func Test_Limiter_Sliding_Window_No_Skip_Choices(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    2,
@@ -255,28 +255,28 @@ func Test_Limiter_Sliding_Window_No_Skip_Choices(t *testing.T) {
 		LimiterMiddleware:      SlidingWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(4*time.Second + 500*time.Millisecond)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
@@ -284,7 +284,7 @@ func Test_Limiter_Sliding_Window_No_Skip_Choices(t *testing.T) {
 // go test -run Test_Limiter_Sliding_Window_Custom_Storage_No_Skip_Choices -v
 func Test_Limiter_Sliding_Window_Custom_Storage_No_Skip_Choices(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    2,
@@ -295,35 +295,35 @@ func Test_Limiter_Sliding_Window_Custom_Storage_No_Skip_Choices(t *testing.T) {
 		LimiterMiddleware:      SlidingWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(4*time.Second + 500*time.Millisecond)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
 
 func Test_Limiter_Sliding_Window_Reset_After_Expiration(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:               1,
@@ -331,29 +331,29 @@ func Test_Limiter_Sliding_Window_Reset_After_Expiration(t *testing.T) {
 		LimiterMiddleware: SlidingWindow{},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusTooManyRequests, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusTooManyRequests, resp.StatusCode)
 
 	time.Sleep(3 * time.Second)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 }
 
 // go test -run Test_Limiter_Fixed_Window_Skip_Failed_Requests -v
 func Test_Limiter_Fixed_Window_Skip_Failed_Requests(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                1,
@@ -362,28 +362,28 @@ func Test_Limiter_Fixed_Window_Skip_Failed_Requests(t *testing.T) {
 		LimiterMiddleware:  FixedWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(3 * time.Second)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
@@ -391,7 +391,7 @@ func Test_Limiter_Fixed_Window_Skip_Failed_Requests(t *testing.T) {
 // go test -run Test_Limiter_Fixed_Window_Custom_Storage_Skip_Failed_Requests -v
 func Test_Limiter_Fixed_Window_Custom_Storage_Skip_Failed_Requests(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                1,
@@ -401,28 +401,28 @@ func Test_Limiter_Fixed_Window_Custom_Storage_Skip_Failed_Requests(t *testing.T)
 		LimiterMiddleware:  FixedWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(3 * time.Second)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
@@ -430,7 +430,7 @@ func Test_Limiter_Fixed_Window_Custom_Storage_Skip_Failed_Requests(t *testing.T)
 // go test -run Test_Limiter_Sliding_Window_Skip_Failed_Requests -v
 func Test_Limiter_Sliding_Window_Skip_Failed_Requests(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                1,
@@ -439,28 +439,28 @@ func Test_Limiter_Sliding_Window_Skip_Failed_Requests(t *testing.T) {
 		LimiterMiddleware:  SlidingWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(4*time.Second + 500*time.Millisecond)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
@@ -468,7 +468,7 @@ func Test_Limiter_Sliding_Window_Skip_Failed_Requests(t *testing.T) {
 // go test -run Test_Limiter_Sliding_Window_Custom_Storage_Skip_Failed_Requests -v
 func Test_Limiter_Sliding_Window_Custom_Storage_Skip_Failed_Requests(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                1,
@@ -478,28 +478,28 @@ func Test_Limiter_Sliding_Window_Custom_Storage_Skip_Failed_Requests(t *testing.
 		LimiterMiddleware:  SlidingWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(4*time.Second + 500*time.Millisecond)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 }
@@ -509,7 +509,7 @@ func Test_Limiter_Fixed_Window_Skip_Successful_Requests(t *testing.T) {
 	t.Parallel()
 	// Test concurrency using a default store
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    1,
@@ -518,28 +518,28 @@ func Test_Limiter_Fixed_Window_Skip_Successful_Requests(t *testing.T) {
 		LimiterMiddleware:      FixedWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(3 * time.Second)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 }
@@ -548,7 +548,7 @@ func Test_Limiter_Fixed_Window_Skip_Successful_Requests(t *testing.T) {
 func Test_Limiter_Fixed_Window_Skip_Long_Request_Expiration(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New()
+	app := Vortex.New()
 	hit := 0
 
 	app.Use(New(Config{
@@ -558,24 +558,24 @@ func Test_Limiter_Fixed_Window_Skip_Long_Request_Expiration(t *testing.T) {
 		LimiterMiddleware:      FixedWindow{},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		hit++
 		if hit == 1 {
 			time.Sleep(time.Second + 200*time.Millisecond)
-			return c.SendStatus(fiber.StatusOK)
+			return c.SendStatus(Vortex.StatusOK)
 		}
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.SendStatus(Vortex.StatusInternalServerError)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil), -1)
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil), -1)
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil), -1)
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil), -1)
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 500, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil), -1)
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil), -1)
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 }
@@ -585,7 +585,7 @@ func Test_Limiter_Fixed_Window_Custom_Storage_Skip_Successful_Requests(t *testin
 	t.Parallel()
 	// Test concurrency using a default store
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    1,
@@ -595,28 +595,28 @@ func Test_Limiter_Fixed_Window_Custom_Storage_Skip_Successful_Requests(t *testin
 		LimiterMiddleware:      FixedWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(3 * time.Second)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 }
@@ -626,7 +626,7 @@ func Test_Limiter_Sliding_Window_Skip_Successful_Requests(t *testing.T) {
 	t.Parallel()
 	// Test concurrency using a default store
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    1,
@@ -635,28 +635,28 @@ func Test_Limiter_Sliding_Window_Skip_Successful_Requests(t *testing.T) {
 		LimiterMiddleware:      SlidingWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(4*time.Second + 500*time.Millisecond)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 }
@@ -665,7 +665,7 @@ func Test_Limiter_Sliding_Window_Skip_Successful_Requests(t *testing.T) {
 func Test_Limiter_Sliding_Window_Skip_Long_Request_Expiration(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New()
+	app := Vortex.New()
 	hit := 0
 
 	app.Use(New(Config{
@@ -675,24 +675,24 @@ func Test_Limiter_Sliding_Window_Skip_Long_Request_Expiration(t *testing.T) {
 		LimiterMiddleware:      SlidingWindow{},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		hit++
 		if hit == 1 {
 			time.Sleep(time.Second + 200*time.Millisecond)
-			return c.SendStatus(fiber.StatusOK)
+			return c.SendStatus(Vortex.StatusOK)
 		}
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.SendStatus(Vortex.StatusInternalServerError)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil), -1)
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil), -1)
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil), -1)
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil), -1)
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 500, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil), -1)
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil), -1)
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 }
@@ -702,7 +702,7 @@ func Test_Limiter_Sliding_Window_Custom_Storage_Skip_Successful_Requests(t *test
 	t.Parallel()
 	// Test concurrency using a default store
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    1,
@@ -712,28 +712,28 @@ func Test_Limiter_Sliding_Window_Custom_Storage_Skip_Successful_Requests(t *test
 		LimiterMiddleware:      SlidingWindow{},
 	}))
 
-	app.Get("/:status", func(c *fiber.Ctx) error {
+	app.Get("/:status", func(c *Vortex.Ctx) error {
 		if c.Params("status") == "fail" {
 			return c.SendStatus(400)
 		}
 		return c.SendStatus(200)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/success", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/success", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 429, resp.StatusCode)
 
 	time.Sleep(4*time.Second + 500*time.Millisecond)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/fail", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/fail", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 400, resp.StatusCode)
 }
@@ -744,7 +744,7 @@ func Test_Limiter_Sliding_Window_Skip_TTL_Preservation(t *testing.T) {
 
 	store := newRecordingStorage()
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    1,
@@ -754,11 +754,11 @@ func Test_Limiter_Sliding_Window_Skip_TTL_Preservation(t *testing.T) {
 		LimiterMiddleware:      SlidingWindow{},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
@@ -784,7 +784,7 @@ func Test_Limiter_Sliding_Window_Skip_TTL_Preservation(t *testing.T) {
 
 // go test -v -run=^$ -bench=Benchmark_Limiter_Custom_Store -benchmem -count=4
 func Benchmark_Limiter_Custom_Store(b *testing.B) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:        100,
@@ -792,14 +792,14 @@ func Benchmark_Limiter_Custom_Store(b *testing.B) {
 		Storage:    memory.New(),
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
 
 	h := app.Handler()
 
 	fctx := &fasthttp.RequestCtx{}
-	fctx.Request.Header.SetMethod(fiber.MethodGet)
+	fctx.Request.Header.SetMethod(Vortex.MethodGet)
 	fctx.Request.SetRequestURI("/")
 
 	b.ResetTimer()
@@ -812,33 +812,33 @@ func Benchmark_Limiter_Custom_Store(b *testing.B) {
 // go test -run Test_Limiter_Next
 func Test_Limiter_Next(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(_ *Vortex.Ctx) bool {
 			return true
 		},
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 }
 
 func Test_Limiter_Headers(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:        50,
 		Expiration: 2 * time.Second,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Hello tester!")
 	})
 
 	fctx := &fasthttp.RequestCtx{}
-	fctx.Request.Header.SetMethod(fiber.MethodGet)
+	fctx.Request.Header.SetMethod(Vortex.MethodGet)
 	fctx.Request.SetRequestURI("/")
 
 	app.Handler()(fctx)
@@ -854,21 +854,21 @@ func Test_Limiter_Headers(t *testing.T) {
 
 // go test -v -run=^$ -bench=Benchmark_Limiter -benchmem -count=4
 func Benchmark_Limiter(b *testing.B) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:        100,
 		Expiration: 60 * time.Second,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
 
 	h := app.Handler()
 
 	fctx := &fasthttp.RequestCtx{}
-	fctx.Request.Header.SetMethod(fiber.MethodGet)
+	fctx.Request.Header.SetMethod(Vortex.MethodGet)
 	fctx.Request.SetRequestURI("/")
 
 	b.ResetTimer()
@@ -881,7 +881,7 @@ func Benchmark_Limiter(b *testing.B) {
 // go test -run Test_Sliding_Window -race -v
 func Test_Sliding_Window(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Max:               10,
 		Expiration:        2 * time.Second,
@@ -889,18 +889,18 @@ func Test_Sliding_Window(t *testing.T) {
 		LimiterMiddleware: SlidingWindow{},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Hello tester!")
 	})
 
 	singleRequest := func(shouldFail bool) {
-		resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+		resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 		if shouldFail {
 			utils.AssertEqual(t, nil, err)
 			utils.AssertEqual(t, 429, resp.StatusCode)
 		} else {
 			utils.AssertEqual(t, nil, err)
-			utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+			utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 		}
 	}
 
@@ -928,7 +928,7 @@ func Test_Sliding_Window(t *testing.T) {
 }
 
 func Test_Limiter_Fixed_Window_SubSecondExpiration(t *testing.T) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	baseTS := uint32(time.Now().Unix())
 	originalTS := atomic.LoadUint32(&utils.Timestamp)
@@ -944,22 +944,22 @@ func Test_Limiter_Fixed_Window_SubSecondExpiration(t *testing.T) {
 		LimiterMiddleware: FixedWindow{},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	refreshTimestamp(baseTS)
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 	utils.AssertEqual(t, true, resp.Header.Get(xRateLimitReset) != "")
 
 	refreshTimestamp(baseTS)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusTooManyRequests, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusTooManyRequests, resp.StatusCode)
 }
 
 func Test_Limiter_Fixed_Window_FractionalExpiration_TTLSynced(t *testing.T) {
@@ -967,7 +967,7 @@ func Test_Limiter_Fixed_Window_FractionalExpiration_TTLSynced(t *testing.T) {
 
 	storage := newRecordingStorage()
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Max:                    1,
@@ -977,13 +977,13 @@ func Test_Limiter_Fixed_Window_FractionalExpiration_TTLSynced(t *testing.T) {
 		SkipSuccessfulRequests: true,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 	if len(storage.expirations) != 2 {
 		t.Fatalf("expected 2 expirations recorded, got %d", len(storage.expirations))
@@ -994,7 +994,7 @@ func Test_Limiter_Fixed_Window_FractionalExpiration_TTLSynced(t *testing.T) {
 }
 
 func Test_Limiter_Fixed_Window_FractionalExpiration_PersistsWindow(t *testing.T) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	baseTS := uint32(time.Now().Unix())
 	originalTS := atomic.LoadUint32(&utils.Timestamp)
@@ -1010,29 +1010,29 @@ func Test_Limiter_Fixed_Window_FractionalExpiration_PersistsWindow(t *testing.T)
 		LimiterMiddleware: FixedWindow{},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 	refreshTimestamp(baseTS + 1)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusTooManyRequests, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusTooManyRequests, resp.StatusCode)
 
 	refreshTimestamp(baseTS + 3)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 }
 
 func Test_Limiter_Sliding_Window_SubSecondExpiration(t *testing.T) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	baseTS := uint32(time.Now().Unix())
 	originalTS := atomic.LoadUint32(&utils.Timestamp)
@@ -1048,20 +1048,21 @@ func Test_Limiter_Sliding_Window_SubSecondExpiration(t *testing.T) {
 		LimiterMiddleware: SlidingWindow{},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	refreshTimestamp(baseTS)
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 	utils.AssertEqual(t, true, resp.Header.Get(xRateLimitReset) != "")
 
 	refreshTimestamp(baseTS)
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusTooManyRequests, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusTooManyRequests, resp.StatusCode)
 }
+

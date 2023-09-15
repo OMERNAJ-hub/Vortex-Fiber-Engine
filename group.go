@@ -1,8 +1,8 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
-package fiber
+package Vortex
 
 import (
 	"fmt"
@@ -48,13 +48,13 @@ func (grp *Group) Name(name string) Router {
 // Use registers a middleware route that will match requests
 // with the provided prefix (which is optional and defaults to "/").
 //
-//	app.Use(func(c *fiber.Ctx) error {
+//	app.Use(func(c *Vortex.Ctx) error {
 //	     return c.Next()
 //	})
-//	app.Use("/api", func(c *fiber.Ctx) error {
+//	app.Use("/api", func(c *Vortex.Ctx) error {
 //	     return c.Next()
 //	})
-//	app.Use("/api", handler, func(c *fiber.Ctx) error {
+//	app.Use("/api", handler, func(c *Vortex.Ctx) error {
 //	     return c.Next()
 //	})
 //
@@ -207,3 +207,4 @@ func (grp *Group) Route(prefix string, fn func(router Router), name ...string) R
 
 	return group
 }
+

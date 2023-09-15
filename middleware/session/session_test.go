@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/internal/storage/memory"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/internal/storage/memory"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -20,10 +20,10 @@ func Test_Session(t *testing.T) {
 	// session store
 	store := New()
 
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 
-	// fiber context
+	// Vortex context
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(ctx)
 
@@ -118,10 +118,10 @@ func Test_Session_Types(t *testing.T) {
 	// session store
 	store := New()
 
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 
-	// fiber context
+	// Vortex context
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 
 	// set cookie
@@ -229,9 +229,9 @@ func Test_Session_Store_Reset(t *testing.T) {
 	t.Parallel()
 	// session store
 	store := New()
-	// fiber instance
-	app := fiber.New()
-	// fiber context
+	// Vortex instance
+	app := Vortex.New()
+	// Vortex context
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 
 	// get session
@@ -267,9 +267,9 @@ func Test_Session_Save(t *testing.T) {
 	t.Run("save to cookie", func(t *testing.T) {
 		// session store
 		store := New()
-		// fiber instance
-		app := fiber.New()
-		// fiber context
+		// Vortex instance
+		app := Vortex.New()
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 		// get session
@@ -288,9 +288,9 @@ func Test_Session_Save(t *testing.T) {
 		store := New(Config{
 			KeyLookup: "header:session_id",
 		})
-		// fiber instance
-		app := fiber.New()
-		// fiber context
+		// Vortex instance
+		app := Vortex.New()
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 		// get session
@@ -315,9 +315,9 @@ func Test_Session_Save_Expiration(t *testing.T) {
 		t.Parallel()
 		// session store
 		store := New()
-		// fiber instance
-		app := fiber.New()
-		// fiber context
+		// Vortex instance
+		app := Vortex.New()
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 		// get session
@@ -368,9 +368,9 @@ func Test_Session_Destroy(t *testing.T) {
 		t.Parallel()
 		// session store
 		store := New()
-		// fiber instance
-		app := fiber.New()
-		// fiber context
+		// Vortex instance
+		app := Vortex.New()
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 		// get session
@@ -389,9 +389,9 @@ func Test_Session_Destroy(t *testing.T) {
 		store := New(Config{
 			KeyLookup: "header:session_id",
 		})
-		// fiber instance
-		app := fiber.New()
-		// fiber context
+		// Vortex instance
+		app := Vortex.New()
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 		// get session
@@ -436,9 +436,9 @@ func Test_Session_Cookie(t *testing.T) {
 	t.Parallel()
 	// session store
 	store := New()
-	// fiber instance
-	app := fiber.New()
-	// fiber context
+	// Vortex instance
+	app := Vortex.New()
+	// Vortex context
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(ctx)
 
@@ -452,13 +452,13 @@ func Test_Session_Cookie(t *testing.T) {
 }
 
 // go test -run Test_Session_Cookie_In_Response
-// Regression: https://github.com/gofiber/fiber/pull/1191
+// Regression: https://github.com/goVortex/Vortex/pull/1191
 func Test_Session_Cookie_In_Middleware_Chain(t *testing.T) {
 	t.Parallel()
 	store := New()
-	app := fiber.New()
+	app := Vortex.New()
 
-	// fiber context
+	// Vortex context
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(ctx)
 
@@ -481,11 +481,11 @@ func Test_Session_Cookie_In_Middleware_Chain(t *testing.T) {
 }
 
 // go test -run Test_Session_Deletes_Single_Key
-// Regression: https://github.com/gofiber/fiber/issues/1365
+// Regression: https://github.com/goVortex/Vortex/issues/1365
 func Test_Session_Deletes_Single_Key(t *testing.T) {
 	t.Parallel()
 	store := New()
-	app := fiber.New()
+	app := Vortex.New()
 
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 
@@ -518,19 +518,19 @@ func Test_Session_Deletes_Single_Key(t *testing.T) {
 // go test -run Test_Session_Reset
 func Test_Session_Reset(t *testing.T) {
 	t.Parallel()
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 
 	// session store
 	store := New()
 
-	// fiber context
+	// Vortex context
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(ctx)
 
 	t.Run("reset session data and id, and set fresh to be true", func(t *testing.T) {
 		t.Parallel()
-		// fiber context
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		// a random session uuid
 		originalSessionUUIDString := ""
@@ -590,17 +590,17 @@ func Test_Session_Reset(t *testing.T) {
 }
 
 // go test -run Test_Session_Regenerate
-// Regression: https://github.com/gofiber/fiber/issues/1395
+// Regression: https://github.com/goVortex/Vortex/issues/1395
 func Test_Session_Regenerate(t *testing.T) {
 	t.Parallel()
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 	t.Run("set fresh to be true when regenerating a session", func(t *testing.T) {
 		// session store
 		store := New()
 		// a random session uuid
 		originalSessionUUIDString := ""
-		// fiber context
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 
@@ -642,7 +642,7 @@ func Test_Session_Regenerate(t *testing.T) {
 
 // go test -v -run=^$ -bench=Benchmark_Session -benchmem -count=4
 func Benchmark_Session(b *testing.B) {
-	app, store := fiber.New(), New()
+	app, store := Vortex.New(), New()
 	c := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(c)
 	c.Request().Header.SetCookie(store.sessionName, "12356789")
@@ -679,7 +679,7 @@ func Benchmark_Session(b *testing.B) {
 // go test -v -run=^$ -bench=Benchmark_Session_Parallel -benchmem -count=4
 func Benchmark_Session_Parallel(b *testing.B) {
 	b.Run("default", func(b *testing.B) {
-		app, store := fiber.New(), New()
+		app, store := Vortex.New(), New()
 		b.ReportAllocs()
 		b.ResetTimer()
 		b.RunParallel(func(pb *testing.PB) {
@@ -696,7 +696,7 @@ func Benchmark_Session_Parallel(b *testing.B) {
 	})
 
 	b.Run("storage", func(b *testing.B) {
-		app := fiber.New()
+		app := Vortex.New()
 		store := New(Config{
 			Storage: memory.New(),
 		})
@@ -719,7 +719,7 @@ func Benchmark_Session_Parallel(b *testing.B) {
 // go test -v -run=^$ -bench=Benchmark_Session_Asserted -benchmem -count=4
 func Benchmark_Session_Asserted(b *testing.B) {
 	b.Run("default", func(b *testing.B) {
-		app, store := fiber.New(), New()
+		app, store := Vortex.New(), New()
 		c := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(c)
 		c.Request().Header.SetCookie(store.sessionName, "12356789")
@@ -736,7 +736,7 @@ func Benchmark_Session_Asserted(b *testing.B) {
 	})
 
 	b.Run("storage", func(b *testing.B) {
-		app := fiber.New()
+		app := Vortex.New()
 		store := New(Config{
 			Storage: memory.New(),
 		})
@@ -759,7 +759,7 @@ func Benchmark_Session_Asserted(b *testing.B) {
 // go test -v -run=^$ -bench=Benchmark_Session_Asserted_Parallel -benchmem -count=4
 func Benchmark_Session_Asserted_Parallel(b *testing.B) {
 	b.Run("default", func(b *testing.B) {
-		app, store := fiber.New(), New()
+		app, store := Vortex.New(), New()
 		b.ReportAllocs()
 		b.ResetTimer()
 		b.RunParallel(func(pb *testing.PB) {
@@ -777,7 +777,7 @@ func Benchmark_Session_Asserted_Parallel(b *testing.B) {
 	})
 
 	b.Run("storage", func(b *testing.B) {
-		app := fiber.New()
+		app := Vortex.New()
 		store := New(Config{
 			Storage: memory.New(),
 		})
@@ -801,7 +801,7 @@ func Benchmark_Session_Asserted_Parallel(b *testing.B) {
 // go test -v -race -run Test_Session_Concurrency ./...
 func Test_Session_Concurrency(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 	store := New()
 
 	var wg sync.WaitGroup
@@ -902,3 +902,4 @@ func Test_Session_Concurrency(t *testing.T) {
 		utils.AssertEqual(t, nil, err)
 	}
 }
+

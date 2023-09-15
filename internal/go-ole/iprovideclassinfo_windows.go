@@ -19,3 +19,4 @@ func getClassInfo(disp *IProvideClassInfo) (tinfo *ITypeInfo, err error) {
 	}
 	return
 }
+

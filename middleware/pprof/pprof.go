@@ -4,13 +4,13 @@ import (
 	"net/http/pprof"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 
 	"github.com/valyala/fasthttp/fasthttpadaptor"
 )
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := configDefault(config...)
 
@@ -33,7 +33,7 @@ func New(config ...Config) fiber.Handler {
 	prefix := cfg.Prefix + "/debug/pprof"
 
 	// Return new handler
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -77,7 +77,7 @@ func New(config ...Config) fiber.Handler {
 				path = prefix + "/"
 			}
 
-			return c.Redirect(path, fiber.StatusFound)
+			return c.Redirect(path, Vortex.StatusFound)
 		}
 		return nil
 	}
@@ -93,3 +93,4 @@ func cutPrefix(s, prefix string) (after string, found bool) {
 	}
 	return s[len(prefix):], true
 }
+

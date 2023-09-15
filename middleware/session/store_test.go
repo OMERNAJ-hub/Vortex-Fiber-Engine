@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -15,14 +15,14 @@ func TestStore_getSessionID(t *testing.T) {
 	t.Parallel()
 	expectedID := "test-session-id"
 
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 
 	t.Run("from cookie", func(t *testing.T) {
 		t.Parallel()
 		// session store
 		store := New()
-		// fiber context
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 		// set cookie
@@ -37,7 +37,7 @@ func TestStore_getSessionID(t *testing.T) {
 		store := New(Config{
 			KeyLookup: "header:session_id",
 		})
-		// fiber context
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 		// set header
@@ -52,7 +52,7 @@ func TestStore_getSessionID(t *testing.T) {
 		store := New(Config{
 			KeyLookup: "query:session_id",
 		})
-		// fiber context
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 		// set url parameter
@@ -63,18 +63,18 @@ func TestStore_getSessionID(t *testing.T) {
 }
 
 // go test -run TestStore_Get
-// Regression: https://github.com/gofiber/fiber/issues/1408
-// Regression: https://github.com/gofiber/fiber/security/advisories/GHSA-98j2-3j3p-fw2v
+// Regression: https://github.com/goVortex/Vortex/issues/1408
+// Regression: https://github.com/goVortex/Vortex/security/advisories/GHSA-98j2-3j3p-fw2v
 func TestStore_Get(t *testing.T) {
 	t.Parallel()
 	unexpectedID := "test-session-id"
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 	t.Run("session should be re-generated if it is invalid", func(t *testing.T) {
 		t.Parallel()
 		// session store
 		store := New()
-		// fiber context
+		// Vortex context
 		ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 		defer app.ReleaseCtx(ctx)
 		// set cookie
@@ -90,12 +90,12 @@ func TestStore_Get(t *testing.T) {
 // go test -run TestStore_DeleteSession
 func TestStore_DeleteSession(t *testing.T) {
 	t.Parallel()
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 	// session store
 	store := New()
 
-	// fiber context
+	// Vortex context
 	ctx := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(ctx)
 
@@ -117,3 +117,4 @@ func TestStore_DeleteSession(t *testing.T) {
 	// The session ID should be different now, because the old session was deleted
 	utils.AssertEqual(t, session.ID() == sessionID, false)
 }
+

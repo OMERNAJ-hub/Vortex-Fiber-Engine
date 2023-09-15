@@ -1,6 +1,6 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
 package utils
 
@@ -39,7 +39,7 @@ func Benchmark_IsIPv4(b *testing.B) {
 	ip := "174.23.33.100"
 	var res bool
 
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = IsIPv4(ip)
 		}
@@ -75,7 +75,7 @@ func Benchmark_IsIPv6(b *testing.B) {
 	ip := "9396:9549:b4f7:8ed0:4791:1330:8c06:e62d"
 	var res bool
 
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = IsIPv6(ip)
 		}
@@ -89,3 +89,4 @@ func Benchmark_IsIPv6(b *testing.B) {
 		AssertEqual(b, true, res)
 	})
 }
+

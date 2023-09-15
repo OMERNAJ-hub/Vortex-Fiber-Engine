@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/gofiber/fiber/v2/internal/go-ole"
-	"github.com/gofiber/fiber/v2/internal/go-ole/oleutil"
+	"github.com/goVortex/Vortex/v2/internal/go-ole"
+	"github.com/goVortex/Vortex/v2/internal/go-ole/oleutil"
 )
 
 // SWbemServices is used to access wmi. See https://msdn.microsoft.com/en-us/library/aa393719(v=vs.85).aspx
@@ -259,3 +259,4 @@ func (s *SWbemServices) queryBackground(q *queryRequest) error {
 	// fmt.Println("queryBackground: Finished")
 	return errFieldMismatch
 }
+

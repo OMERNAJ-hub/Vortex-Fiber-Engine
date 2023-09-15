@@ -200,3 +200,4 @@ func encodeFloat64(v reflect.Value) string {
 func encodeString(v reflect.Value) string {
 	return v.String()
 }
+

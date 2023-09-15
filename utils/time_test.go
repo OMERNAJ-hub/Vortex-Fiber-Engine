@@ -33,7 +33,7 @@ func Benchmark_CalculateTimestamp(b *testing.B) {
 	StartTimeStampUpdater()
 
 	var res uint32
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = atomic.LoadUint32(&Timestamp)
 		}
@@ -46,3 +46,4 @@ func Benchmark_CalculateTimestamp(b *testing.B) {
 		checkTimeStamp(b, uint32(time.Now().Unix()), res)
 	})
 }
+

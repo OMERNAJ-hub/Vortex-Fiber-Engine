@@ -14,3 +14,4 @@ type Data struct {
 	Stop          time.Time
 	Timestamp     atomic.Value
 }
+

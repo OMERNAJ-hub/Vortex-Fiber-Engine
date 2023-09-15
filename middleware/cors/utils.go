@@ -64,3 +64,4 @@ type subdomain struct {
 func (s subdomain) match(o string) bool {
 	return len(o) >= len(s.prefix)+len(s.suffix) && strings.HasPrefix(o, s.prefix) && strings.HasSuffix(o, s.suffix)
 }
+

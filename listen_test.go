@@ -1,8 +1,8 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
-package fiber
+package Vortex
 
 import (
 	"bytes"
@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp/fasthttputil"
 )
@@ -320,8 +320,8 @@ func Test_App_print_Route_with_group(t *testing.T) {
 
 	v1 := app.Group("v1")
 	v1.Get("/test", emptyHandler).Name("v1")
-	v1.Post("/test/fiber", emptyHandler)
-	v1.Put("/test/fiber/*", emptyHandler)
+	v1.Post("/test/Vortex", emptyHandler)
+	v1.Put("/test/Vortex/*", emptyHandler)
 
 	printRoutesMessage := captureOutput(func() {
 		app.printRoutesMessage()
@@ -332,11 +332,12 @@ func Test_App_print_Route_with_group(t *testing.T) {
 	utils.AssertEqual(t, true, strings.Contains(printRoutesMessage, "emptyHandler"))
 	utils.AssertEqual(t, true, strings.Contains(printRoutesMessage, "/v1/test"))
 	utils.AssertEqual(t, true, strings.Contains(printRoutesMessage, MethodPost))
-	utils.AssertEqual(t, true, strings.Contains(printRoutesMessage, "/v1/test/fiber"))
+	utils.AssertEqual(t, true, strings.Contains(printRoutesMessage, "/v1/test/Vortex"))
 	utils.AssertEqual(t, true, strings.Contains(printRoutesMessage, "PUT"))
-	utils.AssertEqual(t, true, strings.Contains(printRoutesMessage, "/v1/test/fiber/*"))
+	utils.AssertEqual(t, true, strings.Contains(printRoutesMessage, "/v1/test/Vortex/*"))
 }
 
 func emptyHandler(_ *Ctx) error {
 	return nil
 }
+

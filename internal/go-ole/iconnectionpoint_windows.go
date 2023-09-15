@@ -41,3 +41,4 @@ func (v *IConnectionPoint) Unadvise(cookie uint32) (err error) {
 func (v *IConnectionPoint) EnumConnections(p *unsafe.Pointer) error {
 	return NewError(E_NOTIMPL)
 }
+

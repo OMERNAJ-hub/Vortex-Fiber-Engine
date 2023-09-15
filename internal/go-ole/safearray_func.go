@@ -209,3 +209,4 @@ func safeArrayGetRecordInfo(safearray *SafeArray) (interface{}, error) {
 func safeArraySetRecordInfo(safearray *SafeArray, recordInfo interface{}) error {
 	return NewError(E_NOTIMPL)
 }
+

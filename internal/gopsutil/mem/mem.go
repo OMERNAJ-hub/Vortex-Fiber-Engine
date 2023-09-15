@@ -3,7 +3,7 @@ package mem
 import (
 	"encoding/json"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 //lint:ignore U1000 we need this elsewhere
@@ -104,3 +104,4 @@ func (m SwapMemoryStat) String() string {
 	s, _ := json.Marshal(m)
 	return string(s)
 }
+

@@ -190,3 +190,4 @@ type KinfoVmentry struct {
 	X_kve_ispare     [12]int32
 	Path             [1024]int8
 }
+

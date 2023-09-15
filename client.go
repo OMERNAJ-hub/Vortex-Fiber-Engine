@@ -1,4 +1,4 @@
-package fiber
+package Vortex
 
 import (
 	"bytes"
@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -65,13 +65,13 @@ type Client struct {
 	// User-Agent header to be excluded from the Request.
 	NoDefaultUserAgentHeader bool
 
-	// When set by an external client of Fiber it will use the provided implementation of a
+	// When set by an external client of Vortex it will use the provided implementation of a
 	// JSONMarshal
 	//
 	// Allowing for flexibility in using another json library for encoding
 	JSONEncoder utils.JSONMarshal
 
-	// When set by an external client of Fiber it will use the provided implementation of a
+	// When set by an external client of Vortex it will use the provided implementation of a
 	// JSONUnmarshal
 	//
 	// Allowing for flexibility in using another json library for decoding
@@ -1007,7 +1007,7 @@ func ReleaseFormFile(ff *FormFile) {
 }
 
 const (
-	defaultUserAgent = "fiber"
+	defaultUserAgent = "Vortex"
 )
 
 type multipartWriter interface {
@@ -1017,3 +1017,4 @@ type multipartWriter interface {
 	WriteField(fieldname, value string) error
 	Close() error
 }
+

@@ -4,7 +4,7 @@ id: compress
 
 # Compress
 
-Compression middleware for [Fiber](https://github.com/gofiber/fiber) that will compress the response using `gzip`, `deflate` and `brotli` compression depending on the [Accept-Encoding](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding) header.
+Compression middleware for [Vortex](https://github.com/goVortex/Vortex) that will compress the response using `gzip`, `deflate` and `brotli` compression depending on the [Accept-Encoding](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding) header.
 
 :::note
 The compression middleware refrains from compressing bodies that are smaller than 200 bytes. This decision is based on the observation that, in such cases, the compressed size is likely to exceed the original size, making compression inefficient. [more](https://github.com/valyala/fasthttp/blob/497922a21ef4b314f393887e9c6147b8c3e3eda4/http.go#L1713-L1715)
@@ -13,21 +13,21 @@ The compression middleware refrains from compressing bodies that are smaller tha
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Examples
 
-Import the middleware package that is part of the Fiber web framework
+Import the middleware package that is part of the Vortex web framework
 
 ```go
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/compress"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/compress"
 )
 ```
 
-After you initiate your Fiber app, you can use the following possibilities:
+After you initiate your Vortex app, you can use the following possibilities:
 
 ```go
 // Initialize default config
@@ -40,7 +40,7 @@ app.Use(compress.New(compress.Config{
 
 // Skip middleware for specific routes
 app.Use(compress.New(compress.Config{
-  Next:  func(c *fiber.Ctx) bool {
+  Next:  func(c *Vortex.Ctx) bool {
     return c.Path() == "/dont_compress"
   },
   Level: compress.LevelBestSpeed, // 1
@@ -53,7 +53,7 @@ app.Use(compress.New(compress.Config{
 
 | Property | Type                    | Description                                                         | Default            |
 |:---------|:------------------------|:--------------------------------------------------------------------|:-------------------|
-| Next     | `func(*fiber.Ctx) bool` | Next defines a function to skip this middleware when returned true. | `nil`              |
+| Next     | `func(*Vortex.Ctx) bool` | Next defines a function to skip this middleware when returned true. | `nil`              |
 | Level    | `Level`                 | Level determines the compression algorithm.                         | `LevelDefault (0)` |
 
 Possible values for the "Level" field are:
@@ -83,3 +83,4 @@ const (
     LevelBestCompression = 2
 )
 ```
+

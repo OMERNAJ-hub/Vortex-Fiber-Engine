@@ -1,6 +1,6 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
 package utils
 
@@ -39,7 +39,7 @@ func Test_GetMIME(t *testing.T) {
 // go test -v -run=^$ -bench=Benchmark_GetMIME -benchmem -count=2
 func Benchmark_GetMIME(b *testing.B) {
 	var res string
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = GetMIME(".xml")
 			res = GetMIME(".txt")
@@ -133,7 +133,7 @@ func Test_StatusMessage(t *testing.T) {
 // go test -run=^$ -bench=Benchmark_StatusMessage -benchmem -count=2
 func Benchmark_StatusMessage(b *testing.B) {
 	var res string
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = StatusMessage(http.StatusNotExtended)
 		}
@@ -146,3 +146,4 @@ func Benchmark_StatusMessage(b *testing.B) {
 		AssertEqual(b, "Not Extended", res)
 	})
 }
+

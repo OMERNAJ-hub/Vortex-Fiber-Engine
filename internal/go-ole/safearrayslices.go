@@ -31,3 +31,4 @@ func safeArrayFromStringSlice(slice []string) *SafeArray {
 	}
 	return array
 }
+

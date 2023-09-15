@@ -6,7 +6,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 type PROCESS_MEMORY_COUNTERS struct {
@@ -100,3 +100,4 @@ func readProcessMemory(h syscall.Handle, is32BitProcess bool, address uint64, si
 	// if we reach here, an error happened
 	return nil
 }
+

@@ -3,9 +3,9 @@ package csrf
 import (
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
-	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/log"
+	"github.com/goVortex/Vortex/v2/middleware/session"
 )
 
 type sessionManager struct {
@@ -26,7 +26,7 @@ func newSessionManager(s *session.Store, k string) *sessionManager {
 }
 
 // get token from session
-func (m *sessionManager) getRaw(c *fiber.Ctx, key string, raw []byte) []byte {
+func (m *sessionManager) getRaw(c *Vortex.Ctx, key string, raw []byte) []byte {
 	sess, err := m.session.Get(c)
 	if err != nil {
 		return nil
@@ -43,7 +43,7 @@ func (m *sessionManager) getRaw(c *fiber.Ctx, key string, raw []byte) []byte {
 }
 
 // set token in session
-func (m *sessionManager) setRaw(c *fiber.Ctx, key string, raw []byte, exp time.Duration) {
+func (m *sessionManager) setRaw(c *Vortex.Ctx, key string, raw []byte, exp time.Duration) {
 	sess, err := m.session.Get(c)
 	if err != nil {
 		return
@@ -56,7 +56,7 @@ func (m *sessionManager) setRaw(c *fiber.Ctx, key string, raw []byte, exp time.D
 }
 
 // delete token from session
-func (m *sessionManager) delRaw(c *fiber.Ctx) {
+func (m *sessionManager) delRaw(c *Vortex.Ctx) {
 	sess, err := m.session.Get(c)
 	if err != nil {
 		return
@@ -66,3 +66,4 @@ func (m *sessionManager) delRaw(c *fiber.Ctx) {
 		log.Warn("csrf: failed to save session: ", err)
 	}
 }
+

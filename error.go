@@ -1,9 +1,9 @@
-package fiber
+package Vortex
 
 import (
 	errors "encoding/json"
 
-	"github.com/gofiber/fiber/v2/internal/schema"
+	"github.com/goVortex/Vortex/v2/internal/schema"
 )
 
 type (
@@ -38,3 +38,4 @@ type (
 
 	UnsupportedValueError = errors.UnsupportedValueError
 )
+

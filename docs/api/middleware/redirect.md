@@ -4,12 +4,12 @@ id: redirect
 
 # Redirect
 
-Redirection middleware for Fiber.
+Redirection middleware for Vortex.
 
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Examples
@@ -18,12 +18,12 @@ func New(config ...Config) fiber.Handler
 package main
 
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/redirect"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/redirect"
 )
 
 func main() {
-  app := fiber.New()
+  app := Vortex.New()
   
   app.Use(redirect.New(redirect.Config{
     Rules: map[string]string{
@@ -33,10 +33,10 @@ func main() {
     StatusCode: 301,
   }))
   
-  app.Get("/new", func(c *fiber.Ctx) error {
+  app.Get("/new", func(c *Vortex.Ctx) error {
     return c.SendString("Hello, World!")
   })
-  app.Get("/new/*", func(c *fiber.Ctx) error {
+  app.Get("/new/*", func(c *Vortex.Ctx) error {
     return c.SendString("Wildcard: " + c.Params("*"))
   })
   
@@ -55,7 +55,7 @@ curl http://localhost:3000/old/hello
 
 | Property   | Type                    | Description                                                                                                                | Default                |
 |:-----------|:------------------------|:---------------------------------------------------------------------------------------------------------------------------|:-----------------------|
-| Next       | `func(*fiber.Ctx) bool` | Filter defines a function to skip middleware.                                                                              | `nil`                  |
+| Next       | `func(*Vortex.Ctx) bool` | Filter defines a function to skip middleware.                                                                              | `nil`                  |
 | Rules      | `map[string]string`     | Rules defines the URL path rewrite rules. The values captured in asterisk can be retrieved by index e.g. $1, $2 and so on. | Required               |
 | StatusCode | `int`                   | The status code when redirecting. This is ignored if Redirect is disabled.                                                 | 302 Temporary Redirect |
 
@@ -63,6 +63,7 @@ curl http://localhost:3000/old/hello
 
 ```go
 var ConfigDefault = Config{
-	StatusCode: fiber.StatusFound,
+	StatusCode: Vortex.StatusFound,
 }
 ```
+

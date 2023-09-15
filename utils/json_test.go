@@ -56,3 +56,4 @@ func Test_DefaultJSONDecoder(t *testing.T) {
 	AssertEqual(t, err, nil)
 	AssertEqual(t, "Hello World", ss.ImportantString)
 }
+

@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 func Avg() (*AvgStat, error) {
@@ -42,3 +42,4 @@ func MiscWithContext(ctx context.Context) (*MiscStat, error) {
 
 	return &ret, nil
 }
+

@@ -335,3 +335,4 @@ func safeArraySetRecordInfo(safearray *SafeArray, recordInfo interface{}) (err e
 			uintptr(unsafe.Pointer(&recordInfo))))
 	return
 }
+

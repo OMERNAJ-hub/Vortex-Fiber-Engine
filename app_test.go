@@ -1,9 +1,9 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
 //nolint:bodyclose // Much easier to just ignore memory leaks in tests
-package fiber
+package Vortex
 
 import (
 	"bytes"
@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/fasthttputil"
@@ -949,9 +949,9 @@ func Test_App_Static_Download(t *testing.T) {
 	c := app.AcquireCtx(&fasthttp.RequestCtx{})
 	defer app.ReleaseCtx(c)
 
-	app.Static("/fiber.png", "./.github/testdata/fs/img/fiber.png", Static{Download: true})
+	app.Static("/Vortex.png", "./.github/testdata/fs/img/Vortex.png", Static{Download: true})
 
-	resp, err := app.Test(httptest.NewRequest(MethodGet, "/fiber.png", nil))
+	resp, err := app.Test(httptest.NewRequest(MethodGet, "/Vortex.png", nil))
 	utils.AssertEqual(t, nil, err, "app.Test(req)")
 	utils.AssertEqual(t, 200, resp.StatusCode, "Status code")
 	utils.AssertEqual(t, false, resp.Header.Get(HeaderContentLength) == "")
@@ -2027,7 +2027,7 @@ func TestErrorHandler_PicksRightOne(t *testing.T) {
 		{"/api/v1", "/api/v1 error handler"},
 
 		// / mount doesn't have custom ErrorHandler, since is
-		// the root path i will use Fiber's default Error Handler
+		// the root path i will use Vortex's default Error Handler
 		{"/", "random error"},
 	}
 
@@ -2048,3 +2048,4 @@ func TestErrorHandler_PicksRightOne(t *testing.T) {
 		})
 	}
 }
+

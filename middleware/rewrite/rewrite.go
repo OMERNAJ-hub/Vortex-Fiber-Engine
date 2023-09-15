@@ -5,11 +5,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	cfg := configDefault(config...)
 
 	// Initialize
@@ -20,7 +20,7 @@ func New(config ...Config) fiber.Handler {
 		cfg.rulesRegex[regexp.MustCompile(k)] = v
 	}
 	// Middleware function
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Next request to skip middleware
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -52,3 +52,4 @@ func captureTokens(pattern *regexp.Regexp, input string) *strings.Replacer {
 	}
 	return strings.NewReplacer(replace...)
 }
+

@@ -172,3 +172,4 @@ func DispatchMessage(msg *Msg) int32 {
 func GetVariantDate(value uint64) (time.Time, error) {
 	return time.Now(), NewError(E_NOTIMPL)
 }
+

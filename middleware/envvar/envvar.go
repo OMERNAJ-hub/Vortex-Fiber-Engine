@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
 // Config defines the config for middleware.
@@ -23,23 +23,23 @@ func (envVar *EnvVar) set(key, val string) {
 	envVar.Vars[key] = val
 }
 
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	var cfg Config
 	if len(config) > 0 {
 		cfg = config[0]
 	}
 
-	return func(c *fiber.Ctx) error {
-		if c.Method() != fiber.MethodGet {
-			return fiber.ErrMethodNotAllowed
+	return func(c *Vortex.Ctx) error {
+		if c.Method() != Vortex.MethodGet {
+			return Vortex.ErrMethodNotAllowed
 		}
 
 		envVar := newEnvVar(cfg)
 		varsByte, err := c.App().Config().JSONEncoder(envVar)
 		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+			return c.Status(Vortex.StatusInternalServerError).SendString(err.Error())
 		}
-		c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)
+		c.Set(Vortex.HeaderContentType, Vortex.MIMEApplicationJSONCharsetUTF8)
 		return c.Send(varsByte)
 	}
 }
@@ -66,3 +66,4 @@ func newEnvVar(cfg Config) *EnvVar {
 
 	return vars
 }
+

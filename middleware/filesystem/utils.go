@@ -9,8 +9,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 func getFileExtension(p string) string {
@@ -21,7 +21,7 @@ func getFileExtension(p string) string {
 	return p[n:]
 }
 
-func dirList(c *fiber.Ctx, f http.File) error {
+func dirList(c *Vortex.Ctx, f http.File) error {
 	fileinfos, err := f.Readdir(-1)
 	if err != nil {
 		return fmt.Errorf("failed to read dir: %w", err)
@@ -64,3 +64,4 @@ func dirList(c *fiber.Ctx, f http.File) error {
 
 	return nil
 }
+

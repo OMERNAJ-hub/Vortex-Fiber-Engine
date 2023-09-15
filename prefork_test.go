@@ -1,8 +1,8 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 📄 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
-// 💖 Maintained and modified for Fiber by @renewerner87
-package fiber
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 📄 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
+// 💖 Maintained and modified for Vortex by @renewerner87
+package Vortex
 
 import (
 	"crypto/tls"
@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 func Test_App_Prefork_Child_Process(t *testing.T) {
@@ -102,3 +102,4 @@ func teardownIsChild(t *testing.T) {
 
 	utils.AssertEqual(t, nil, os.Setenv(envPreforkChildKey, ""))
 }
+

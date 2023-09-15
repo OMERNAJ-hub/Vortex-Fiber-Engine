@@ -9,7 +9,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 func Avg() (*AvgStat, error) {
@@ -133,3 +133,4 @@ func readLoadAvgFromFile() ([]string, error) {
 	values := strings.Fields(string(line))
 	return values, nil
 }
+

@@ -4,33 +4,33 @@ id: recover
 
 # Recover
 
-Recover middleware for [Fiber](https://github.com/gofiber/fiber) that recovers from panics anywhere in the stack chain and handles the control to the centralized [ErrorHandler](https://docs.gofiber.io/guide/error-handling).
+Recover middleware for [Vortex](https://github.com/goVortex/Vortex) that recovers from panics anywhere in the stack chain and handles the control to the centralized [ErrorHandler](https://docs.goVortex.io/guide/error-handling).
 
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Examples
 
-Import the middleware package that is part of the Fiber web framework
+Import the middleware package that is part of the Vortex web framework
 
 ```go
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/recover"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/recover"
 )
 ```
 
-After you initiate your Fiber app, you can use the following possibilities:
+After you initiate your Vortex app, you can use the following possibilities:
 
 ```go
 // Initialize default config
 app.Use(recover.New())
 
 // This panic will be caught by the middleware
-app.Get("/", func(c *fiber.Ctx) error {
+app.Get("/", func(c *Vortex.Ctx) error {
     panic("I'm an error")
 })
 ```
@@ -39,9 +39,9 @@ app.Get("/", func(c *fiber.Ctx) error {
 
 | Property          | Type                            | Description                                                         | Default                  |
 |:------------------|:--------------------------------|:--------------------------------------------------------------------|:-------------------------|
-| Next              | `func(*fiber.Ctx) bool`         | Next defines a function to skip this middleware when returned true. | `nil`                    |
+| Next              | `func(*Vortex.Ctx) bool`         | Next defines a function to skip this middleware when returned true. | `nil`                    |
 | EnableStackTrace  | `bool`                          | EnableStackTrace enables handling stack trace.                      | `false`                  |
-| StackTraceHandler | `func(*fiber.Ctx, interface{})` | StackTraceHandler defines a function to handle stack trace.         | defaultStackTraceHandler |
+| StackTraceHandler | `func(*Vortex.Ctx, interface{})` | StackTraceHandler defines a function to handle stack trace.         | defaultStackTraceHandler |
 
 ## Default Config
 
@@ -52,3 +52,4 @@ var ConfigDefault = Config{
     StackTraceHandler: defaultStackTraceHandler,
 }
 ```
+

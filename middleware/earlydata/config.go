@@ -1,7 +1,7 @@
 package earlydata
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
 const (
@@ -14,35 +14,35 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	//
 	// Optional. Default: nil
-	Next func(c *fiber.Ctx) bool
+	Next func(c *Vortex.Ctx) bool
 
 	// IsEarlyData returns whether the request is an early-data request.
 	//
 	// Optional. Default: a function which checks if the "Early-Data" request header equals "1".
-	IsEarlyData func(c *fiber.Ctx) bool
+	IsEarlyData func(c *Vortex.Ctx) bool
 
 	// AllowEarlyData returns whether the early-data request should be allowed or rejected.
 	//
 	// Optional. Default: a function which rejects the request on unsafe and allows the request on safe HTTP request methods.
-	AllowEarlyData func(c *fiber.Ctx) bool
+	AllowEarlyData func(c *Vortex.Ctx) bool
 
 	// Error is returned in case an early-data request is rejected.
 	//
-	// Optional. Default: fiber.ErrTooEarly.
+	// Optional. Default: Vortex.ErrTooEarly.
 	Error error
 }
 
 // ConfigDefault is the default config
 var ConfigDefault = Config{
-	IsEarlyData: func(c *fiber.Ctx) bool {
+	IsEarlyData: func(c *Vortex.Ctx) bool {
 		return c.Get(DefaultHeaderName) == DefaultHeaderTrueValue
 	},
 
-	AllowEarlyData: func(c *fiber.Ctx) bool {
-		return fiber.IsMethodSafe(c.Method())
+	AllowEarlyData: func(c *Vortex.Ctx) bool {
+		return Vortex.IsMethodSafe(c.Method())
 	},
 
-	Error: fiber.ErrTooEarly,
+	Error: Vortex.ErrTooEarly,
 }
 
 // Helper function to set default values
@@ -71,3 +71,4 @@ func configDefault(config ...Config) Config {
 
 	return cfg
 }
+

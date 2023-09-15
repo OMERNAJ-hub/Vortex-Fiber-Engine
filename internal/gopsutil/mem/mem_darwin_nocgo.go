@@ -91,3 +91,4 @@ func VirtualMemoryWithContext(ctx context.Context) (*VirtualMemoryStat, error) {
 
 	return ret, nil
 }
+

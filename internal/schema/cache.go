@@ -311,3 +311,4 @@ func (o tagOptions) Contains(option string) bool {
 	}
 	return false
 }
+

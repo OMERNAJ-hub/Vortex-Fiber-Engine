@@ -6,27 +6,27 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/session"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/middleware/session"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
 
 func Test_CSRF(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New())
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
-	methods := [4]string{fiber.MethodGet, fiber.MethodHead, fiber.MethodOptions, fiber.MethodTrace}
+	methods := [4]string{Vortex.MethodGet, Vortex.MethodHead, Vortex.MethodOptions, Vortex.MethodTrace}
 
 	for _, method := range methods {
 		// Generate CSRF token
@@ -36,14 +36,14 @@ func Test_CSRF(t *testing.T) {
 		// Without CSRF cookie
 		ctx.Request.Reset()
 		ctx.Response.Reset()
-		ctx.Request.Header.SetMethod(fiber.MethodPost)
+		ctx.Request.Header.SetMethod(Vortex.MethodPost)
 		h(ctx)
 		utils.AssertEqual(t, 403, ctx.Response.StatusCode())
 
 		// Empty/invalid CSRF token
 		ctx.Request.Reset()
 		ctx.Response.Reset()
-		ctx.Request.Header.SetMethod(fiber.MethodPost)
+		ctx.Request.Header.SetMethod(Vortex.MethodPost)
 		ctx.Request.Header.Set(HeaderName, "johndoe")
 		h(ctx)
 		utils.AssertEqual(t, 403, ctx.Response.StatusCode())
@@ -53,12 +53,12 @@ func Test_CSRF(t *testing.T) {
 		ctx.Response.Reset()
 		ctx.Request.Header.SetMethod(method)
 		h(ctx)
-		token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+		token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 		token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 		ctx.Request.Reset()
 		ctx.Response.Reset()
-		ctx.Request.Header.SetMethod(fiber.MethodPost)
+		ctx.Request.Header.SetMethod(Vortex.MethodPost)
 		ctx.Request.Header.Set(HeaderName, token)
 		ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 		h(ctx)
@@ -74,10 +74,10 @@ func Test_CSRF_WithSession(t *testing.T) {
 		KeyLookup: "cookie:_session",
 	})
 
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 
-	// fiber context
+	// Vortex context
 	ctx := &fasthttp.RequestCtx{}
 	defer app.ReleaseCtx(app.AcquireCtx(ctx))
 
@@ -101,24 +101,24 @@ func Test_CSRF_WithSession(t *testing.T) {
 	// middleware
 	app.Use(New(config))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 
-	methods := [4]string{fiber.MethodGet, fiber.MethodHead, fiber.MethodOptions, fiber.MethodTrace}
+	methods := [4]string{Vortex.MethodGet, Vortex.MethodHead, Vortex.MethodOptions, Vortex.MethodTrace}
 
 	for _, method := range methods {
 		// Generate CSRF token
-		ctx.Request.Header.SetMethod(fiber.MethodGet)
+		ctx.Request.Header.SetMethod(Vortex.MethodGet)
 		ctx.Request.Header.SetCookie("_session", newSessionIDString)
 		h(ctx)
 
 		// Without CSRF cookie
 		ctx.Request.Reset()
 		ctx.Response.Reset()
-		ctx.Request.Header.SetMethod(fiber.MethodPost)
+		ctx.Request.Header.SetMethod(Vortex.MethodPost)
 		ctx.Request.Header.SetCookie("_session", newSessionIDString)
 		h(ctx)
 		utils.AssertEqual(t, 403, ctx.Response.StatusCode())
@@ -126,7 +126,7 @@ func Test_CSRF_WithSession(t *testing.T) {
 		// Empty/invalid CSRF token
 		ctx.Request.Reset()
 		ctx.Response.Reset()
-		ctx.Request.Header.SetMethod(fiber.MethodPost)
+		ctx.Request.Header.SetMethod(Vortex.MethodPost)
 		ctx.Request.Header.Set(HeaderName, "johndoe")
 		ctx.Request.Header.SetCookie("_session", newSessionIDString)
 		h(ctx)
@@ -138,7 +138,7 @@ func Test_CSRF_WithSession(t *testing.T) {
 		ctx.Request.Header.SetMethod(method)
 		ctx.Request.Header.SetCookie("_session", newSessionIDString)
 		h(ctx)
-		token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+		token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 		for _, header := range strings.Split(token, ";") {
 			if strings.Split(strings.TrimSpace(header), "=")[0] == ConfigDefault.CookieName {
 				token = strings.Split(header, "=")[1]
@@ -148,7 +148,7 @@ func Test_CSRF_WithSession(t *testing.T) {
 
 		ctx.Request.Reset()
 		ctx.Response.Reset()
-		ctx.Request.Header.SetMethod(fiber.MethodPost)
+		ctx.Request.Header.SetMethod(Vortex.MethodPost)
 		ctx.Request.Header.Set(HeaderName, token)
 		ctx.Request.Header.SetCookie("_session", newSessionIDString)
 		ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
@@ -160,29 +160,29 @@ func Test_CSRF_WithSession(t *testing.T) {
 // go test -run Test_CSRF_ExpiredToken
 func Test_CSRF_ExpiredToken(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Expiration: 1 * time.Second,
 	}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Generate CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	// Use the CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -194,7 +194,7 @@ func Test_CSRF_ExpiredToken(t *testing.T) {
 	// Expired CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -210,10 +210,10 @@ func Test_CSRF_ExpiredToken_WithSession(t *testing.T) {
 		KeyLookup: "cookie:_session",
 	})
 
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 
-	// fiber context
+	// Vortex context
 	ctx := &fasthttp.RequestCtx{}
 	defer app.ReleaseCtx(app.AcquireCtx(ctx))
 
@@ -238,17 +238,17 @@ func Test_CSRF_ExpiredToken_WithSession(t *testing.T) {
 	// middleware
 	app.Use(New(config))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 
 	// Generate CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	ctx.Request.Header.SetCookie("_session", newSessionIDString)
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	for _, header := range strings.Split(token, ";") {
 		if strings.Split(strings.TrimSpace(header), "=")[0] == ConfigDefault.CookieName {
 			token = strings.Split(header, "=")[1]
@@ -259,7 +259,7 @@ func Test_CSRF_ExpiredToken_WithSession(t *testing.T) {
 	// Use the CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie("_session", newSessionIDString)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
@@ -272,7 +272,7 @@ func Test_CSRF_ExpiredToken_WithSession(t *testing.T) {
 	// Expired CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie("_session", newSessionIDString)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
@@ -283,21 +283,21 @@ func Test_CSRF_ExpiredToken_WithSession(t *testing.T) {
 // go test -run Test_CSRF_MultiUseToken
 func Test_CSRF_MultiUseToken(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		KeyLookup: "header:X-Csrf-Token",
 	}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Invalid CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set("X-Csrf-Token", "johndoe")
 	h(ctx)
 	utils.AssertEqual(t, 403, ctx.Response.StatusCode())
@@ -305,18 +305,18 @@ func Test_CSRF_MultiUseToken(t *testing.T) {
 	// Generate CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set("X-Csrf-Token", token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
-	newToken := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	newToken := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	newToken = strings.Split(strings.Split(newToken, ";")[0], "=")[1]
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
 
@@ -327,34 +327,34 @@ func Test_CSRF_MultiUseToken(t *testing.T) {
 // go test -run Test_CSRF_SingleUseToken
 func Test_CSRF_SingleUseToken(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		SingleUseToken: true,
 	}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Generate CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	// Use the CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
-	newToken := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	newToken := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	newToken = strings.Split(strings.Split(newToken, ";")[0], "=")[1]
 	if token == newToken {
 		t.Error("new token should not be the same as the old token")
@@ -363,7 +363,7 @@ func Test_CSRF_SingleUseToken(t *testing.T) {
 	// Use the CSRF token again
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -373,16 +373,16 @@ func Test_CSRF_SingleUseToken(t *testing.T) {
 // go test -run Test_CSRF_Next
 func Test_CSRF_Next(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(_ *Vortex.Ctx) bool {
 			return true
 		},
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 }
 
 func Test_CSRF_Invalid_KeyLookup(t *testing.T) {
@@ -390,51 +390,51 @@ func Test_CSRF_Invalid_KeyLookup(t *testing.T) {
 	defer func() {
 		utils.AssertEqual(t, "[CSRF] KeyLookup must in the form of <source>:<key>", recover())
 	}()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{KeyLookup: "I:am:invalid"}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
 }
 
 func Test_CSRF_From_Form(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{KeyLookup: "form:_csrf"}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Invalid CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
-	ctx.Request.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationForm)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
+	ctx.Request.Header.Set(Vortex.HeaderContentType, Vortex.MIMEApplicationForm)
 	h(ctx)
 	utils.AssertEqual(t, 403, ctx.Response.StatusCode())
 
 	// Generate CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
-	ctx.Request.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationForm)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
+	ctx.Request.Header.Set(Vortex.HeaderContentType, Vortex.MIMEApplicationForm)
 	ctx.Request.SetBodyString("_csrf=" + token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -443,19 +443,19 @@ func Test_CSRF_From_Form(t *testing.T) {
 
 func Test_CSRF_From_Query(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{KeyLookup: "query:_csrf"}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Invalid CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.SetRequestURI("/?_csrf=" + utils.UUIDv4())
 	h(ctx)
 	utils.AssertEqual(t, 403, ctx.Response.StatusCode())
@@ -463,16 +463,16 @@ func Test_CSRF_From_Query(t *testing.T) {
 	// Generate CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	ctx.Request.SetRequestURI("/")
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	ctx.Request.Reset()
 	ctx.Response.Reset()
 	ctx.Request.SetRequestURI("/?_csrf=" + token)
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
@@ -481,19 +481,19 @@ func Test_CSRF_From_Query(t *testing.T) {
 
 func Test_CSRF_From_Param(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	csrfGroup := app.Group("/:csrf", New(Config{KeyLookup: "param:csrf"}))
 
-	csrfGroup.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	csrfGroup.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Invalid CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.SetRequestURI("/" + utils.UUIDv4())
 	h(ctx)
 	utils.AssertEqual(t, 403, ctx.Response.StatusCode())
@@ -501,16 +501,16 @@ func Test_CSRF_From_Param(t *testing.T) {
 	// Generate CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	ctx.Request.SetRequestURI("/" + utils.UUIDv4())
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	ctx.Request.Reset()
 	ctx.Response.Reset()
 	ctx.Request.SetRequestURI("/" + token)
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
@@ -519,37 +519,37 @@ func Test_CSRF_From_Param(t *testing.T) {
 
 func Test_CSRF_From_Cookie(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	csrfGroup := app.Group("/", New(Config{KeyLookup: "cookie:csrf"}))
 
-	csrfGroup.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	csrfGroup.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Invalid CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.SetRequestURI("/")
-	ctx.Request.Header.Set(fiber.HeaderCookie, "csrf="+utils.UUIDv4()+";")
+	ctx.Request.Header.Set(Vortex.HeaderCookie, "csrf="+utils.UUIDv4()+";")
 	h(ctx)
 	utils.AssertEqual(t, 403, ctx.Response.StatusCode())
 
 	// Generate CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	ctx.Request.SetRequestURI("/")
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
-	ctx.Request.Header.Set(fiber.HeaderCookie, "csrf="+token+";")
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
+	ctx.Request.Header.Set(Vortex.HeaderCookie, "csrf="+token+";")
 	ctx.Request.SetRequestURI("/")
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
@@ -558,9 +558,9 @@ func Test_CSRF_From_Cookie(t *testing.T) {
 
 func Test_CSRF_From_Custom(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
-	extractor := func(c *fiber.Ctx) (string, error) {
+	extractor := func(c *Vortex.Ctx) (string, error) {
 		body := string(c.Body())
 		// Generate the correct extractor to get the token from the correct location
 		selectors := strings.Split(body, "=")
@@ -573,31 +573,31 @@ func Test_CSRF_From_Custom(t *testing.T) {
 
 	app.Use(New(Config{Extractor: extractor}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Invalid CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
-	ctx.Request.Header.Set(fiber.HeaderContentType, fiber.MIMETextPlain)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
+	ctx.Request.Header.Set(Vortex.HeaderContentType, Vortex.MIMETextPlain)
 	h(ctx)
 	utils.AssertEqual(t, 403, ctx.Response.StatusCode())
 
 	// Generate CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
-	ctx.Request.Header.Set(fiber.HeaderContentType, fiber.MIMETextPlain)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
+	ctx.Request.Header.Set(Vortex.HeaderContentType, Vortex.MIMETextPlain)
 	ctx.Request.SetBodyString("_csrf=" + token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -606,31 +606,31 @@ func Test_CSRF_From_Custom(t *testing.T) {
 
 func Test_CSRF_Referer(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{CookieSecure: true}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
-	ctx.Request.Header.Set(fiber.HeaderXForwardedProto, "https")
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedProto, "https")
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	// Test Correct Referer with port
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.URI().SetScheme("https")
 	ctx.Request.URI().SetHost("example.com:8443")
 	ctx.Request.Header.SetProtocol("https")
 	ctx.Request.Header.SetHost("example.com:8443")
-	ctx.Request.Header.Set(fiber.HeaderReferer, ctx.Request.URI().String())
+	ctx.Request.Header.Set(Vortex.HeaderReferer, ctx.Request.URI().String())
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -639,15 +639,15 @@ func Test_CSRF_Referer(t *testing.T) {
 	// Test Correct Referer with ReverseProxy
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.URI().SetScheme("https")
 	ctx.Request.URI().SetHost("10.0.1.42.com:8443")
 	ctx.Request.Header.SetProtocol("https")
 	ctx.Request.Header.SetHost("10.0.1.42:8443")
-	ctx.Request.Header.Set(fiber.HeaderXForwardedProto, "https")
-	ctx.Request.Header.Set(fiber.HeaderXForwardedHost, "example.com")
-	ctx.Request.Header.Set(fiber.HeaderXForwardedFor, `192.0.2.43, "[2001:db8:cafe::17]"`)
-	ctx.Request.Header.Set(fiber.HeaderReferer, "https://example.com")
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedProto, "https")
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedHost, "example.com")
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedFor, `192.0.2.43, "[2001:db8:cafe::17]"`)
+	ctx.Request.Header.Set(Vortex.HeaderReferer, "https://example.com")
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -656,13 +656,13 @@ func Test_CSRF_Referer(t *testing.T) {
 	// Test Correct Referer with ReverseProxy Missing X-Forwarded-* Headers
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.URI().SetScheme("https")
 	ctx.Request.URI().SetHost("10.0.1.42:8443")
 	ctx.Request.Header.SetProtocol("https")
 	ctx.Request.Header.SetHost("10.0.1.42:8443")
-	ctx.Request.Header.Set(fiber.HeaderXUrlScheme, "https") // We need to set this header to make sure c.Protocol() returns https
-	ctx.Request.Header.Set(fiber.HeaderReferer, "https://example.com")
+	ctx.Request.Header.Set(Vortex.HeaderXUrlScheme, "https") // We need to set this header to make sure c.Protocol() returns https
+	ctx.Request.Header.Set(Vortex.HeaderReferer, "https://example.com")
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -671,10 +671,10 @@ func Test_CSRF_Referer(t *testing.T) {
 	// Test Correct Referer with path
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
-	ctx.Request.Header.Set(fiber.HeaderXForwardedProto, "https")
-	ctx.Request.Header.Set(fiber.HeaderXForwardedHost, "example.com")
-	ctx.Request.Header.Set(fiber.HeaderReferer, "https://example.com/action/items?gogogo=true")
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedProto, "https")
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedHost, "example.com")
+	ctx.Request.Header.Set(Vortex.HeaderReferer, "https://example.com/action/items?gogogo=true")
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -683,10 +683,10 @@ func Test_CSRF_Referer(t *testing.T) {
 	// Test Wrong Referer
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
-	ctx.Request.Header.Set(fiber.HeaderXForwardedProto, "https")
-	ctx.Request.Header.Set(fiber.HeaderXForwardedHost, "example.com")
-	ctx.Request.Header.Set(fiber.HeaderReferer, "https://csrf.example.com")
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedProto, "https")
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedHost, "example.com")
+	ctx.Request.Header.Set(Vortex.HeaderReferer, "https://csrf.example.com")
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -695,29 +695,29 @@ func Test_CSRF_Referer(t *testing.T) {
 
 func Test_CSRF_DeleteToken(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	config := ConfigDefault
 
 	app.Use(New(config))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Generate CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	// Delete the CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	if handler, ok := app.AcquireCtx(ctx).Locals(ConfigDefault.HandlerContextKey).(*CSRFHandler); ok {
@@ -729,7 +729,7 @@ func Test_CSRF_DeleteToken(t *testing.T) {
 
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -744,10 +744,10 @@ func Test_CSRF_DeleteToken_WithSession(t *testing.T) {
 		KeyLookup: "cookie:_session",
 	})
 
-	// fiber instance
-	app := fiber.New()
+	// Vortex instance
+	app := Vortex.New()
 
-	// fiber context
+	// Vortex context
 	ctx := &fasthttp.RequestCtx{}
 	defer app.ReleaseCtx(app.AcquireCtx(ctx))
 
@@ -768,23 +768,23 @@ func Test_CSRF_DeleteToken_WithSession(t *testing.T) {
 	// middleware
 	app.Use(New(config))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 
 	// Generate CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	ctx.Request.Header.SetCookie("_session", newSessionIDString)
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	// Delete the CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	if handler, ok := app.AcquireCtx(ctx).Locals(ConfigDefault.HandlerContextKey).(*CSRFHandler); ok {
@@ -796,7 +796,7 @@ func Test_CSRF_DeleteToken_WithSession(t *testing.T) {
 
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	ctx.Request.Header.SetCookie("_session", newSessionIDString)
@@ -806,30 +806,30 @@ func Test_CSRF_DeleteToken_WithSession(t *testing.T) {
 
 func Test_CSRF_ErrorHandler_InvalidToken(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
-	errHandler := func(ctx *fiber.Ctx, err error) error {
+	errHandler := func(ctx *Vortex.Ctx, err error) error {
 		utils.AssertEqual(t, ErrTokenInvalid, err)
 		return ctx.Status(419).Send([]byte("invalid CSRF token"))
 	}
 
 	app.Use(New(Config{ErrorHandler: errHandler}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Generate CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
 
 	// invalid CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, "johndoe")
 	h(ctx)
 	utils.AssertEqual(t, 419, ctx.Response.StatusCode())
@@ -838,30 +838,30 @@ func Test_CSRF_ErrorHandler_InvalidToken(t *testing.T) {
 
 func Test_CSRF_ErrorHandler_EmptyToken(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
-	errHandler := func(ctx *fiber.Ctx, err error) error {
+	errHandler := func(ctx *Vortex.Ctx, err error) error {
 		utils.AssertEqual(t, ErrMissingHeader, err)
 		return ctx.Status(419).Send([]byte("empty CSRF token"))
 	}
 
 	app.Use(New(Config{ErrorHandler: errHandler}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Generate CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
 
 	// empty CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	h(ctx)
 	utils.AssertEqual(t, 419, ctx.Response.StatusCode())
 	utils.AssertEqual(t, "empty CSRF token", string(ctx.Response.Body()))
@@ -869,9 +869,9 @@ func Test_CSRF_ErrorHandler_EmptyToken(t *testing.T) {
 
 func Test_CSRF_ErrorHandler_MissingReferer(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
-	errHandler := func(ctx *fiber.Ctx, err error) error {
+	errHandler := func(ctx *Vortex.Ctx, err error) error {
 		utils.AssertEqual(t, ErrNoReferer, err)
 		return ctx.Status(419).Send([]byte("empty CSRF token"))
 	}
@@ -881,23 +881,23 @@ func Test_CSRF_ErrorHandler_MissingReferer(t *testing.T) {
 		ErrorHandler: errHandler,
 	}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
-	ctx.Request.Header.Set(fiber.HeaderXForwardedProto, "https")
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedProto, "https")
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
-	ctx.Request.Header.Set(fiber.HeaderXForwardedProto, "https")
-	ctx.Request.Header.Set(fiber.HeaderXForwardedHost, "example.com")
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedProto, "https")
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedHost, "example.com")
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 	h(ctx)
@@ -906,12 +906,12 @@ func Test_CSRF_ErrorHandler_MissingReferer(t *testing.T) {
 
 func Test_CSRF_Cookie_Injection_Exploit(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New())
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	h := app.Handler()
@@ -920,42 +920,42 @@ func Test_CSRF_Cookie_Injection_Exploit(t *testing.T) {
 	// Inject CSRF token
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
-	ctx.Request.Header.Set(fiber.HeaderCookie, "csrf_=pwned;")
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
+	ctx.Request.Header.Set(Vortex.HeaderCookie, "csrf_=pwned;")
 	ctx.Request.SetRequestURI("/")
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	// Exploit CSRF token we just injected
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	ctx.Request.Header.Set(HeaderName, token)
-	ctx.Request.Header.Set(fiber.HeaderCookie, "csrf_=pwned;")
+	ctx.Request.Header.Set(Vortex.HeaderCookie, "csrf_=pwned;")
 	h(ctx)
 	utils.AssertEqual(t, 403, ctx.Response.StatusCode(), "CSRF exploit successful")
 }
 
-// TODO: use this test case and make the unsafe header value bug from https://github.com/gofiber/fiber/issues/2045 reproducible and permanently fixed/tested by this testcase
+// TODO: use this test case and make the unsafe header value bug from https://github.com/goVortex/Vortex/issues/2045 reproducible and permanently fixed/tested by this testcase
 // func Test_CSRF_UnsafeHeaderValue(t *testing.T) {
 //  t.Parallel()
-// 	app := fiber.New()
+// 	app := Vortex.New()
 
 // 	app.Use(New())
-// 	app.Get("/", func(c *fiber.Ctx) error {
-// 		return c.SendStatus(fiber.StatusOK)
+// 	app.Get("/", func(c *Vortex.Ctx) error {
+// 		return c.SendStatus(Vortex.StatusOK)
 // 	})
-// 	app.Get("/test", func(c *fiber.Ctx) error {
-// 		return c.SendStatus(fiber.StatusOK)
+// 	app.Get("/test", func(c *Vortex.Ctx) error {
+// 		return c.SendStatus(Vortex.StatusOK)
 // 	})
-// 	app.Post("/", func(c *fiber.Ctx) error {
-// 		return c.SendStatus(fiber.StatusOK)
+// 	app.Post("/", func(c *Vortex.Ctx) error {
+// 		return c.SendStatus(Vortex.StatusOK)
 // 	})
 
-// 	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+// 	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 // 	utils.AssertEqual(t, nil, err)
-// 	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+// 	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 // 	var token string
 // 	for _, c := range resp.Cookies() {
@@ -968,22 +968,22 @@ func Test_CSRF_Cookie_Injection_Exploit(t *testing.T) {
 
 // 	fmt.Println("token", token)
 
-// 	getReq := httptest.NewRequest(fiber.MethodGet, "/", nil)
+// 	getReq := httptest.NewRequest(Vortex.MethodGet, "/", nil)
 // 	getReq.Header.Set(HeaderName, token)
 // 	resp, err = app.Test(getReq)
 
-// 	getReq = httptest.NewRequest(fiber.MethodGet, "/test", nil)
+// 	getReq = httptest.NewRequest(Vortex.MethodGet, "/test", nil)
 // 	getReq.Header.Set("X-Requested-With", "XMLHttpRequest")
-// 	getReq.Header.Set(fiber.HeaderCacheControl, "no")
+// 	getReq.Header.Set(Vortex.HeaderCacheControl, "no")
 // 	getReq.Header.Set(HeaderName, token)
 
 // 	resp, err = app.Test(getReq)
 
-// 	getReq.Header.Set(fiber.HeaderAccept, "*/*")
+// 	getReq.Header.Set(Vortex.HeaderAccept, "*/*")
 // 	getReq.Header.Del(HeaderName)
 // 	resp, err = app.Test(getReq)
 
-// 	postReq := httptest.NewRequest(fiber.MethodPost, "/", nil)
+// 	postReq := httptest.NewRequest(Vortex.MethodPost, "/", nil)
 // 	postReq.Header.Set("X-Requested-With", "XMLHttpRequest")
 // 	postReq.Header.Set(HeaderName, token)
 // 	resp, err = app.Test(postReq)
@@ -991,36 +991,36 @@ func Test_CSRF_Cookie_Injection_Exploit(t *testing.T) {
 
 // go test -v -run=^$ -bench=Benchmark_Middleware_CSRF_Check -benchmem -count=4
 func Benchmark_Middleware_CSRF_Check(b *testing.B) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New())
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusTeapot)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusTeapot)
 	})
 
-	app.Post("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusTeapot)
+	app.Post("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusTeapot)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Generate CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
-	token := string(ctx.Response.Header.Peek(fiber.HeaderSetCookie))
+	token := string(ctx.Response.Header.Peek(Vortex.HeaderSetCookie))
 	token = strings.Split(strings.Split(token, ";")[0], "=")[1]
 
 	// Test Correct Referer POST
 	ctx.Request.Reset()
 	ctx.Response.Reset()
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
-	ctx.Request.Header.Set(fiber.HeaderXForwardedProto, "https")
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
+	ctx.Request.Header.Set(Vortex.HeaderXForwardedProto, "https")
 	ctx.Request.URI().SetScheme("https")
 	ctx.Request.URI().SetHost("example.com")
 	ctx.Request.Header.SetProtocol("https")
 	ctx.Request.Header.SetHost("example.com")
-	ctx.Request.Header.Set(fiber.HeaderReferer, "https://example.com")
+	ctx.Request.Header.Set(Vortex.HeaderReferer, "https://example.com")
 	ctx.Request.Header.Set(HeaderName, token)
 	ctx.Request.Header.SetCookie(ConfigDefault.CookieName, token)
 
@@ -1031,23 +1031,23 @@ func Benchmark_Middleware_CSRF_Check(b *testing.B) {
 		h(ctx)
 	}
 
-	utils.AssertEqual(b, fiber.StatusTeapot, ctx.Response.Header.StatusCode())
+	utils.AssertEqual(b, Vortex.StatusTeapot, ctx.Response.Header.StatusCode())
 }
 
 // go test -v -run=^$ -bench=Benchmark_Middleware_CSRF_GenerateToken -benchmem -count=4
 func Benchmark_Middleware_CSRF_GenerateToken(b *testing.B) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New())
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusTeapot)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusTeapot)
 	})
 
 	h := app.Handler()
 	ctx := &fasthttp.RequestCtx{}
 
 	// Generate CSRF token
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	b.ReportAllocs()
 	b.ResetTimer()
 
@@ -1056,5 +1056,6 @@ func Benchmark_Middleware_CSRF_GenerateToken(b *testing.B) {
 	}
 
 	// Ensure the GET request returns a 418 status code
-	utils.AssertEqual(b, fiber.StatusTeapot, ctx.Response.Header.StatusCode())
+	utils.AssertEqual(b, Vortex.StatusTeapot, ctx.Response.Header.StatusCode())
 }
+

@@ -99,3 +99,4 @@ func convertHresultToError(hr, r2 uintptr, ignore error) (err error) {
 	}
 	return
 }
+

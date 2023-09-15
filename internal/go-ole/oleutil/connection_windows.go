@@ -7,7 +7,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	ole "github.com/gofiber/fiber/v2/internal/go-ole"
+	ole "github.com/goVortex/Vortex/v2/internal/go-ole"
 )
 
 // ConnectObject creates a connection point between two services for communication.
@@ -56,3 +56,4 @@ func ConnectObject(disp *ole.IDispatch, iid *ole.GUID, idisp interface{}) (cooki
 
 	return 0, ole.NewError(ole.E_INVALIDARG)
 }
+

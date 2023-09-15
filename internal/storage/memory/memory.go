@@ -7,7 +7,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // Storage interface that is implemented by storage providers
@@ -158,3 +158,4 @@ func (s *Storage) Conn() map[string]entry {
 	defer s.mux.RUnlock()
 	return s.db
 }
+

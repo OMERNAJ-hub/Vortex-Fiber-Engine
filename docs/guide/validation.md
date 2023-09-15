@@ -6,7 +6,7 @@ sidebar_position: 5
 
 ## Validator package
 
-Fiber can make _great_ use of the validator package to ensure correct validation of data to store.
+Vortex can make _great_ use of the validator package to ensure correct validation of data to store.
 
 - [Official validator Github page \(Installation, use, examples..\).](https://github.com/go-playground/validator)
 
@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
 type (
@@ -79,10 +79,10 @@ func main() {
 		validator: validate,
 	}
 
-	app := fiber.New(fiber.Config{
+	app := Vortex.New(Vortex.Config{
 		// Global custom error handler
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return c.Status(fiber.StatusBadRequest).JSON(GlobalErrorHandlerResp{
+		ErrorHandler: func(c *Vortex.Ctx, err error) error {
+			return c.Status(Vortex.StatusBadRequest).JSON(GlobalErrorHandlerResp{
 				Success: false,
 				Message: err.Error(),
 			})
@@ -95,7 +95,7 @@ func main() {
 		return fl.Field().Int() >= 12 && fl.Field().Int() <= 18
 	})
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		user := &User{
 			Name: c.Query("name"),
 			Age:  c.QueryInt("age"),
@@ -114,8 +114,8 @@ func main() {
 				))
 			}
 
-			return &fiber.Error{
-				Code:    fiber.ErrBadRequest.Code,
+			return &Vortex.Error{
+				Code:    Vortex.ErrBadRequest.Code,
 				Message: strings.Join(errMsgs, " and "),
 			}
 		}
@@ -166,3 +166,4 @@ Hello, World!
 **/
 
 ```
+

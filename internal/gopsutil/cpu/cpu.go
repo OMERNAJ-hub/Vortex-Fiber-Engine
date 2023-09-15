@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 // TimesStat contains the amounts of time the CPU has spent performing different
@@ -185,3 +185,4 @@ func percentUsedFromLastCall(percpu bool) ([]float64, error) {
 	}
 	return calculateAllBusy(lastTimes, cpuTimes)
 }
+

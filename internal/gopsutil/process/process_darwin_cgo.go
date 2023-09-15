@@ -28,3 +28,4 @@ func (p *Process) ExeWithContext(ctx context.Context) (string, error) {
 
 	return C.GoString(buffer), nil
 }
+

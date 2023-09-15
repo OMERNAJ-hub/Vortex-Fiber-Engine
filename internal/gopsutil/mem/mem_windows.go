@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 var (
@@ -97,3 +97,4 @@ func SwapMemoryWithContext(ctx context.Context) (*SwapMemoryStat, error) {
 
 	return ret, nil
 }
+

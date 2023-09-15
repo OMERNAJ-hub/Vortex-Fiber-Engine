@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/requestid"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/middleware/requestid"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/bytebufferpool"
 	"github.com/valyala/fasthttp"
@@ -26,7 +26,7 @@ import (
 // go test -run Test_Logger
 func Test_Logger(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
@@ -36,20 +36,20 @@ func Test_Logger(t *testing.T) {
 		Output: buf,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return errors.New("some random error")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusInternalServerError, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusInternalServerError, resp.StatusCode)
 	utils.AssertEqual(t, "some random error", buf.String())
 }
 
 // go test -run Test_Logger_locals
 func Test_Logger_locals(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
@@ -59,88 +59,88 @@ func Test_Logger_locals(t *testing.T) {
 		Output: buf,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		c.Locals("demo", "johndoe")
-		return c.SendStatus(fiber.StatusOK)
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	app.Get("/int", func(c *fiber.Ctx) error {
+	app.Get("/int", func(c *Vortex.Ctx) error {
 		c.Locals("demo", 55)
-		return c.SendStatus(fiber.StatusOK)
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	app.Get("/empty", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+	app.Get("/empty", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 	utils.AssertEqual(t, "johndoe", buf.String())
 
 	buf.Reset()
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/int", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/int", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 	utils.AssertEqual(t, "55", buf.String())
 
 	buf.Reset()
 
-	resp, err = app.Test(httptest.NewRequest(fiber.MethodGet, "/empty", nil))
+	resp, err = app.Test(httptest.NewRequest(Vortex.MethodGet, "/empty", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 	utils.AssertEqual(t, "", buf.String())
 }
 
 // go test -run Test_Logger_Next
 func Test_Logger_Next(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(_ *Vortex.Ctx) bool {
 			return true
 		},
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 }
 
 // go test -run Test_Logger_Done
 func Test_Logger_Done(t *testing.T) {
 	t.Parallel()
 	buf := bytes.NewBuffer(nil)
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
-		Done: func(c *fiber.Ctx, logString []byte) {
-			if c.Response().StatusCode() == fiber.StatusOK {
+		Done: func(c *Vortex.Ctx, logString []byte) {
+			if c.Response().StatusCode() == Vortex.StatusOK {
 				_, err := buf.Write(logString)
 				utils.AssertEqual(t, nil, err)
 			}
 		},
-	})).Get("/logging", func(ctx *fiber.Ctx) error {
-		return ctx.SendStatus(fiber.StatusOK)
+	})).Get("/logging", func(ctx *Vortex.Ctx) error {
+		return ctx.SendStatus(Vortex.StatusOK)
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/logging", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/logging", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 	utils.AssertEqual(t, true, buf.Len() > 0)
 }
 
 // go test -run Test_Logger_ErrorTimeZone
 func Test_Logger_ErrorTimeZone(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		TimeZone: "invalid",
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 }
 
 type fakeOutput int
@@ -154,15 +154,15 @@ func (o *fakeOutput) Write([]byte) (int, error) {
 func Test_Logger_ErrorOutput_WithoutColor(t *testing.T) {
 	t.Parallel()
 	o := new(fakeOutput)
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Output:        o,
 		DisableColors: true,
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 
 	utils.AssertEqual(t, 1, int(*o))
 }
@@ -171,14 +171,14 @@ func Test_Logger_ErrorOutput_WithoutColor(t *testing.T) {
 func Test_Logger_ErrorOutput(t *testing.T) {
 	t.Parallel()
 	o := new(fakeOutput)
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Output: o,
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 
 	utils.AssertEqual(t, 1, int(*o))
 }
@@ -189,7 +189,7 @@ func Test_Logger_All(t *testing.T) {
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Format: "${pid}${reqHeaders}${referer}${protocol}${ip}${ips}${host}${url}${ua}${body}${route}${black}${red}${green}${yellow}${blue}${magenta}${cyan}${white}${reset}${error}${header:test}${query:test}${form:test}${cookie:test}${non}",
 		Output: buf,
@@ -198,9 +198,9 @@ func Test_Logger_All(t *testing.T) {
 	// Alias colors
 	colors := app.Config().ColorScheme
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/?foo=bar", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/?foo=bar", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 
 	expected := fmt.Sprintf("%dHost=example.comhttp0.0.0.0example.com/?foo=bar/%s%s%s%s%s%s%s%s%sCannot GET /", os.Getpid(), colors.Black, colors.Red, colors.Green, colors.Yellow, colors.Blue, colors.Magenta, colors.Cyan, colors.White, colors.Reset)
 	utils.AssertEqual(t, expected, buf.String())
@@ -236,7 +236,7 @@ func Test_Logger_WithLatency(t *testing.T) {
 	t.Parallel()
 	buff := bytebufferpool.Get()
 	defer bytebufferpool.Put(buff)
-	app := fiber.New()
+	app := Vortex.New()
 	logger := New(Config{
 		Output: buff,
 		Format: "${latency}",
@@ -250,9 +250,9 @@ func Test_Logger_WithLatency(t *testing.T) {
 	sleepDuration := 1 * time.Nanosecond
 
 	// Define a test route that sleeps
-	app.Get("/test", func(c *fiber.Ctx) error {
+	app.Get("/test", func(c *Vortex.Ctx) error {
 		time.Sleep(sleepDuration)
-		return c.SendStatus(fiber.StatusOK)
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	// Loop through each time unit and assert that the log output contains the expected latency value
@@ -261,9 +261,9 @@ func Test_Logger_WithLatency(t *testing.T) {
 		sleepDuration = 1 * tu.div
 
 		// Create a new HTTP request to the test route
-		resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/test", nil), int(2*time.Second))
+		resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/test", nil), int(2*time.Second))
 		utils.AssertEqual(t, nil, err)
-		utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+		utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 		// Assert that the log output contains the expected latency value in the current time unit
 		utils.AssertEqual(t, bytes.HasSuffix(buff.Bytes(), []byte(tu.unit)), true, fmt.Sprintf("Expected latency to be in %s, got %s", tu.unit, buff.String()))
@@ -278,7 +278,7 @@ func Test_Logger_WithLatency_DefaultFormat(t *testing.T) {
 	t.Parallel()
 	buff := bytebufferpool.Get()
 	defer bytebufferpool.Put(buff)
-	app := fiber.New()
+	app := Vortex.New()
 	logger := New(Config{
 		Output: buff,
 	})
@@ -291,9 +291,9 @@ func Test_Logger_WithLatency_DefaultFormat(t *testing.T) {
 	sleepDuration := 1 * time.Nanosecond
 
 	// Define a test route that sleeps
-	app.Get("/test", func(c *fiber.Ctx) error {
+	app.Get("/test", func(c *Vortex.Ctx) error {
 		time.Sleep(sleepDuration)
-		return c.SendStatus(fiber.StatusOK)
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	// Loop through each time unit and assert that the log output contains the expected latency value
@@ -302,9 +302,9 @@ func Test_Logger_WithLatency_DefaultFormat(t *testing.T) {
 		sleepDuration = 1 * tu.div
 
 		// Create a new HTTP request to the test route
-		resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/test", nil), int(2*time.Second))
+		resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/test", nil), int(2*time.Second))
 		utils.AssertEqual(t, nil, err)
-		utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+		utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 
 		// Assert that the log output contains the expected latency value in the current time unit
 		// parse out the latency value from the log output
@@ -323,15 +323,15 @@ func Test_Query_Params(t *testing.T) {
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Format: "${queryParams}",
 		Output: buf,
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/?foo=bar&baz=moz", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/?foo=bar&baz=moz", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 
 	expected := "foo=bar&baz=moz"
 	utils.AssertEqual(t, expected, buf.String())
@@ -343,21 +343,21 @@ func Test_Response_Body(t *testing.T) {
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Format: "${resBody}",
 		Output: buf,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Sample response body")
 	})
 
-	app.Post("/test", func(c *fiber.Ctx) error {
+	app.Post("/test", func(c *Vortex.Ctx) error {
 		return c.Send([]byte("Post in test"))
 	})
 
-	_, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	_, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 
 	expectedGetResponse := "Sample response body"
@@ -365,7 +365,7 @@ func Test_Response_Body(t *testing.T) {
 
 	buf.Reset() // Reset buffer to test POST
 
-	_, err = app.Test(httptest.NewRequest(fiber.MethodPost, "/test", nil))
+	_, err = app.Test(httptest.NewRequest(Vortex.MethodPost, "/test", nil))
 	utils.AssertEqual(t, nil, err)
 
 	expectedPostResponse := "Post in test"
@@ -375,7 +375,7 @@ func Test_Response_Body(t *testing.T) {
 // go test -run Test_Logger_AppendUint
 func Test_Logger_AppendUint(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
@@ -385,21 +385,21 @@ func Test_Logger_AppendUint(t *testing.T) {
 		Output: buf,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		c.Response().Header.SetContentLength(5)
 		return c.SendString("hello")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 	utils.AssertEqual(t, "-2 5 200", buf.String())
 }
 
 // go test -run Test_Logger_Data_Race -race
 func Test_Logger_Data_Race(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
@@ -409,7 +409,7 @@ func Test_Logger_Data_Race(t *testing.T) {
 		Format: "${time} | ${pid} | ${locals:requestid} | ${status} | ${latency} | ${method} | ${path}\n",
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("hello")
 	})
 
@@ -420,26 +420,26 @@ func Test_Logger_Data_Race(t *testing.T) {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
-		resp1, err1 = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+		resp1, err1 = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 		wg.Done()
 	}()
-	resp2, err2 = app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp2, err2 = app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	wg.Wait()
 	utils.AssertEqual(t, nil, err1)
-	utils.AssertEqual(t, fiber.StatusOK, resp1.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp1.StatusCode)
 	utils.AssertEqual(t, nil, err2)
-	utils.AssertEqual(t, fiber.StatusOK, resp2.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp2.StatusCode)
 }
 
 // go test -v -run=^$ -bench=Benchmark_Logger -benchmem -count=4
 func Benchmark_Logger(b *testing.B) {
-	benchSetup := func(b *testing.B, app *fiber.App) {
+	benchSetup := func(b *testing.B, app *Vortex.App) {
 		b.Helper()
 
 		h := app.Handler()
 
 		fctx := &fasthttp.RequestCtx{}
-		fctx.Request.Header.SetMethod(fiber.MethodGet)
+		fctx.Request.Header.SetMethod(Vortex.MethodGet)
 		fctx.Request.SetRequestURI("/")
 
 		b.ReportAllocs()
@@ -453,12 +453,12 @@ func Benchmark_Logger(b *testing.B) {
 	}
 
 	b.Run("Base", func(bb *testing.B) {
-		app := fiber.New()
+		app := Vortex.New()
 		app.Use(New(Config{
 			Format: "${bytesReceived} ${bytesSent} ${status}",
 			Output: io.Discard,
 		}))
-		app.Get("/", func(c *fiber.Ctx) error {
+		app.Get("/", func(c *Vortex.Ctx) error {
 			c.Set("test", "test")
 			return c.SendString("Hello, World!")
 		})
@@ -466,23 +466,23 @@ func Benchmark_Logger(b *testing.B) {
 	})
 
 	b.Run("DefaultFormat", func(bb *testing.B) {
-		app := fiber.New()
+		app := Vortex.New()
 		app.Use(New(Config{
 			Output: io.Discard,
 		}))
-		app.Get("/", func(c *fiber.Ctx) error {
+		app.Get("/", func(c *Vortex.Ctx) error {
 			return c.SendString("Hello, World!")
 		})
 		benchSetup(bb, app)
 	})
 
 	b.Run("WithTagParameter", func(bb *testing.B) {
-		app := fiber.New()
+		app := Vortex.New()
 		app.Use(New(Config{
 			Format: "${bytesReceived} ${bytesSent} ${status} ${reqHeader:test}",
 			Output: io.Discard,
 		}))
-		app.Get("/", func(c *fiber.Ctx) error {
+		app.Get("/", func(c *Vortex.Ctx) error {
 			c.Set("test", "test")
 			return c.SendString("Hello, World!")
 		})
@@ -496,25 +496,25 @@ func Test_Response_Header(t *testing.T) {
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(requestid.New(requestid.Config{
 		Next:       nil,
-		Header:     fiber.HeaderXRequestID,
-		Generator:  func() string { return "Hello fiber!" },
+		Header:     Vortex.HeaderXRequestID,
+		Generator:  func() string { return "Hello Vortex!" },
 		ContextKey: "requestid",
 	}))
 	app.Use(New(Config{
 		Format: "${respHeader:X-Request-ID}",
 		Output: buf,
 	}))
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello fiber!")
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendString("Hello Vortex!")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
-	utils.AssertEqual(t, "Hello fiber!", buf.String())
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, "Hello Vortex!", buf.String())
 }
 
 // go test -run Test_Req_Header
@@ -523,21 +523,21 @@ func Test_Req_Header(t *testing.T) {
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Format: "${header:test}",
 		Output: buf,
 	}))
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello fiber!")
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendString("Hello Vortex!")
 	})
-	headerReq := httptest.NewRequest(fiber.MethodGet, "/", nil)
-	headerReq.Header.Add("test", "Hello fiber!")
+	headerReq := httptest.NewRequest(Vortex.MethodGet, "/", nil)
+	headerReq.Header.Add("test", "Hello Vortex!")
 
 	resp, err := app.Test(headerReq)
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
-	utils.AssertEqual(t, "Hello fiber!", buf.String())
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, "Hello Vortex!", buf.String())
 }
 
 // go test -run Test_ReqHeader_Header
@@ -546,21 +546,21 @@ func Test_ReqHeader_Header(t *testing.T) {
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Format: "${reqHeader:test}",
 		Output: buf,
 	}))
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello fiber!")
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendString("Hello Vortex!")
 	})
-	reqHeaderReq := httptest.NewRequest(fiber.MethodGet, "/", nil)
-	reqHeaderReq.Header.Add("test", "Hello fiber!")
+	reqHeaderReq := httptest.NewRequest(Vortex.MethodGet, "/", nil)
+	reqHeaderReq.Header.Add("test", "Hello Vortex!")
 
 	resp, err := app.Test(reqHeaderReq)
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
-	utils.AssertEqual(t, "Hello fiber!", buf.String())
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, "Hello Vortex!", buf.String())
 }
 
 // go test -run Test_CustomTags
@@ -571,32 +571,32 @@ func Test_CustomTags(t *testing.T) {
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Format: "${custom_tag}",
 		CustomTags: map[string]LogFunc{
-			"custom_tag": func(output Buffer, c *fiber.Ctx, data *Data, extraParam string) (int, error) {
+			"custom_tag": func(output Buffer, c *Vortex.Ctx, data *Data, extraParam string) (int, error) {
 				return output.WriteString(customTag)
 			},
 		},
 		Output: buf,
 	}))
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello fiber!")
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendString("Hello Vortex!")
 	})
-	reqHeaderReq := httptest.NewRequest(fiber.MethodGet, "/", nil)
-	reqHeaderReq.Header.Add("test", "Hello fiber!")
+	reqHeaderReq := httptest.NewRequest(Vortex.MethodGet, "/", nil)
+	reqHeaderReq.Header.Add("test", "Hello Vortex!")
 
 	resp, err := app.Test(reqHeaderReq)
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 	utils.AssertEqual(t, customTag, buf.String())
 }
 
 // go test -run Test_Logger_ByteSent_Streaming
 func Test_Logger_ByteSent_Streaming(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
@@ -606,7 +606,7 @@ func Test_Logger_ByteSent_Streaming(t *testing.T) {
 		Output: buf,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		c.Set("Connection", "keep-alive")
 		c.Set("Transfer-Encoding", "chunked")
 		c.Context().SetBodyStreamWriter(func(w *bufio.Writer) {
@@ -627,9 +627,9 @@ func Test_Logger_ByteSent_Streaming(t *testing.T) {
 		return nil
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode)
 	utils.AssertEqual(t, "-2 -1 200", buf.String())
 }
 
@@ -637,14 +637,15 @@ func Test_Logger_ByteSent_Streaming(t *testing.T) {
 func Test_Logger_EnableColors(t *testing.T) {
 	t.Parallel()
 	o := new(fakeOutput)
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
 		Output: o,
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 
 	utils.AssertEqual(t, 1, int(*o))
 }
+

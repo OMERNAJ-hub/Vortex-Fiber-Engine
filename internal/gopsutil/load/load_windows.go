@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 var (
@@ -82,3 +82,4 @@ func MiscWithContext(ctx context.Context) (*MiscStat, error) {
 
 	return &ret, common.ErrNotImplementedError
 }
+

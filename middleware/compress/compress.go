@@ -1,13 +1,13 @@
 package compress
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 
 	"github.com/valyala/fasthttp"
 )
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := configDefault(config...)
 
@@ -39,13 +39,13 @@ func New(config ...Config) fiber.Handler {
 		)
 	default:
 		// LevelDisabled
-		return func(c *fiber.Ctx) error {
+		return func(c *Vortex.Ctx) error {
 			return c.Next()
 		}
 	}
 
 	// Return new handler
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -63,3 +63,4 @@ func New(config ...Config) fiber.Handler {
 		return nil
 	}
 }
+

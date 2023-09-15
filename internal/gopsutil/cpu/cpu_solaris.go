@@ -284,3 +284,4 @@ func parseProcessorInfo(cmdOutput string) ([]InfoStat, error) {
 func CountsWithContext(ctx context.Context, logical bool) (int, error) {
 	return runtime.NumCPU(), nil
 }
+

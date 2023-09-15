@@ -298,3 +298,4 @@ func (z *item) Msgsize() (s int) {
 	s += 8 + msgp.IntSize
 	return
 }
+

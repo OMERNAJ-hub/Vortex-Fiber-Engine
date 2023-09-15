@@ -83,3 +83,4 @@ func CallSyscall(mib []int32) ([]byte, uint64, error) {
 
 	return buf, length, nil
 }
+

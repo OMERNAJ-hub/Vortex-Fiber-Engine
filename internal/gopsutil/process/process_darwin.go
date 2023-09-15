@@ -16,9 +16,9 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
-	"github.com/gofiber/fiber/v2/internal/gopsutil/cpu"
-	"github.com/gofiber/fiber/v2/internal/gopsutil/net"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/cpu"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/net"
 )
 
 // copied from sys/sysctl.h
@@ -687,3 +687,4 @@ func callPsWithContext(ctx context.Context, arg string, pid int32, threadOption 
 
 	return ret, nil
 }
+

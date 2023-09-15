@@ -1,8 +1,8 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
-package fiber
+package Vortex
 
 import (
 	"bytes"
@@ -24,8 +24,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/gofiber/fiber/v2/internal/schema"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/internal/schema"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/bytebufferpool"
 	"github.com/valyala/fasthttp"
@@ -216,7 +216,7 @@ func (c *Ctx) AcceptsLanguages(offers ...string) string {
 	return getOffer(c.Get(HeaderAcceptLanguage), acceptsOffer, offers...)
 }
 
-// App returns the *App reference to the instance of the Fiber application
+// App returns the *App reference to the instance of the Vortex application
 func (c *Ctx) App() *App {
 	return c.app
 }
@@ -2011,3 +2011,4 @@ func (c *Ctx) getBody() []byte {
 
 	return c.fasthttp.Request.Body()
 }
+

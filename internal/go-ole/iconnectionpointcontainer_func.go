@@ -9,3 +9,4 @@ func (v *IConnectionPointContainer) EnumConnectionPoints(points interface{}) err
 func (v *IConnectionPointContainer) FindConnectionPoint(iid *GUID, point **IConnectionPoint) error {
 	return NewError(E_NOTIMPL)
 }
+

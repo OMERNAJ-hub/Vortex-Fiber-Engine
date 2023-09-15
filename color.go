@@ -1,10 +1,10 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
-package fiber
+package Vortex
 
-// Colors is a struct to define custom colors for Fiber app and middlewares.
+// Colors is a struct to define custom colors for Vortex app and middlewares.
 type Colors struct {
 	// Black color.
 	//
@@ -105,3 +105,4 @@ func defaultColors(colors Colors) Colors {
 
 	return colors
 }
+

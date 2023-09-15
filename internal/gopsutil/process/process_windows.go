@@ -13,9 +13,9 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
-	cpu "github.com/gofiber/fiber/v2/internal/gopsutil/cpu"
-	net "github.com/gofiber/fiber/v2/internal/gopsutil/net"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
+	cpu "github.com/goVortex/Vortex/v2/internal/gopsutil/cpu"
+	net "github.com/goVortex/Vortex/v2/internal/gopsutil/net"
 )
 
 var (
@@ -1022,3 +1022,4 @@ func convertUTF16ToString(src []byte) string {
 	}
 	return syscall.UTF16ToString(codePoints)
 }
+

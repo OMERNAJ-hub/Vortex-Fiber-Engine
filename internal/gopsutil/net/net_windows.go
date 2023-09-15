@@ -12,7 +12,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 var (
@@ -777,3 +777,4 @@ func parseIPv6HexString(addr [16]byte) string {
 	ip := net.IP(ret[:])
 	return ip.String()
 }
+

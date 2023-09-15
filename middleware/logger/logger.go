@@ -9,8 +9,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/mattn/go-colorable"
 	"github.com/mattn/go-isatty"
@@ -19,7 +19,7 @@ import (
 )
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := configDefault(config...)
 
@@ -55,7 +55,7 @@ func New(config ...Config) fiber.Handler {
 	var (
 		once       sync.Once
 		mu         sync.Mutex
-		errHandler fiber.ErrorHandler
+		errHandler Vortex.ErrorHandler
 
 		dataPool = sync.Pool{New: func() interface{} { return new(Data) }}
 	)
@@ -79,7 +79,7 @@ func New(config ...Config) fiber.Handler {
 	}
 
 	// Return new handler
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -122,7 +122,7 @@ func New(config ...Config) fiber.Handler {
 		// Manually call error handler
 		if chainErr != nil {
 			if err := errHandler(c, chainErr); err != nil {
-				_ = c.SendStatus(fiber.StatusInternalServerError) //nolint:errcheck // TODO: Explain why we ignore the error here
+				_ = c.SendStatus(Vortex.StatusInternalServerError) //nolint:errcheck // TODO: Explain why we ignore the error here
 			}
 		}
 
@@ -180,3 +180,4 @@ func appendInt(output Buffer, v int) (int, error) {
 	output.Set(fasthttp.AppendUint(output.Bytes(), v))
 	return output.Len() - old, nil
 }
+

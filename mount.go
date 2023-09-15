@@ -1,8 +1,8 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
-package fiber
+package Vortex
 
 import (
 	"sort"
@@ -35,8 +35,8 @@ func newMountFields(app *App) *mountFields {
 
 // Mount attaches another app instance as a sub-router along a routing path.
 // It's very useful to split up a large API as many independent routers and
-// compose them as a single service using Mount. The fiber's error handler and
-// any of the fiber's sub apps are added to the application's error handlers
+// compose them as a single service using Mount. The Vortex's error handler and
+// any of the Vortex's sub apps are added to the application's error handlers
 // to be invoked on errors that happen within the prefix route.
 func (app *App) Mount(prefix string, subApp *App) Router {
 	prefix = strings.TrimRight(prefix, "/")
@@ -220,3 +220,4 @@ func (app *App) processSubAppsRoutes() {
 	}
 	atomic.StoreUint32(&app.handlersCount, handlersCount)
 }
+

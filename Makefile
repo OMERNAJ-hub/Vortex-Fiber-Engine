@@ -1,7 +1,7 @@
 ## help: 💡 Display available commands
 .PHONY: help
 help:
-	@echo '⚡️ GoFiber/Fiber Development:'
+	@echo '⚡️ GoVortex/Vortex Development:'
 	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ':' |  sed -e 's/^/ /'
 
 ## audit: 🚀 Conduct quality checks
@@ -53,3 +53,4 @@ generate:
 	go install github.com/tinylib/msgp@latest
 	go install github.com/vburenin/ifacemaker@975a95966976eeb2d4365a7fb236e274c54da64c
 	go generate ./...
+

@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -17,7 +17,7 @@ type Session struct {
 	mu         sync.RWMutex  // Mutex to protect non-data fields
 	id         string        // session id
 	fresh      bool          // if new session
-	ctx        *fiber.Ctx    // fiber context
+	ctx        *Vortex.Ctx    // Vortex context
 	config     *Store        // store configuration
 	data       *data         // key value data
 	byteBuffer *bytes.Buffer // byte buffer for the en- and decode
@@ -309,3 +309,4 @@ func (s *Session) decodeSessionData(rawData []byte) error {
 	}
 	return nil
 }
+

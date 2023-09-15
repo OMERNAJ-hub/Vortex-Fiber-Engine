@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
 var (
@@ -25,7 +25,7 @@ type CSRFHandler struct {
 }
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := configDefault(config...)
 
@@ -42,7 +42,7 @@ func New(config ...Config) fiber.Handler {
 	}
 
 	// Return new handler
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -61,7 +61,7 @@ func New(config ...Config) fiber.Handler {
 
 		// Action depends on the HTTP method
 		switch c.Method() {
-		case fiber.MethodGet, fiber.MethodHead, fiber.MethodOptions, fiber.MethodTrace:
+		case Vortex.MethodGet, Vortex.MethodHead, Vortex.MethodOptions, Vortex.MethodTrace:
 			cookieToken := c.Cookies(cfg.CookieName)
 
 			if cookieToken != "" {
@@ -127,7 +127,7 @@ func New(config ...Config) fiber.Handler {
 		updateCSRFCookie(c, cfg, token)
 
 		// Tell the browser that a new header value is generated
-		c.Vary(fiber.HeaderCookie)
+		c.Vary(Vortex.HeaderCookie)
 
 		// Store the token in the context if a context key is specified
 		if cfg.ContextKey != nil {
@@ -141,7 +141,7 @@ func New(config ...Config) fiber.Handler {
 
 // getRawFromStorage returns the raw value from the storage for the given token
 // returns nil if the token does not exist, is expired or is invalid
-func getRawFromStorage(c *fiber.Ctx, token string, cfg Config, sessionManager *sessionManager, storageManager *storageManager) []byte {
+func getRawFromStorage(c *Vortex.Ctx, token string, cfg Config, sessionManager *sessionManager, storageManager *storageManager) []byte {
 	if cfg.Session != nil {
 		return sessionManager.getRaw(c, token, dummyValue)
 	}
@@ -149,7 +149,7 @@ func getRawFromStorage(c *fiber.Ctx, token string, cfg Config, sessionManager *s
 }
 
 // createOrExtendTokenInStorage creates or extends the token in the storage
-func createOrExtendTokenInStorage(c *fiber.Ctx, token string, cfg Config, sessionManager *sessionManager, storageManager *storageManager) {
+func createOrExtendTokenInStorage(c *Vortex.Ctx, token string, cfg Config, sessionManager *sessionManager, storageManager *storageManager) {
 	if cfg.Session != nil {
 		sessionManager.setRaw(c, token, dummyValue, cfg.Expiration)
 	} else {
@@ -157,7 +157,7 @@ func createOrExtendTokenInStorage(c *fiber.Ctx, token string, cfg Config, sessio
 	}
 }
 
-func deleteTokenFromStorage(c *fiber.Ctx, token string, cfg Config, sessionManager *sessionManager, storageManager *storageManager) {
+func deleteTokenFromStorage(c *Vortex.Ctx, token string, cfg Config, sessionManager *sessionManager, storageManager *storageManager) {
 	if cfg.Session != nil {
 		sessionManager.delRaw(c)
 	} else {
@@ -167,16 +167,16 @@ func deleteTokenFromStorage(c *fiber.Ctx, token string, cfg Config, sessionManag
 
 // Update CSRF cookie
 // if expireCookie is true, the cookie will expire immediately
-func updateCSRFCookie(c *fiber.Ctx, cfg Config, token string) {
+func updateCSRFCookie(c *Vortex.Ctx, cfg Config, token string) {
 	setCSRFCookie(c, cfg, token, cfg.Expiration)
 }
 
-func expireCSRFCookie(c *fiber.Ctx, cfg Config) {
+func expireCSRFCookie(c *Vortex.Ctx, cfg Config) {
 	setCSRFCookie(c, cfg, "", -time.Hour)
 }
 
-func setCSRFCookie(c *fiber.Ctx, cfg Config, token string, expiry time.Duration) {
-	cookie := &fiber.Cookie{
+func setCSRFCookie(c *Vortex.Ctx, cfg Config, token string, expiry time.Duration) {
+	cookie := &Vortex.Cookie{
 		Name:        cfg.CookieName,
 		Value:       token,
 		Domain:      cfg.CookieDomain,
@@ -194,7 +194,7 @@ func setCSRFCookie(c *fiber.Ctx, cfg Config, token string, expiry time.Duration)
 
 // DeleteToken removes the token found in the context from the storage
 // and expires the CSRF cookie
-func (handler *CSRFHandler) DeleteToken(c *fiber.Ctx) error {
+func (handler *CSRFHandler) DeleteToken(c *Vortex.Ctx) error {
 	// Get the config from the context
 	config := handler.config
 	if config == nil {
@@ -220,8 +220,8 @@ func isCsrfFromCookie(extractor interface{}) bool {
 // refererMatchesHost checks that the referer header matches the host header
 // returns an error if the referer header is not present or is invalid
 // returns nil if the referer header is valid
-func refererMatchesHost(c *fiber.Ctx) error {
-	referer := strings.ToLower(c.Get(fiber.HeaderReferer))
+func refererMatchesHost(c *Vortex.Ctx) error {
+	referer := strings.ToLower(c.Get(Vortex.HeaderReferer))
 	if referer == "" {
 		return ErrNoReferer
 	}
@@ -237,3 +237,4 @@ func refererMatchesHost(c *fiber.Ctx) error {
 
 	return ErrBadReferer
 }
+

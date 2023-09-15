@@ -1,14 +1,14 @@
 ---
 id: log
 title: 📃 Log
-description: Fiber's built-in log package
+description: Vortex's built-in log package
 sidebar_position: 6
 ---
 
 We can use logs to observe program behavior, diagnose problems, or configure corresponding alarms.
 And defining a well structured log can improve search efficiency and facilitate handling of problems.
 
-Fiber provides a default way to print logs in the standard output. 
+Vortex provides a default way to print logs in the standard output. 
 It also provides several global functions, such as `log.Info`, `log.Errorf`, `log.Warnw`, etc. 
 
 ## Log levels
@@ -27,7 +27,7 @@ const (
 
 ## Custom log
 
-Fiber provides the `AllLogger` interface for adapting the various log libraries.
+Vortex provides the `AllLogger` interface for adapting the various log libraries.
 
 ```go
 type CommonLogger interface {
@@ -80,7 +80,7 @@ log.Fatalw("", "fruit", "banana")
 If you are in a project and just want to use a simple log function that can be printed at any time in the global, we provide a global log.
 
 ```go
-import "github.com/gofiber/fiber/v2/log"
+import "github.com/goVortex/Vortex/v2/log"
 
 log.Info("info")
 log.Warn("warn")
@@ -92,7 +92,7 @@ You can also find an already implemented adaptation under contrib, or use your o
 ```go
 import (
     "log"
-    fiberlog "github.com/gofiber/fiber/v2/log"
+    Vortexlog "github.com/goVortex/Vortex/v2/log"
 )
 
 var _ log.AllLogger = (*customLogger)(nil)
@@ -103,7 +103,7 @@ type customLogger struct {
 
 // ...
 // inject your custom logger
-fiberlog.SetLogger(customLogger)
+Vortexlog.SetLogger(customLogger)
 ```
 
 ## Set Level
@@ -113,7 +113,7 @@ The default logger is LevelTrace.
 Note that this method is not **concurrent-safe**.
 
 ```go
-import "github.com/gofiber/fiber/v2/log"
+import "github.com/goVortex/Vortex/v2/log"
 
 log.SetLevel(log.LevelInfo)
 ```
@@ -152,4 +152,5 @@ Set the context, using the following method will return a `CommonLogger` instanc
 commonLogger := log.WithContext(ctx)
 commonLogger.Info("info")
 ```
+
 

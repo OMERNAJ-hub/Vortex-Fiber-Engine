@@ -16,7 +16,7 @@ type serverXMLStructure struct {
 	Name    string   `xml:"name"`
 }
 
-const xmlString = `<servers version="1"><server><name>fiber one</name></server><server><name>fiber two</name></server></servers>`
+const xmlString = `<servers version="1"><server><name>Vortex one</name></server><server><name>Vortex two</name></server></servers>`
 
 func Test_GolangXMLEncoder(t *testing.T) {
 	t.Parallel()
@@ -25,8 +25,8 @@ func Test_GolangXMLEncoder(t *testing.T) {
 		ss = &serversXMLStructure{
 			Version: "1",
 			Servers: []serverXMLStructure{
-				{Name: "fiber one"},
-				{Name: "fiber two"},
+				{Name: "Vortex one"},
+				{Name: "Vortex two"},
 			},
 		}
 		xmlEncoder XMLMarshal = xml.Marshal
@@ -45,8 +45,8 @@ func Test_DefaultXMLEncoder(t *testing.T) {
 		ss = &serversXMLStructure{
 			Version: "1",
 			Servers: []serverXMLStructure{
-				{Name: "fiber one"},
-				{Name: "fiber two"},
+				{Name: "Vortex one"},
+				{Name: "Vortex two"},
 			},
 		}
 		xmlEncoder XMLMarshal = xml.Marshal
@@ -57,3 +57,4 @@ func Test_DefaultXMLEncoder(t *testing.T) {
 
 	AssertEqual(t, string(raw), xmlString)
 }
+

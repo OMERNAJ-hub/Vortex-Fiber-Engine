@@ -92,3 +92,4 @@ func (v *IDispatch) GetProperty(name string, params ...interface{}) (*VARIANT, e
 func (v *IDispatch) PutProperty(name string, params ...interface{}) (*VARIANT, error) {
 	return v.InvokeWithOptionalArgs(name, DISPATCH_PROPERTYPUT, params)
 }
+

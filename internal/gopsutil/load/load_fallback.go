@@ -5,7 +5,7 @@ package load
 import (
 	"context"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 func Avg() (*AvgStat, error) {
@@ -23,3 +23,4 @@ func Misc() (*MiscStat, error) {
 func MiscWithContext(ctx context.Context) (*MiscStat, error) {
 	return nil, common.ErrNotImplementedError
 }
+

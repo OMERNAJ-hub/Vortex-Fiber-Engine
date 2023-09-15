@@ -12,7 +12,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 var portMatch = regexp.MustCompile(`(.*)\.(\d+)$`)
@@ -318,3 +318,4 @@ func ConnectionsWithContext(ctx context.Context, kind string) ([]ConnectionStat,
 
 	return ret, nil
 }
+

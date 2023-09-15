@@ -108,3 +108,4 @@ func stat(fs http.FileSystem, name string) (os.FileInfo, error) {
 	defer f.Close()
 	return f.Stat()
 }
+

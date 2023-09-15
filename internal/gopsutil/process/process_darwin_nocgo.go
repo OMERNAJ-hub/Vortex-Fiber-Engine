@@ -31,3 +31,4 @@ func (p *Process) ExeWithContext(ctx context.Context) (string, error) {
 	}
 	return "", fmt.Errorf("missing txt data returned by lsof")
 }
+

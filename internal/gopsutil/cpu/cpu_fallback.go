@@ -6,7 +6,7 @@ import (
 	"context"
 	"runtime"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 func Times(percpu bool) ([]TimesStat, error) {
@@ -28,3 +28,4 @@ func InfoWithContext(ctx context.Context) ([]InfoStat, error) {
 func CountsWithContext(ctx context.Context, logical bool) (int, error) {
 	return runtime.NumCPU(), nil
 }
+

@@ -7,3 +7,4 @@ type JSONMarshal func(v interface{}) ([]byte, error)
 // in the value pointed to by v. If v is nil or not a pointer,
 // Unmarshal returns an InvalidUnmarshalError.
 type JSONUnmarshal func(data []byte, v interface{}) error
+

@@ -5,7 +5,7 @@ package net
 import (
 	"context"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 func IOCounters(pernic bool) ([]IOCountersStat, error) {
@@ -90,3 +90,4 @@ func ConnectionsPidMaxWithoutUidsWithContext(ctx context.Context, kind string, p
 func connectionsPidMaxWithoutUidsWithContext(ctx context.Context, kind string, pid int32, max int) ([]ConnectionStat, error) {
 	return []ConnectionStat{}, common.ErrNotImplementedError
 }
+

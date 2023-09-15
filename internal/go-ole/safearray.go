@@ -25,3 +25,4 @@ type SAFEARRAY SafeArray
 // SAFEARRAYBOUND is obsolete, exists for backwards compatibility.
 // Use SafeArrayBound
 type SAFEARRAYBOUND SafeArrayBound
+

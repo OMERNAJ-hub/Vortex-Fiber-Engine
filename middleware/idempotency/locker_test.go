@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2/middleware/idempotency"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/middleware/idempotency"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // go test -run Test_MemoryLock
@@ -57,3 +57,4 @@ func Test_MemoryLock(t *testing.T) {
 		utils.AssertEqual(t, nil, err)
 	}
 }
+

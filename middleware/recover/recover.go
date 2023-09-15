@@ -5,20 +5,20 @@ import (
 	"os"
 	"runtime/debug"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
-func defaultStackTraceHandler(_ *fiber.Ctx, e interface{}) {
+func defaultStackTraceHandler(_ *Vortex.Ctx, e interface{}) {
 	_, _ = os.Stderr.WriteString(fmt.Sprintf("panic: %v\n\n%s\n", e, debug.Stack())) //nolint:errcheck // This will never fail
 }
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := configDefault(config...)
 
 	// Return new handler
-	return func(c *fiber.Ctx) (err error) { //nolint:nonamedreturns // Uses recover() to overwrite the error
+	return func(c *Vortex.Ctx) (err error) { //nolint:nonamedreturns // Uses recover() to overwrite the error
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -43,3 +43,4 @@ func New(config ...Config) fiber.Handler {
 		return c.Next()
 	}
 }
+

@@ -19,3 +19,4 @@ func (v *ITypeInfo) GetTypeAttr() (tattr *TYPEATTR, err error) {
 	}
 	return
 }
+

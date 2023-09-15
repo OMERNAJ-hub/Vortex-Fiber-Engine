@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
-	"github.com/gofiber/fiber/v2/middleware/session"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/log"
+	"github.com/goVortex/Vortex/v2/middleware/session"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // Config defines the config for middleware.
@@ -16,7 +16,7 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	//
 	// Optional. Default: nil
-	Next func(c *fiber.Ctx) bool
+	Next func(c *Vortex.Ctx) bool
 
 	// KeyLookup is a string in the form of "<source>:<key>" that is used
 	// to create an Extractor that extracts the token from the request.
@@ -76,7 +76,7 @@ type Config struct {
 	//
 	// Optional. Default: memory.New()
 	// Ignored if Session is set.
-	Storage fiber.Storage
+	Storage Vortex.Storage
 
 	// Session is used to store the state of the middleware
 	//
@@ -86,7 +86,7 @@ type Config struct {
 
 	// SessionKey is the key used to store the token in the session
 	//
-	// Default: "fiber.csrf.token"
+	// Default: "Vortex.csrf.token"
 	SessionKey string
 
 	// Context key to store generated CSRF token into context.
@@ -104,26 +104,26 @@ type Config struct {
 	CookieExpires time.Duration
 
 	// Deprecated: Please use Cookie* related fields
-	Cookie *fiber.Cookie
+	Cookie *Vortex.Cookie
 
 	// Deprecated: Please use KeyLookup
 	TokenLookup string
 
-	// ErrorHandler is executed when an error is returned from fiber.Handler.
+	// ErrorHandler is executed when an error is returned from Vortex.Handler.
 	//
 	// Optional. Default: DefaultErrorHandler
-	ErrorHandler fiber.ErrorHandler
+	ErrorHandler Vortex.ErrorHandler
 
 	// Extractor returns the csrf token
 	//
 	// If set this will be used in place of an Extractor based on KeyLookup.
 	//
 	// Optional. Default will create an Extractor based on KeyLookup.
-	Extractor func(c *fiber.Ctx) (string, error)
+	Extractor func(c *Vortex.Ctx) (string, error)
 
 	// HandlerContextKey is used to store the CSRF Handler into context
 	//
-	// Default: "fiber.csrf.handler"
+	// Default: "Vortex.csrf.handler"
 	HandlerContextKey interface{}
 }
 
@@ -138,13 +138,13 @@ var ConfigDefault = Config{
 	KeyGenerator:      utils.UUIDv4,
 	ErrorHandler:      defaultErrorHandler,
 	Extractor:         CsrfFromHeader(HeaderName),
-	SessionKey:        "fiber.csrf.token",
-	HandlerContextKey: "fiber.csrf.handler",
+	SessionKey:        "Vortex.csrf.token",
+	HandlerContextKey: "Vortex.csrf.handler",
 }
 
-// default ErrorHandler that process return error from fiber.Handler
-func defaultErrorHandler(_ *fiber.Ctx, _ error) error {
-	return fiber.ErrForbidden
+// default ErrorHandler that process return error from Vortex.Handler
+func defaultErrorHandler(_ *Vortex.Ctx, _ error) error {
+	return Vortex.ErrForbidden
 }
 
 // Helper function to set default values
@@ -241,3 +241,4 @@ func configDefault(config ...Config) Config {
 
 	return cfg
 }
+

@@ -3,26 +3,26 @@ set -e
 
 # Some env variables
 BRANCH="master"
-REPO_URL="github.com/gofiber/docs.git"
+REPO_URL="github.com/goVortex/docs.git"
 AUTHOR_EMAIL="github-actions[bot]@users.noreply.github.com"
 AUTHOR_USERNAME="github-actions[bot]"
 VERSION_FILE="versions.json"
 REPO_DIR="core"
-COMMIT_URL="https://github.com/gofiber/fiber"
+COMMIT_URL="https://github.com/goVortex/Vortex"
 DOCUSAURUS_COMMAND="npm run docusaurus -- docs:version"
 
 # Set commit author
 git config --global user.email "${AUTHOR_EMAIL}"
 git config --global user.name "${AUTHOR_USERNAME}"
 
-git clone https://${TOKEN}@${REPO_URL} fiber-docs
+git clone https://${TOKEN}@${REPO_URL} Vortex-docs
 
 # Handle push event
 #if [ "$EVENT" == "push" ]; then
 #  latest_commit=$(git rev-parse --short HEAD)
 #  log_output=$(git log --oneline ${BRANCH} HEAD~1..HEAD --name-status -- docs/)
 #  if [[ $log_output != "" ]]; then
-#    cp -a docs/* fiber-docs/docs/${REPO_DIR}
+#    cp -a docs/* Vortex-docs/docs/${REPO_DIR}
 #  fi
 #
 ## Handle release event
@@ -33,7 +33,7 @@ if [ "$EVENT" == "release" ]; then
   # Form new version name
   new_version="${major_version}.x"
 
-  cd fiber-docs/ || true
+  cd Vortex-docs/ || true
   npm ci
 
   # Check if contrib_versions.json exists and modify it if required
@@ -50,7 +50,7 @@ if [ "$EVENT" == "release" ]; then
 fi
 
 # Push changes
-cd fiber-docs/ || true
+cd Vortex-docs/ || true
 git add .
 if [[ $EVENT == "push" ]]; then
   git commit -m "Add docs from ${COMMIT_URL}/commit/${latest_commit}"
@@ -73,3 +73,4 @@ if ((retry == MAX_RETRIES)); then
   echo "Failed to push after $MAX_RETRIES attempts. Exiting with 1."
   exit 1
 fi
+

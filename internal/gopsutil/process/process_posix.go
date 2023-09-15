@@ -16,7 +16,7 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 // POSIX
@@ -192,3 +192,4 @@ func (p *Process) UsernameWithContext(ctx context.Context) (string, error) {
 	}
 	return "", nil
 }
+

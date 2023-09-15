@@ -6,3 +6,4 @@ package ole
 func errstr(errno int) string {
 	return ""
 }
+

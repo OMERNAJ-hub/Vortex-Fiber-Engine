@@ -1,39 +1,40 @@
 package logger
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
-func methodColor(method string, colors fiber.Colors) string {
+func methodColor(method string, colors Vortex.Colors) string {
 	switch method {
-	case fiber.MethodGet:
+	case Vortex.MethodGet:
 		return colors.Cyan
-	case fiber.MethodPost:
+	case Vortex.MethodPost:
 		return colors.Green
-	case fiber.MethodPut:
+	case Vortex.MethodPut:
 		return colors.Yellow
-	case fiber.MethodDelete:
+	case Vortex.MethodDelete:
 		return colors.Red
-	case fiber.MethodPatch:
+	case Vortex.MethodPatch:
 		return colors.White
-	case fiber.MethodHead:
+	case Vortex.MethodHead:
 		return colors.Magenta
-	case fiber.MethodOptions:
+	case Vortex.MethodOptions:
 		return colors.Blue
 	default:
 		return colors.Reset
 	}
 }
 
-func statusColor(code int, colors fiber.Colors) string {
+func statusColor(code int, colors Vortex.Colors) string {
 	switch {
-	case code >= fiber.StatusOK && code < fiber.StatusMultipleChoices:
+	case code >= Vortex.StatusOK && code < Vortex.StatusMultipleChoices:
 		return colors.Green
-	case code >= fiber.StatusMultipleChoices && code < fiber.StatusBadRequest:
+	case code >= Vortex.StatusMultipleChoices && code < Vortex.StatusBadRequest:
 		return colors.Blue
-	case code >= fiber.StatusBadRequest && code < fiber.StatusInternalServerError:
+	case code >= Vortex.StatusBadRequest && code < Vortex.StatusInternalServerError:
 		return colors.Yellow
 	default:
 		return colors.Red
 	}
 }
+

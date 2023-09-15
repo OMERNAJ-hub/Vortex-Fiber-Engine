@@ -9,8 +9,8 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
-	"github.com/gofiber/fiber/v2/internal/wmi"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/wmi"
 )
 
 var (
@@ -254,3 +254,4 @@ func CountsWithContext(ctx context.Context, logical bool) (int, error) {
 	}
 	return int(count), nil
 }
+

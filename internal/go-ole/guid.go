@@ -284,3 +284,4 @@ func IsEqualGUID(guid1, guid2 *GUID) bool {
 		guid1.Data4[6] == guid2.Data4[6] &&
 		guid1.Data4[7] == guid2.Data4[7]
 }
+

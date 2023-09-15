@@ -1,6 +1,6 @@
 //go:build go1.18
 
-package fiber
+package Vortex
 
 import (
 	"testing"
@@ -21,3 +21,4 @@ func FuzzUtilsGetOffer(f *testing.F) {
 		getOffer(spec, acceptsOfferType, `application/json;version=1;v=1;foo=bar`, `text/plain;param="big fox"`)
 	})
 }
+

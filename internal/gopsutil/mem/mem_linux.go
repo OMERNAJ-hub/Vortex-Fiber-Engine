@@ -12,7 +12,7 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 type VirtualMemoryExStat struct {
@@ -281,3 +281,4 @@ func calcuateAvailVmem(ret *VirtualMemoryStat, retEx *VirtualMemoryExStat) uint6
 
 	return availMemory
 }
+

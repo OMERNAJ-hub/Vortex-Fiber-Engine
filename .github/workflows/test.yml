@@ -72,3 +72,4 @@ jobs:
 
       - name: Test (race)
         run: go test ./... -race -count=1 -shuffle=on
+

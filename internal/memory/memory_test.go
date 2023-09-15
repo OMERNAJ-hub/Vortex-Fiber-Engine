@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // go test -run Test_Memory -v -race
@@ -62,7 +62,7 @@ func Benchmark_Memory(b *testing.B) {
 	value := []byte("joe")
 
 	ttl := 2 * time.Second
-	b.Run("fiber_memory", func(b *testing.B) {
+	b.Run("Vortex_memory", func(b *testing.B) {
 		d := New()
 		b.ReportAllocs()
 		b.ResetTimer()
@@ -79,3 +79,4 @@ func Benchmark_Memory(b *testing.B) {
 		}
 	})
 }
+

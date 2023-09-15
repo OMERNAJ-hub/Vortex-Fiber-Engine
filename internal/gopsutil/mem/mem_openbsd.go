@@ -12,7 +12,7 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 func GetPageSize() (uint64, error) {
@@ -104,3 +104,4 @@ func SwapMemoryWithContext(ctx context.Context) (*SwapMemoryStat, error) {
 		UsedPercent: percent,
 	}, nil
 }
+

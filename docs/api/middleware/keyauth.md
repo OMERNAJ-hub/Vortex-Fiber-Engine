@@ -9,7 +9,7 @@ Key auth middleware provides a key based authentication.
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Examples
@@ -20,15 +20,15 @@ package main
 import (
 	"crypto/sha256"
 	"crypto/subtle"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/keyauth"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/middleware/keyauth"
 )
 
 var (
 	apiKey = "correct horse battery staple"
 )
 
-func validateAPIKey(c *fiber.Ctx, key string) (bool, error) {
+func validateAPIKey(c *Vortex.Ctx, key string) (bool, error) {
 	hashedAPIKey := sha256.Sum256([]byte(apiKey))
 	hashedKey := sha256.Sum256([]byte(key))
 
@@ -39,7 +39,7 @@ func validateAPIKey(c *fiber.Ctx, key string) (bool, error) {
 }
 
 func main() {
-	app := fiber.New()
+	app := Vortex.New()
 
 	// note that the keyauth middleware needs to be defined before the routes are defined!
 	app.Use(keyauth.New(keyauth.Config{
@@ -47,7 +47,7 @@ func main() {
 		Validator:  validateAPIKey,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Successfully authenticated!")
 	})
 
@@ -69,7 +69,7 @@ curl --cookie "access_token=Clearly A Wrong Key" http://localhost:3000
 #>  missing or malformed API Key
 ```
 
-For a more detailed example, see also the [`github.com/gofiber/recipes`](https://github.com/gofiber/recipes) repository and specifically the `fiber-envoy-extauthz` repository and the [`keyauth example`](https://github.com/gofiber/recipes/blob/master/fiber-envoy-extauthz/authz/main.go) code.
+For a more detailed example, see also the [`github.com/goVortex/recipes`](https://github.com/goVortex/recipes) repository and specifically the `Vortex-envoy-extauthz` repository and the [`keyauth example`](https://github.com/goVortex/recipes/blob/master/Vortex-envoy-extauthz/authz/main.go) code.
 
 
 ### Authenticate only certain endpoints
@@ -82,8 +82,8 @@ package main
 import (
 	"crypto/sha256"
 	"crypto/subtle"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/keyauth"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/middleware/keyauth"
 	"regexp"
 	"strings"
 )
@@ -96,7 +96,7 @@ var (
 	}
 )
 
-func validateAPIKey(c *fiber.Ctx, key string) (bool, error) {
+func validateAPIKey(c *Vortex.Ctx, key string) (bool, error) {
 	hashedAPIKey := sha256.Sum256([]byte(apiKey))
 	hashedKey := sha256.Sum256([]byte(key))
 
@@ -106,7 +106,7 @@ func validateAPIKey(c *fiber.Ctx, key string) (bool, error) {
 	return false, keyauth.ErrMissingOrMalformedAPIKey
 }
 
-func authFilter(c *fiber.Ctx) bool {
+func authFilter(c *Vortex.Ctx) bool {
 	originalURL := strings.ToLower(c.OriginalURL())
 
 	for _, pattern := range protectedURLs {
@@ -118,7 +118,7 @@ func authFilter(c *fiber.Ctx) bool {
 }
 
 func main() {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(keyauth.New(keyauth.Config{
 		Next:    authFilter,
@@ -126,13 +126,13 @@ func main() {
 		Validator: validateAPIKey,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Welcome")
 	})
-	app.Get("/authenticated", func(c *fiber.Ctx) error {
+	app.Get("/authenticated", func(c *Vortex.Ctx) error {
 		return c.SendString("Successfully authenticated!")
 	})
-	app.Get("/auth2", func(c *fiber.Ctx) error {
+	app.Get("/auth2", func(c *Vortex.Ctx) error {
 		return c.SendString("Successfully authenticated 2!")
 	})
 
@@ -164,8 +164,8 @@ package main
 import (
 	"crypto/sha256"
 	"crypto/subtle"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/keyauth"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/middleware/keyauth"
 )
 
 const (
@@ -173,10 +173,10 @@ const (
 )
 
 func main() {
-	app := fiber.New()
+	app := Vortex.New()
 
 	authMiddleware := keyauth.New(keyauth.Config{
-		Validator:  func(c *fiber.Ctx, key string) (bool, error) {
+		Validator:  func(c *Vortex.Ctx, key string) (bool, error) {
 			hashedAPIKey := sha256.Sum256([]byte(apiKey))
 			hashedKey := sha256.Sum256([]byte(key))
 
@@ -187,11 +187,11 @@ func main() {
 		},
 	})
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("Welcome")
 	})
 
-	app.Get("/allowed",  authMiddleware, func(c *fiber.Ctx) error {
+	app.Get("/allowed",  authMiddleware, func(c *Vortex.Ctx) error {
 		return c.SendString("Successfully authenticated!")
 	})
 
@@ -215,29 +215,30 @@ curl --header "Authorization: Bearer my-super-secret-key"  http://localhost:3000
 
 | Property       | Type                                     | Description                                                                                          | Default                       |
 |:---------------|:-----------------------------------------|:-----------------------------------------------------------------------------------------------------|:------------------------------|
-| Next           | `func(*fiber.Ctx) bool`                  | Next defines a function to skip this middleware when returned true.                                  | `nil`                         |
-| SuccessHandler | `fiber.Handler`                          | SuccessHandler defines a function which is executed for a valid key.                                 | `nil`                         |
-| ErrorHandler   | `fiber.ErrorHandler`                     | ErrorHandler defines a function which is executed for an invalid key.                                | `401 Invalid or expired key`  |
+| Next           | `func(*Vortex.Ctx) bool`                  | Next defines a function to skip this middleware when returned true.                                  | `nil`                         |
+| SuccessHandler | `Vortex.Handler`                          | SuccessHandler defines a function which is executed for a valid key.                                 | `nil`                         |
+| ErrorHandler   | `Vortex.ErrorHandler`                     | ErrorHandler defines a function which is executed for an invalid key.                                | `401 Invalid or expired key`  |
 | KeyLookup      | `string`                                 | KeyLookup is a string in the form of "`<source>:<name>`" that is used to extract key from the request. | "header:Authorization"        |
 | AuthScheme     | `string`                                 | AuthScheme to be used in the Authorization header.                                                   | "Bearer"                      |
-| Validator      | `func(*fiber.Ctx, string) (bool, error)` | Validator is a function to validate the key.                                                         | A function for key validation |
+| Validator      | `func(*Vortex.Ctx, string) (bool, error)` | Validator is a function to validate the key.                                                         | A function for key validation |
 | ContextKey     | `interface{}`                            | Context key to store the bearer token from the token into context.                                   | "token"                       |
 
 ## Default Config
 
 ```go
 var ConfigDefault = Config{
-	SuccessHandler: func(c *fiber.Ctx) error {
+	SuccessHandler: func(c *Vortex.Ctx) error {
 		return c.Next()
 	},
-	ErrorHandler: func(c *fiber.Ctx, err error) error {
+	ErrorHandler: func(c *Vortex.Ctx, err error) error {
 		if err == ErrMissingOrMalformedAPIKey {
-			return c.Status(fiber.StatusUnauthorized).SendString(err.Error())
+			return c.Status(Vortex.StatusUnauthorized).SendString(err.Error())
 		}
-		return c.Status(fiber.StatusUnauthorized).SendString("Invalid or expired API Key")
+		return c.Status(Vortex.StatusUnauthorized).SendString("Invalid or expired API Key")
 	},
-	KeyLookup:  "header:" + fiber.HeaderAuthorization,
+	KeyLookup:  "header:" + Vortex.HeaderAuthorization,
 	AuthScheme: "Bearer",
 	ContextKey: "token",
 }
 ```
+

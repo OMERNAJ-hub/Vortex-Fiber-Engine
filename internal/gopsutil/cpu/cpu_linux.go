@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 var ClocksPerSec = float64(100)
@@ -367,3 +367,4 @@ func CountsWithContext(ctx context.Context, logical bool) (int, error) {
 	}
 	return ret, nil
 }
+

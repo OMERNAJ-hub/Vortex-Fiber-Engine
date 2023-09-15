@@ -4,7 +4,7 @@ id: encryptcookie
 
 # Encrypt Cookie
 
-Encrypt Cookie is a middleware for [Fiber](https://github.com/gofiber/fiber) that secures your cookie values through encryption. 
+Encrypt Cookie is a middleware for [Vortex](https://github.com/goVortex/Vortex) that secures your cookie values through encryption. 
 
 :::note
 This middleware encrypts cookie values and not the cookie names.
@@ -14,7 +14,7 @@ This middleware encrypts cookie values and not the cookie names.
 
 ```go
 // Intitializes the middleware
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 
 // Returns a random 32 character long string
 func GenerateKey() string
@@ -22,16 +22,16 @@ func GenerateKey() string
 
 ## Examples
 
-To use the Encrypt Cookie middleware, first, import the middleware package as part of the Fiber web framework:
+To use the Encrypt Cookie middleware, first, import the middleware package as part of the Vortex web framework:
 
 ```go
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/encryptcookie"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/encryptcookie"
 )
 ```
 
-Once you've imported the middleware package, you can use it inside your Fiber app:
+Once you've imported the middleware package, you can use it inside your Vortex app:
 
 ```go
 // Provide a minimal configuration
@@ -40,13 +40,13 @@ app.Use(encryptcookie.New(encryptcookie.Config{
 }))
 
 // Retrieve the encrypted cookie value
-app.Get("/", func(c *fiber.Ctx) error {
+app.Get("/", func(c *Vortex.Ctx) error {
     return c.SendString("value=" + c.Cookies("test"))
 })
 
 // Create an encrypted cookie
-app.Post("/", func(c *fiber.Ctx) error {
-    c.Cookie(&fiber.Cookie{
+app.Post("/", func(c *Vortex.Ctx) error {
+    c.Cookie(&Vortex.Cookie{
         Name:  "test",
         Value: "SomeThing",
     })
@@ -64,7 +64,7 @@ Make sure not to set `Key` to `encryptcookie.GenerateKey()` because that will cr
 
 | Property  | Type                                                | Description                                                                                           | Default                      |
 |:----------|:----------------------------------------------------|:------------------------------------------------------------------------------------------------------|:-----------------------------|
-| Next      | `func(*fiber.Ctx) bool`                             | A function to skip this middleware when returned true.                                                | `nil`                        |
+| Next      | `func(*Vortex.Ctx) bool`                             | A function to skip this middleware when returned true.                                                | `nil`                        |
 | Except    | `[]string`                                          | Array of cookie keys that should not be encrypted.                                                    | `[]`                         |
 | Key       | `string`                                            | A base64-encoded unique key to encode & decode cookies. Required. Key length should be 32 characters. | (No default, required field) |
 | Encryptor | `func(decryptedString, key string) (string, error)` | A custom function to encrypt cookies.                                                                 | `EncryptCookie`              |
@@ -99,3 +99,4 @@ app.Use(csrf.New(csrf.Config{
 	CookieHTTPOnly: false,
 }))
 ```
+

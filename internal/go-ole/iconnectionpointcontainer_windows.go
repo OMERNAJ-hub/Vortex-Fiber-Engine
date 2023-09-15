@@ -23,3 +23,4 @@ func (v *IConnectionPointContainer) FindConnectionPoint(iid *GUID, point **IConn
 	}
 	return
 }
+

@@ -13,3 +13,4 @@ func (v *IInspectable) GetRuntimeClassName() (string, error) {
 func (v *IInspectable) GetTrustLevel() (uint32, error) {
 	return uint32(0), NewError(E_NOTIMPL)
 }
+

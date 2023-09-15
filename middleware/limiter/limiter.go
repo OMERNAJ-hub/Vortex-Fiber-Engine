@@ -1,7 +1,7 @@
 package limiter
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
 const (
@@ -12,14 +12,15 @@ const (
 )
 
 type LimiterHandler interface {
-	New(config Config) fiber.Handler
+	New(config Config) Vortex.Handler
 }
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := configDefault(config...)
 
 	// Return the specified middleware handler.
 	return cfg.LimiterMiddleware.New(cfg)
 }
+

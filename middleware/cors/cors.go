@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/log"
 )
 
 // Config defines the config for middleware.
@@ -13,7 +13,7 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	//
 	// Optional. Default: nil
-	Next func(c *fiber.Ctx) bool
+	Next func(c *Vortex.Ctx) bool
 
 	// AllowOriginsFunc defines a function that will set the 'Access-Control-Allow-Origin'
 	// response header to the 'origin' request header when returned true. This allows for
@@ -71,12 +71,12 @@ var ConfigDefault = Config{
 	AllowOriginsFunc: nil,
 	AllowOrigins:     "*",
 	AllowMethods: strings.Join([]string{
-		fiber.MethodGet,
-		fiber.MethodPost,
-		fiber.MethodHead,
-		fiber.MethodPut,
-		fiber.MethodDelete,
-		fiber.MethodPatch,
+		Vortex.MethodGet,
+		Vortex.MethodPost,
+		Vortex.MethodHead,
+		Vortex.MethodPut,
+		Vortex.MethodDelete,
+		Vortex.MethodPatch,
 	}, ","),
 	AllowHeaders:     "",
 	AllowCredentials: false,
@@ -85,7 +85,7 @@ var ConfigDefault = Config{
 }
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := ConfigDefault
 
@@ -153,33 +153,33 @@ func New(config ...Config) fiber.Handler {
 	maxAge := strconv.Itoa(cfg.MaxAge)
 
 	// Return new handler
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
 		}
 
 		// Get originHeader header
-		originHeader := strings.ToLower(c.Get(fiber.HeaderOrigin))
+		originHeader := strings.ToLower(c.Get(Vortex.HeaderOrigin))
 
 		// If the request does not have Origin header, the request is outside the scope of CORS
 		if originHeader == "" {
 			// See https://fetch.spec.whatwg.org/#cors-protocol-and-http-caches
 			// Unless all origins are allowed, we include the Vary header to cache the response correctly
 			if !allowAllOrigins {
-				c.Vary(fiber.HeaderOrigin)
+				c.Vary(Vortex.HeaderOrigin)
 			}
 
 			return c.Next()
 		}
 
 		// If it's a preflight request and doesn't have Access-Control-Request-Method header, it's outside the scope of CORS
-		if c.Method() == fiber.MethodOptions && c.Get(fiber.HeaderAccessControlRequestMethod) == "" {
+		if c.Method() == Vortex.MethodOptions && c.Get(Vortex.HeaderAccessControlRequestMethod) == "" {
 			// Response to OPTIONS request should not be cached but,
 			// some caching can be configured to cache such responses.
 			// To Avoid poisoning the cache, we include the Vary header
 			// for non-CORS OPTIONS requests:
-			c.Vary(fiber.HeaderOrigin)
+			c.Vary(Vortex.HeaderOrigin)
 			return c.Next()
 		}
 
@@ -218,10 +218,10 @@ func New(config ...Config) fiber.Handler {
 
 		// Simple request
 		// Ommit allowMethods and allowHeaders, only used for pre-flight requests
-		if c.Method() != fiber.MethodOptions {
+		if c.Method() != Vortex.MethodOptions {
 			if !allowAllOrigins {
 				// See https://fetch.spec.whatwg.org/#cors-protocol-and-http-caches
-				c.Vary(fiber.HeaderOrigin)
+				c.Vary(Vortex.HeaderOrigin)
 			}
 			setCORSHeaders(c, allowOrigin, "", "", exposeHeaders, maxAge, cfg)
 			return c.Next()
@@ -233,57 +233,58 @@ func New(config ...Config) fiber.Handler {
 		// some caching can be configured to cache such responses.
 		// To Avoid poisoning the cache, we include the Vary header
 		// of preflight responses:
-		c.Vary(fiber.HeaderAccessControlRequestMethod)
-		c.Vary(fiber.HeaderAccessControlRequestHeaders)
-		c.Vary(fiber.HeaderOrigin)
+		c.Vary(Vortex.HeaderAccessControlRequestMethod)
+		c.Vary(Vortex.HeaderAccessControlRequestHeaders)
+		c.Vary(Vortex.HeaderOrigin)
 
 		setCORSHeaders(c, allowOrigin, allowMethods, allowHeaders, exposeHeaders, maxAge, cfg)
 
 		// Send 204 No Content
-		return c.SendStatus(fiber.StatusNoContent)
+		return c.SendStatus(Vortex.StatusNoContent)
 	}
 }
 
 // Function to set CORS headers
-func setCORSHeaders(c *fiber.Ctx, allowOrigin, allowMethods, allowHeaders, exposeHeaders, maxAge string, cfg Config) {
+func setCORSHeaders(c *Vortex.Ctx, allowOrigin, allowMethods, allowHeaders, exposeHeaders, maxAge string, cfg Config) {
 	if cfg.AllowCredentials {
 		// When AllowCredentials is true, set the Access-Control-Allow-Origin to the specific origin instead of '*'
 		if allowOrigin == "*" {
-			c.Set(fiber.HeaderAccessControlAllowOrigin, allowOrigin)
+			c.Set(Vortex.HeaderAccessControlAllowOrigin, allowOrigin)
 			log.Warn("[CORS] 'AllowCredentials' is true, but 'AllowOrigins' cannot be set to '*'.")
 		} else if allowOrigin != "" {
-			c.Set(fiber.HeaderAccessControlAllowOrigin, allowOrigin)
-			c.Set(fiber.HeaderAccessControlAllowCredentials, "true")
+			c.Set(Vortex.HeaderAccessControlAllowOrigin, allowOrigin)
+			c.Set(Vortex.HeaderAccessControlAllowCredentials, "true")
 		}
 	} else if allowOrigin != "" {
 		// For non-credential requests, it's safe to set to '*' or specific origins
-		c.Set(fiber.HeaderAccessControlAllowOrigin, allowOrigin)
+		c.Set(Vortex.HeaderAccessControlAllowOrigin, allowOrigin)
 	}
 
 	// Set Allow-Methods if not empty
 	if allowMethods != "" {
-		c.Set(fiber.HeaderAccessControlAllowMethods, allowMethods)
+		c.Set(Vortex.HeaderAccessControlAllowMethods, allowMethods)
 	}
 
 	// Set Allow-Headers if not empty
 	if allowHeaders != "" {
-		c.Set(fiber.HeaderAccessControlAllowHeaders, allowHeaders)
+		c.Set(Vortex.HeaderAccessControlAllowHeaders, allowHeaders)
 	} else {
-		h := c.Get(fiber.HeaderAccessControlRequestHeaders)
+		h := c.Get(Vortex.HeaderAccessControlRequestHeaders)
 		if h != "" {
-			c.Set(fiber.HeaderAccessControlAllowHeaders, h)
+			c.Set(Vortex.HeaderAccessControlAllowHeaders, h)
 		}
 	}
 
 	// Set MaxAge if set
 	if cfg.MaxAge > 0 {
-		c.Set(fiber.HeaderAccessControlMaxAge, maxAge)
+		c.Set(Vortex.HeaderAccessControlMaxAge, maxAge)
 	} else if cfg.MaxAge < 0 {
-		c.Set(fiber.HeaderAccessControlMaxAge, "0")
+		c.Set(Vortex.HeaderAccessControlMaxAge, "0")
 	}
 
 	// Set Expose-Headers if not empty
 	if exposeHeaders != "" {
-		c.Set(fiber.HeaderAccessControlExposeHeaders, exposeHeaders)
+		c.Set(Vortex.HeaderAccessControlExposeHeaders, exposeHeaders)
 	}
 }
+

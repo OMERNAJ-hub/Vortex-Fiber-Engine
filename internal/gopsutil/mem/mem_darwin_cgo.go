@@ -56,3 +56,4 @@ func VirtualMemoryWithContext(ctx context.Context) (*VirtualMemoryStat, error) {
 		Wired:       pageSize * uint64(vmstat.wire_count),
 	}, nil
 }
+

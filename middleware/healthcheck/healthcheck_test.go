@@ -5,32 +5,32 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 	"github.com/valyala/fasthttp"
 )
 
-func shouldGiveStatus(t *testing.T, app *fiber.App, path string, expectedStatus int) {
+func shouldGiveStatus(t *testing.T, app *Vortex.App, path string, expectedStatus int) {
 	t.Helper()
-	req, err := app.Test(httptest.NewRequest(fiber.MethodGet, path, nil))
+	req, err := app.Test(httptest.NewRequest(Vortex.MethodGet, path, nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, expectedStatus, req.StatusCode, "path: "+path+" should match "+fmt.Sprint(expectedStatus))
 }
 
-func shouldGiveOK(t *testing.T, app *fiber.App, path string) {
+func shouldGiveOK(t *testing.T, app *Vortex.App, path string) {
 	t.Helper()
-	shouldGiveStatus(t, app, path, fiber.StatusOK)
+	shouldGiveStatus(t, app, path, Vortex.StatusOK)
 }
 
-func shouldGiveNotFound(t *testing.T, app *fiber.App, path string) {
+func shouldGiveNotFound(t *testing.T, app *Vortex.App, path string) {
 	t.Helper()
-	shouldGiveStatus(t, app, path, fiber.StatusNotFound)
+	shouldGiveStatus(t, app, path, Vortex.StatusNotFound)
 }
 
 func Test_HealthCheck_Strict_Routing_Default(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New(fiber.Config{
+	app := Vortex.New(Vortex.Config{
 		StrictRouting: true,
 	})
 
@@ -47,7 +47,7 @@ func Test_HealthCheck_Strict_Routing_Default(t *testing.T) {
 func Test_HealthCheck_Group_Default(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Group("/v1", New())
 	v2Group := app.Group("/v2/")
 	customer := v2Group.Group("/customer/")
@@ -74,7 +74,7 @@ func Test_HealthCheck_Group_Default(t *testing.T) {
 	shouldGiveNotFound(t, app, "/notDefined/livez/")
 
 	// strict routing
-	app = fiber.New(fiber.Config{
+	app = Vortex.New(Vortex.Config{
 		StrictRouting: true,
 	})
 	app.Group("/v1", New())
@@ -106,7 +106,7 @@ func Test_HealthCheck_Group_Default(t *testing.T) {
 func Test_HealthCheck_Default(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New())
 
 	shouldGiveOK(t, app, "/readyz")
@@ -120,15 +120,15 @@ func Test_HealthCheck_Default(t *testing.T) {
 func Test_HealthCheck_Custom(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	c1 := make(chan struct{}, 1)
 	app.Use(New(Config{
-		LivenessProbe: func(c *fiber.Ctx) bool {
+		LivenessProbe: func(c *Vortex.Ctx) bool {
 			return true
 		},
 		LivenessEndpoint: "/live",
-		ReadinessProbe: func(c *fiber.Ctx) bool {
+		ReadinessProbe: func(c *Vortex.Ctx) bool {
 			select {
 			case <-c1:
 				return true
@@ -142,17 +142,17 @@ func Test_HealthCheck_Custom(t *testing.T) {
 	// Live should return 200 with GET request
 	shouldGiveOK(t, app, "/live")
 	// Live should return 404 with POST request
-	req, err := app.Test(httptest.NewRequest(fiber.MethodPost, "/live", nil))
+	req, err := app.Test(httptest.NewRequest(Vortex.MethodPost, "/live", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, req.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, req.StatusCode)
 
 	// Ready should return 404 with POST request
-	req, err = app.Test(httptest.NewRequest(fiber.MethodPost, "/ready", nil))
+	req, err = app.Test(httptest.NewRequest(Vortex.MethodPost, "/ready", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, req.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, req.StatusCode)
 
 	// Ready should return 503 with GET request before the channel is closed
-	shouldGiveStatus(t, app, "/ready", fiber.StatusServiceUnavailable)
+	shouldGiveStatus(t, app, "/ready", Vortex.StatusServiceUnavailable)
 
 	// Ready should return 200 with GET request after the channel is closed
 	c1 <- struct{}{}
@@ -162,16 +162,16 @@ func Test_HealthCheck_Custom(t *testing.T) {
 func Test_HealthCheck_Custom_Nested(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	c1 := make(chan struct{}, 1)
 
 	app.Use(New(Config{
-		LivenessProbe: func(c *fiber.Ctx) bool {
+		LivenessProbe: func(c *Vortex.Ctx) bool {
 			return true
 		},
 		LivenessEndpoint: "/probe/live",
-		ReadinessProbe: func(c *fiber.Ctx) bool {
+		ReadinessProbe: func(c *Vortex.Ctx) bool {
 			select {
 			case <-c1:
 				return true
@@ -183,9 +183,9 @@ func Test_HealthCheck_Custom_Nested(t *testing.T) {
 	}))
 
 	shouldGiveOK(t, app, "/probe/live")
-	shouldGiveStatus(t, app, "/probe/ready", fiber.StatusServiceUnavailable)
+	shouldGiveStatus(t, app, "/probe/ready", Vortex.StatusServiceUnavailable)
 	shouldGiveOK(t, app, "/probe/live/")
-	shouldGiveStatus(t, app, "/probe/ready/", fiber.StatusServiceUnavailable)
+	shouldGiveStatus(t, app, "/probe/ready/", Vortex.StatusServiceUnavailable)
 	shouldGiveNotFound(t, app, "/probe/livez")
 	shouldGiveNotFound(t, app, "/probe/readyz")
 	shouldGiveNotFound(t, app, "/probe/livez/")
@@ -204,10 +204,10 @@ func Test_HealthCheck_Custom_Nested(t *testing.T) {
 func Test_HealthCheck_Next(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
-		Next: func(c *fiber.Ctx) bool {
+		Next: func(c *Vortex.Ctx) bool {
 			return true
 		},
 	}))
@@ -217,13 +217,13 @@ func Test_HealthCheck_Next(t *testing.T) {
 }
 
 func Benchmark_HealthCheck(b *testing.B) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New())
 
 	h := app.Handler()
 	fctx := &fasthttp.RequestCtx{}
-	fctx.Request.Header.SetMethod(fiber.MethodGet)
+	fctx.Request.Header.SetMethod(Vortex.MethodGet)
 	fctx.Request.SetRequestURI("/livez")
 
 	b.ReportAllocs()
@@ -233,5 +233,6 @@ func Benchmark_HealthCheck(b *testing.B) {
 		h(fctx)
 	}
 
-	utils.AssertEqual(b, fiber.StatusOK, fctx.Response.Header.StatusCode())
+	utils.AssertEqual(b, Vortex.StatusOK, fctx.Response.Header.StatusCode())
 }
+

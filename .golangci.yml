@@ -40,7 +40,7 @@ linters-settings:
       - ifElseChain
 
   gofumpt:
-    module-path: github.com/gofiber/fiber
+    module-path: github.com/goVortex/Vortex
     extra-rules: true
 
   gosec:
@@ -136,7 +136,7 @@ linters-settings:
 
   wrapcheck:
     ignorePackageGlobs:
-      - github.com/gofiber/fiber/*
+      - github.com/goVortex/Vortex/*
       - github.com/valyala/fasthttp
 
 issues:
@@ -191,9 +191,9 @@ linters:
     - staticcheck
     - stylecheck
     - tagliatelle
-    # - testpackage # TODO: Enable once https://github.com/gofiber/fiber/issues/2252 is implemented
+    # - testpackage # TODO: Enable once https://github.com/goVortex/Vortex/issues/2252 is implemented
     - thelper
-    # - tparallel # TODO: Enable once https://github.com/gofiber/fiber/issues/2254 is implemented
+    # - tparallel # TODO: Enable once https://github.com/goVortex/Vortex/issues/2254 is implemented
     - typecheck
     - unconvert
     - unparam
@@ -202,3 +202,4 @@ linters:
     - wastedassign
     - whitespace
     - wrapcheck
+

@@ -9,14 +9,14 @@ Rewrite middleware rewrites the URL path based on provided rules. It can be help
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Config
 
 | Property | Type                    | Description                                                                                          | Default    |
 |:---------|:------------------------|:-----------------------------------------------------------------------------------------------------|:-----------|
-| Next     | `func(*fiber.Ctx) bool` | Next defines a function to skip middleware.                                                          | `nil`      |
+| Next     | `func(*Vortex.Ctx) bool` | Next defines a function to skip middleware.                                                          | `nil`      |
 | Rules    | `map[string]string`     | Rules defines the URL path rewrite rules. The values captured in asterisk can be retrieved by index. | (Required) |
 
 ### Examples
@@ -24,12 +24,12 @@ func New(config ...Config) fiber.Handler
 package main
 
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/rewrite"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/rewrite"
 )
 
 func main() {
-  app := fiber.New()
+  app := Vortex.New()
   
   app.Use(rewrite.New(rewrite.Config{
     Rules: map[string]string{
@@ -38,10 +38,10 @@ func main() {
     },
   }))
   
-  app.Get("/new", func(c *fiber.Ctx) error {
+  app.Get("/new", func(c *Vortex.Ctx) error {
     return c.SendString("Hello, World!")
   })
-  app.Get("/new/*", func(c *fiber.Ctx) error {
+  app.Get("/new/*", func(c *Vortex.Ctx) error {
     return c.SendString("Wildcard: " + c.Params("*"))
   })
   
@@ -56,3 +56,4 @@ func main() {
 curl http://localhost:3000/old
 curl http://localhost:3000/old/hello
 ```
+

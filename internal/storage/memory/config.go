@@ -31,3 +31,4 @@ func configDefault(config ...Config) Config {
 	}
 	return cfg
 }
+

@@ -9,7 +9,7 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 func VirtualMemory() (*VirtualMemoryStat, error) {
@@ -165,3 +165,4 @@ func SwapMemoryWithContext(ctx context.Context) (*SwapMemoryStat, error) {
 
 	return s, nil
 }
+

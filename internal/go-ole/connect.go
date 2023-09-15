@@ -190,3 +190,4 @@ func Connect(names ...string) (connection *Connection) {
 	connection.Load(names...)
 	return
 }
+

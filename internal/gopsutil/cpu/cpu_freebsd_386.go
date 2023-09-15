@@ -7,3 +7,4 @@ type cpuTimes struct {
 	Intr uint32
 	Idle uint32
 }
+

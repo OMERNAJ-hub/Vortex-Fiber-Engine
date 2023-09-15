@@ -1,4 +1,4 @@
-package fiber
+package Vortex
 
 import (
 	"crypto/tls"
@@ -14,11 +14,11 @@ import (
 
 	"github.com/valyala/fasthttp/reuseport"
 
-	"github.com/gofiber/fiber/v2/log"
+	"github.com/goVortex/Vortex/v2/log"
 )
 
 const (
-	envPreforkChildKey = "FIBER_PREFORK_CHILD"
+	envPreforkChildKey = "Vortex_PREFORK_CHILD"
 	envPreforkChildVal = "1"
 )
 
@@ -99,7 +99,7 @@ func (app *App) prefork(network, addr string, tlsConfig *tls.Config) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 
-		// add fiber prefork child flag into child proc env
+		// add Vortex prefork child flag into child proc env
 		cmd.Env = append(os.Environ(),
 			fmt.Sprintf("%s=%s", envPreforkChildKey, envPreforkChildVal),
 		)
@@ -177,3 +177,4 @@ func dummyCmd() *exec.Cmd {
 	}
 	return exec.Command(command, "version")
 }
+

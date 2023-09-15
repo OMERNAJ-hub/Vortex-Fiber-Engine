@@ -19,7 +19,7 @@ Please delete options that are not relevant.
 - [ ] For new functionalities I follow the inspiration of the express js framework and built them similar in usage
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation - /docs/ directory for https://docs.gofiber.io/
+- [ ] I have made corresponding changes to the documentation - /docs/ directory for https://docs.goVortex.io/
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
 - [ ] If new dependencies exist, I have checked that they are really necessary and agreed with the maintainers/community (we want to have as few dependencies as possible)
@@ -28,4 +28,5 @@ Please delete options that are not relevant.
 
 ## Commit formatting:
 
-Use emojis on commit messages so it provides an easy way of identifying the purpose or intention of a commit. Check out the emoji cheatsheet here: [CONTRIBUTING.md](https://github.com/gofiber/fiber/blob/master/.github/CONTRIBUTING.md#pull-requests-or-commits)
+Use emojis on commit messages so it provides an easy way of identifying the purpose or intention of a commit. Check out the emoji cheatsheet here: [CONTRIBUTING.md](https://github.com/goVortex/Vortex/blob/master/.github/CONTRIBUTING.md#pull-requests-or-commits)
+

@@ -7,14 +7,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 type SlidingWindow struct{}
 
 // New creates a new sliding window middleware handler
-func (SlidingWindow) New(cfg Config) fiber.Handler {
+func (SlidingWindow) New(cfg Config) Vortex.Handler {
 	var (
 		// Limiter variables
 		mux        = &sync.RWMutex{}
@@ -33,7 +33,7 @@ func (SlidingWindow) New(cfg Config) fiber.Handler {
 	utils.StartTimeStampUpdater()
 
 	// Return new handler
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -108,7 +108,7 @@ func (SlidingWindow) New(cfg Config) fiber.Handler {
 		if remaining < 0 {
 			// Return response with Retry-After header
 			// https://tools.ietf.org/html/rfc6584
-			c.Set(fiber.HeaderRetryAfter, strconv.FormatUint(resetInSec, 10))
+			c.Set(Vortex.HeaderRetryAfter, strconv.FormatUint(resetInSec, 10))
 
 			// Call LimitReached handler
 			return cfg.LimitReached(c)
@@ -119,8 +119,8 @@ func (SlidingWindow) New(cfg Config) fiber.Handler {
 		err := c.Next()
 
 		// Check for SkipFailedRequests and SkipSuccessfulRequests
-		if (cfg.SkipSuccessfulRequests && c.Response().StatusCode() < fiber.StatusBadRequest) ||
-			(cfg.SkipFailedRequests && c.Response().StatusCode() >= fiber.StatusBadRequest) {
+		if (cfg.SkipSuccessfulRequests && c.Response().StatusCode() < Vortex.StatusBadRequest) ||
+			(cfg.SkipFailedRequests && c.Response().StatusCode() >= Vortex.StatusBadRequest) {
 			// Lock entry
 			mux.Lock()
 			e = manager.get(key)
@@ -168,3 +168,4 @@ func (SlidingWindow) New(cfg Config) fiber.Handler {
 		return err
 	}
 }
+

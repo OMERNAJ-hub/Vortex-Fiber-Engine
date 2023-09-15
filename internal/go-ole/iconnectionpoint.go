@@ -18,3 +18,4 @@ type IConnectionPointVtbl struct {
 func (v *IConnectionPoint) VTable() *IConnectionPointVtbl {
 	return (*IConnectionPointVtbl)(unsafe.Pointer(v.RawVTable))
 }
+

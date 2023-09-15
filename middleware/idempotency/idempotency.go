@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/log"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // Inspired by https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-02
@@ -19,15 +19,15 @@ const (
 	localsKeyWasPutToCache localsKeys = "idempotency_wasputtocache"
 )
 
-func IsFromCache(c *fiber.Ctx) bool {
+func IsFromCache(c *Vortex.Ctx) bool {
 	return c.Locals(localsKeyIsFromCache) != nil
 }
 
-func WasPutToCache(c *fiber.Ctx) bool {
+func WasPutToCache(c *Vortex.Ctx) bool {
 	return c.Locals(localsKeyWasPutToCache) != nil
 }
 
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := configDefault(config...)
 
@@ -36,7 +36,7 @@ func New(config ...Config) fiber.Handler {
 		keepResponseHeadersMap[strings.ToLower(h)] = struct{}{}
 	}
 
-	maybeWriteCachedResponse := func(c *fiber.Ctx, key string) (bool, error) {
+	maybeWriteCachedResponse := func(c *Vortex.Ctx, key string) (bool, error) {
 		if val, err := cfg.Storage.Get(key); err != nil {
 			return false, fmt.Errorf("failed to read response: %w", err)
 		} else if val != nil {
@@ -67,7 +67,7 @@ func New(config ...Config) fiber.Handler {
 		return false, nil
 	}
 
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -151,3 +151,4 @@ func New(config ...Config) fiber.Handler {
 		return nil
 	}
 }
+

@@ -4,26 +4,26 @@ id: envvar
 
 # EnvVar
 
-EnvVar middleware for [Fiber](https://github.com/gofiber/fiber) that can be used to expose environment variables with various options.
+EnvVar middleware for [Vortex](https://github.com/goVortex/Vortex) that can be used to expose environment variables with various options.
 
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Examples
 
-Import the middleware package that is part of the Fiber web framework
+Import the middleware package that is part of the Vortex web framework
 
 ```go
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/envvar"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/envvar"
 )
 ```
 
-After you initiate your Fiber app, you can use the following possibilities:
+After you initiate your Vortex app, you can use the following possibilities:
 
 ```go
 // Initialize default config
@@ -67,3 +67,4 @@ Http response contract:
 ```go
 Config{}
 ```
+

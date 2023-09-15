@@ -11,3 +11,4 @@ func compareTokens(a, b []byte) bool {
 func compareStrings(a, b string) bool {
 	return subtle.ConstantTimeCompare([]byte(a), []byte(b)) == 1
 }
+

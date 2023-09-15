@@ -4,7 +4,7 @@ id: csrf
 
 # CSRF
 
-The CSRF middleware for [Fiber](https://github.com/gofiber/fiber) provides protection against [Cross-Site Request Forgery](https://en.wikipedia.org/wiki/Cross-site_request_forgery) (CSRF) attacks. Requests made using methods other than those defined as 'safe' by [RFC9110#section-9.2.1](https://datatracker.ietf.org/doc/html/rfc9110.html#section-9.2.1) (GET, HEAD, OPTIONS, and TRACE) are validated using tokens. If a potential attack is detected, the middleware will return a default 403 Forbidden error.
+The CSRF middleware for [Vortex](https://github.com/goVortex/Vortex) provides protection against [Cross-Site Request Forgery](https://en.wikipedia.org/wiki/Cross-site_request_forgery) (CSRF) attacks. Requests made using methods other than those defined as 'safe' by [RFC9110#section-9.2.1](https://datatracker.ietf.org/doc/html/rfc9110.html#section-9.2.1) (GET, HEAD, OPTIONS, and TRACE) are validated using tokens. If a potential attack is detected, the middleware will return a default 403 Forbidden error.
 
 This middleware offers two [Token Validation Patterns](#token-validation-patterns): the [Double Submit Cookie Pattern (default)](#double-submit-cookie-pattern-default), and the [Synchronizer Token Pattern (with Session)](#synchronizer-token-pattern-with-session).
 
@@ -26,7 +26,7 @@ Never use 'safe' methods to mutate data, for example, never use a GET request to
 
 #### Double Submit Cookie Pattern (Default)
 
-By default, the middleware generates and stores tokens using the `fiber.Storage` interface. These tokens are not linked to any particular user session, and they are validated using the Double Submit Cookie pattern. The token is stored in a cookie, and then sent as a header on requests. The middleware compares the cookie value with the header value to validate the token. This is a secure pattern that does not require a user session.
+By default, the middleware generates and stores tokens using the `Vortex.Storage` interface. These tokens are not linked to any particular user session, and they are validated using the Double Submit Cookie pattern. The token is stored in a cookie, and then sent as a header on requests. The middleware compares the cookie value with the header value to validate the token. This is a secure pattern that does not require a user session.
 
 When the authorization status changes, the previously issued token MUST be deleted, and a new one generated. See [Token Lifecycle](#token-lifecycle) [Deleting Tokens](#deleting-tokens) for more information.
 
@@ -35,7 +35,7 @@ When using this pattern, it's important to set the `CookieSameSite` option to `L
 :::
 
 :::note
-When using this pattern, this middleware uses our [Storage](https://github.com/gofiber/storage) package to support various databases through a single interface. The default configuration for Storage saves data to memory. See [Custom Storage/Database](#custom-storagedatabase) for customizing the storage.
+When using this pattern, this middleware uses our [Storage](https://github.com/goVortex/storage) package to support various databases through a single interface. The default configuration for Storage saves data to memory. See [Custom Storage/Database](#custom-storagedatabase) for customizing the storage.
 :::
 
 #### Synchronizer Token Pattern (with Session)
@@ -94,7 +94,7 @@ if handler, ok := app.AcquireCtx(ctx).Locals(csrf.ConfigDefault.HandlerContextKe
 ```
 
 :::tip
-If you are using this middleware with the fiber session middleware, then you can simply call `session.Destroy()`, `session.Regenerate()`, or `session.Reset()` to delete session and the token stored therein.
+If you are using this middleware with the Vortex session middleware, then you can simply call `session.Destroy()`, `session.Regenerate()`, or `session.Reset()` to delete session and the token stored therein.
 :::
 
 ### BREACH
@@ -104,21 +104,21 @@ It's important to note that the token is sent as a header on every request. If y
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Examples
 
-Import the middleware package that is part of the Fiber web framework:
+Import the middleware package that is part of the Vortex web framework:
 
 ```go
 import (
-    "github.com/gofiber/fiber/v2"
-    "github.com/gofiber/fiber/v2/middleware/csrf"
+    "github.com/goVortex/Vortex/v2"
+    "github.com/goVortex/Vortex/v2/middleware/csrf"
 )
 ```
 
-After initializing your Fiber app, you can use the following code to initialize the middleware:
+After initializing your Vortex app, you can use the following code to initialize the middleware:
 
 ```go
 // Initialize default config
@@ -138,7 +138,7 @@ app.Use(csrf.New(csrf.Config{
 
 | Property          | Type                               | Description                                                                                                                                                                                                                                                                                  | Default                      |
 |:------------------|:-----------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------|
-| Next              | `func(*fiber.Ctx) bool`            | Next defines a function to skip this middleware when returned true.                                                                                                                                                                                                                          | `nil`                        |
+| Next              | `func(*Vortex.Ctx) bool`            | Next defines a function to skip this middleware when returned true.                                                                                                                                                                                                                          | `nil`                        |
 | KeyLookup         | `string`                           | KeyLookup is a string in the form of "`<source>:<key>`" that is used to create an Extractor that extracts the token from the request. Possible values: "`header:<name>`", "`query:<name>`", "`param:<name>`", "`form:<name>`", "`cookie:<name>`". Ignored if an Extractor is explicitly set. | "header:X-Csrf-Token"        |
 | CookieName        | `string`                           | Name of the csrf cookie. This cookie will store the csrf key.                                                                                                                                                                                                                                | "csrf_"                      |
 | CookieDomain      | `string`                           | Domain of the CSRF cookie.                                                                                                                                                                                                                                                                   | ""                           |
@@ -149,17 +149,17 @@ app.Use(csrf.New(csrf.Config{
 | CookieSessionOnly | `bool`                             | Decides whether the cookie should last for only the browser session. Ignores Expiration if set to true.                                                                                                                                                                                      | false                        |
 | Expiration        | `time.Duration`                    | Expiration is the duration before the CSRF token will expire.                                                                                                                                                                                                                                | 1 * time.Hour                |
 | SingleUseToken    | `bool`                             | SingleUseToken indicates if the CSRF token be destroyed and a new one generated on each use. (See TokenLifecycle)                                                                                                                                                                            | false                        |
-| Storage           | `fiber.Storage`                    | Store is used to store the state of the middleware.                                                                                                                                                                                                                                          | `nil`                        |
+| Storage           | `Vortex.Storage`                    | Store is used to store the state of the middleware.                                                                                                                                                                                                                                          | `nil`                        |
 | Session           | `*session.Store`                   | Session is used to store the state of the middleware. Overrides Storage if set.                                                                                                                                                                                                              | `nil`                        |
-| SessionKey        | `string`                           | SessionKey is the key used to store the token within the session.                                                                                                                                                                                                                                | "fiber.csrf.token"           |
+| SessionKey        | `string`                           | SessionKey is the key used to store the token within the session.                                                                                                                                                                                                                                | "Vortex.csrf.token"           |
 | ContextKey        | `inteface{}`                       | Context key to store the generated CSRF token into the context. If left empty, the token will not be stored within the context.                                                                                                                                                                  | ""                           |
 | KeyGenerator      | `func() string`                    | KeyGenerator creates a new CSRF token.                                                                                                                                                                                                                                                       | utils.UUID                   |
 | CookieExpires     | `time.Duration` (Deprecated)       | Deprecated: Please use Expiration.                                                                                                                                                                                                                                                           | 0                            |
-| Cookie            | `*fiber.Cookie` (Deprecated)       | Deprecated: Please use Cookie* related fields.                                                                                                                                                                                                                                               | `nil`                        |
+| Cookie            | `*Vortex.Cookie` (Deprecated)       | Deprecated: Please use Cookie* related fields.                                                                                                                                                                                                                                               | `nil`                        |
 | TokenLookup       | `string` (Deprecated)              | Deprecated: Please use KeyLookup.                                                                                                                                                                                                                                                            | ""                           |
-| ErrorHandler      | `fiber.ErrorHandler`               | ErrorHandler is executed when an error is returned from fiber.Handler.                                                                                                                                                                                                                       | DefaultErrorHandler          |
-| Extractor         | `func(*fiber.Ctx) (string, error)` | Extractor returns the CSRF token. If set, this will be used in place of an Extractor based on KeyLookup.                                                                                                                                                                                     | Extractor based on KeyLookup |
-| HandlerContextKey | `interface{}`                      | HandlerContextKey is used to store the CSRF Handler into context.                                                                                                                                                                                                                            | "fiber.csrf.handler"         |
+| ErrorHandler      | `Vortex.ErrorHandler`               | ErrorHandler is executed when an error is returned from Vortex.Handler.                                                                                                                                                                                                                       | DefaultErrorHandler          |
+| Extractor         | `func(*Vortex.Ctx) (string, error)` | Extractor returns the CSRF token. If set, this will be used in place of an Extractor based on KeyLookup.                                                                                                                                                                                     | Extractor based on KeyLookup |
+| HandlerContextKey | `interface{}`                      | HandlerContextKey is used to store the CSRF Handler into context.                                                                                                                                                                                                                            | "Vortex.csrf.handler"         |
 
 ### Default Config
 
@@ -172,14 +172,14 @@ var ConfigDefault = Config{
 	KeyGenerator:      utils.UUIDv4,
 	ErrorHandler:      defaultErrorHandler,
 	Extractor:         CsrfFromHeader(HeaderName),
-	SessionKey:        "fiber.csrf.token",
-	HandlerContextKey: "fiber.csrf.handler",
+	SessionKey:        "Vortex.csrf.token",
+	HandlerContextKey: "Vortex.csrf.handler",
 }
 ```
 
 ### Recommended Config (with session)
 
-It's recommended to use this middleware with [fiber/middleware/session](https://docs.gofiber.io/api/middleware/session) to store the CSRF token within the session. This is generally more secure than the default configuration.
+It's recommended to use this middleware with [Vortex/middleware/session](https://docs.goVortex.io/api/middleware/session) to store the CSRF token within the session. This is generally more secure than the default configuration.
 
 ```go
 var ConfigDefault = Config{
@@ -194,8 +194,8 @@ var ConfigDefault = Config{
 	ErrorHandler:      defaultErrorHandler,
 	Extractor:         CsrfFromHeader(HeaderName),
 	Session:           session.Store,
-	SessionKey:        "fiber.csrf.token",
-	HandlerContextKey: "fiber.csrf.handler",
+	SessionKey:        "Vortex.csrf.token",
+	HandlerContextKey: "Vortex.csrf.handler",
 }
 ```
 
@@ -222,23 +222,23 @@ If you use the default error handler, the client will receive a 403 Forbidden er
 
 ## Custom Error Handler
 
-You can use a custom error handler to handle errors returned by the CSRF middleware. The error handler is executed when an error is returned from the middleware. The error handler is passed the error returned from the middleware and the fiber.Ctx.
+You can use a custom error handler to handle errors returned by the CSRF middleware. The error handler is executed when an error is returned from the middleware. The error handler is passed the error returned from the middleware and the Vortex.Ctx.
 
 Example, returning a JSON response for API requests and rendering an error page for other requests:
 
 ```go
 app.Use(csrf.New(csrf.Config{
-	ErrorHandler: func(c *fiber.Ctx, err error) error {
+	ErrorHandler: func(c *Vortex.Ctx, err error) error {
 		accepts := c.Accepts("html", "json")
 		path := c.Path()
 		if accepts == "json" || strings.HasPrefix(path, "/api/") {
-			return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			return c.Status(Vortex.StatusForbidden).JSON(Vortex.Map{
 				"error": "Forbidden",
 			})
 		}
-		return c.Status(fiber.StatusForbidden).Render("error", fiber.Map{
+		return c.Status(Vortex.StatusForbidden).Render("error", Vortex.Map{
 			"Title": "Forbidden",
-			"Status": fiber.StatusForbidden,
+			"Status": Vortex.StatusForbidden,
 		}, "layouts/main")
 	},
 }))
@@ -246,11 +246,12 @@ app.Use(csrf.New(csrf.Config{
 
 ## Custom Storage/Database
 
-You can use any storage from our [storage](https://github.com/gofiber/storage/) package.
+You can use any storage from our [storage](https://github.com/goVortex/storage/) package.
 
 ```go
-storage := sqlite3.New() // From github.com/gofiber/storage/sqlite3
+storage := sqlite3.New() // From github.com/goVortex/storage/sqlite3
 app.Use(csrf.New(csrf.Config{
 	Storage: storage,
 }))
 ```
+

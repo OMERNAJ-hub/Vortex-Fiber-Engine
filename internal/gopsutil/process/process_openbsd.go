@@ -15,10 +15,10 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
-	cpu "github.com/gofiber/fiber/v2/internal/gopsutil/cpu"
-	mem "github.com/gofiber/fiber/v2/internal/gopsutil/mem"
-	net "github.com/gofiber/fiber/v2/internal/gopsutil/net"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
+	cpu "github.com/goVortex/Vortex/v2/internal/gopsutil/cpu"
+	mem "github.com/goVortex/Vortex/v2/internal/gopsutil/mem"
+	net "github.com/goVortex/Vortex/v2/internal/gopsutil/net"
 )
 
 // MemoryInfoExStat is different between OSes
@@ -568,3 +568,4 @@ func CallKernProcSyscallWithContext(ctx context.Context, op, arg int32) ([]byte,
 
 	return buf, length, nil
 }
+

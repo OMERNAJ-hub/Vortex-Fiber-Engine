@@ -207,3 +207,4 @@ func (l *defaultLogger) SetOutput(writer io.Writer) {
 func DefaultLogger() AllLogger {
 	return logger
 }
+

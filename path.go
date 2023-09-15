@@ -1,10 +1,10 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 📄 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 📄 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 // ⚠️ This path parser was inspired by ucarion/urlpath (MIT License).
-// 💖 Maintained and modified for Fiber by @renewerner87
+// 💖 Maintained and modified for Vortex by @renewerner87
 
-package fiber
+package Vortex
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // routeParser holds the path segments and param names
@@ -116,7 +116,7 @@ var (
 )
 
 // RoutePatternMatch reports whether the given request path would match the
-// provided Fiber route pattern using the same rules as the router. This can be
+// provided Vortex route pattern using the same rules as the router. This can be
 // handy in tests or tooling where you need to verify patterns without
 // registering them on an App instance.
 //
@@ -126,7 +126,7 @@ var (
 //
 // Example:
 //
-//	match := fiber.RoutePatternMatch("/api/v1/users", "/api/:version/*")
+//	match := Vortex.RoutePatternMatch("/api/v1/users", "/api/:version/*")
 //	// match == true
 func RoutePatternMatch(path, pattern string, cfg ...Config) bool {
 	// See logic in (*Route).match and (*App).register
@@ -758,3 +758,4 @@ func (c *Constraint) CheckConstraint(param string) bool {
 
 	return err == nil
 }
+

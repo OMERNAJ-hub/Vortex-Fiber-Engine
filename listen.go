@@ -1,8 +1,8 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
-package fiber
+package Vortex
 
 import (
 	"crypto/tls"
@@ -23,7 +23,7 @@ import (
 	"github.com/mattn/go-isatty"
 	"github.com/mattn/go-runewidth"
 
-	"github.com/gofiber/fiber/v2/log"
+	"github.com/goVortex/Vortex/v2/log"
 )
 
 const (
@@ -341,7 +341,7 @@ func (app *App) startupMessage(addr string, isTLS bool, pids string) { //nolint:
 	if app.config.AppName != "" {
 		mainLogo += " │ " + centerValue(app.config.AppName, lineLen) + " │\n"
 	}
-	mainLogo += " │ " + centerValue("Fiber v"+Version, lineLen) + " │\n"
+	mainLogo += " │ " + centerValue("Vortex v"+Version, lineLen) + " │\n"
 
 	if host == globalIpv4Addr {
 		mainLogo += " │ " + center(fmt.Sprintf("%s://127.0.0.1:%s", scheme, port), lineLen) + " │\n" +
@@ -418,7 +418,7 @@ func (app *App) startupMessage(addr string, isTLS bool, pids string) { //nolint:
 		)
 	}
 
-	// Combine both the child PID logo and the main Fiber logo
+	// Combine both the child PID logo and the main Vortex logo
 
 	// Pad the shorter logo to the length of the longer one
 	splitMainLogo := strings.Split(mainLogo, "\n")
@@ -456,8 +456,8 @@ func (app *App) startupMessage(addr string, isTLS bool, pids string) { //nolint:
 // printRoutesMessage print all routes with method, path, name and handlers
 // in a format of table, like this:
 // method | path | name      | handlers
-// GET    | /    | routeName | github.com/gofiber/fiber/v2.emptyHandler
-// HEAD   | /    |           | github.com/gofiber/fiber/v2.emptyHandler
+// GET    | /    | routeName | github.com/goVortex/Vortex/v2.emptyHandler
+// HEAD   | /    |           | github.com/goVortex/Vortex/v2.emptyHandler
 func (app *App) printRoutesMessage() {
 	// ignore child processes
 	if IsChild() {
@@ -500,3 +500,4 @@ func (app *App) printRoutesMessage() {
 
 	_ = w.Flush() //nolint:errcheck // It is fine to ignore the error here
 }
+

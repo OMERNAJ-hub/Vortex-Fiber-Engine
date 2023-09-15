@@ -30,3 +30,4 @@ func StartTimeStampUpdater() {
 		}(1 * time.Second) // duration
 	})
 }
+

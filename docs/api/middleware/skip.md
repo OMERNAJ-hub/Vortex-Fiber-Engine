@@ -4,40 +4,40 @@ id: skip
 
 # Skip
 
-Skip middleware for [Fiber](https://github.com/gofiber/fiber) that skips a wrapped handler if a predicate is true.
+Skip middleware for [Vortex](https://github.com/goVortex/Vortex) that skips a wrapped handler if a predicate is true.
 
 ## Signatures
 ```go
-func New(handler fiber.Handler, exclude func(c *fiber.Ctx) bool) fiber.Handler
+func New(handler Vortex.Handler, exclude func(c *Vortex.Ctx) bool) Vortex.Handler
 ```
 
 ## Examples
-Import the middleware package that is part of the Fiber web framework
+Import the middleware package that is part of the Vortex web framework
 ```go
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/skip"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/skip"
 )
 ```
 
-After you initiate your Fiber app, you can use the following possibilities:
+After you initiate your Vortex app, you can use the following possibilities:
 
 ```go
 func main() {
-	app := fiber.New()
+	app := Vortex.New()
 
-	app.Use(skip.New(BasicHandler, func(ctx *fiber.Ctx) bool {
-		return ctx.Method() == fiber.MethodGet
+	app.Use(skip.New(BasicHandler, func(ctx *Vortex.Ctx) bool {
+		return ctx.Method() == Vortex.MethodGet
 	}))
 
-	app.Get("/", func(ctx *fiber.Ctx) error {
+	app.Get("/", func(ctx *Vortex.Ctx) error {
 		return ctx.SendString("It was a GET request!")
 	})
 
 	log.Fatal(app.Listen(":3000"))
 }
 
-func BasicHandler(ctx *fiber.Ctx) error {
+func BasicHandler(ctx *Vortex.Ctx) error {
 	return ctx.SendString("It was not a GET request!")
 }
 ```
@@ -45,3 +45,4 @@ func BasicHandler(ctx *fiber.Ctx) error {
 :::tip
 app.Use will handle requests from any route, and any method. In the example above, it will only skip if the method is GET.
 :::
+

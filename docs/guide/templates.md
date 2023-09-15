@@ -1,7 +1,7 @@
 ---
 id: templates
 title: 📝 Templates
-description: Fiber supports server-side template engines.
+description: Vortex supports server-side template engines.
 sidebar_position: 3
 ---
 
@@ -12,10 +12,10 @@ Templates are a great tool to render dynamic content without using a separate fr
 
 ## Template Engines
 
-Fiber allows you to provide a custom template engine at app initialization.
+Vortex allows you to provide a custom template engine at app initialization.
 
 ```go
-app := fiber.New(fiber.Config{
+app := Vortex.New(Vortex.Config{
     // Pass in Views Template Engine
     Views: engine,
 
@@ -30,25 +30,25 @@ app := fiber.New(fiber.Config{
 
 ### Supported Engines
 
-The Fiber team maintains a [templates](https://docs.gofiber.io/template) package that provides wrappers for multiple template engines:
+The Vortex team maintains a [templates](https://docs.goVortex.io/template) package that provides wrappers for multiple template engines:
 
-* [ace](https://docs.gofiber.io/template/ace/)
-* [amber](https://docs.gofiber.io/template/amber/)
-* [django](https://docs.gofiber.io/template/django/)
-* [handlebars](https://docs.gofiber.io/template/handlebars)
-* [html](https://docs.gofiber.io/template/html)
-* [jet](https://docs.gofiber.io/template/jet)
-* [mustache](https://docs.gofiber.io/template/mustache)
-* [pug](https://docs.gofiber.io/template/pug)
-* [slim](https://docs.gofiber.io/template/slim)
+* [ace](https://docs.goVortex.io/template/ace/)
+* [amber](https://docs.goVortex.io/template/amber/)
+* [django](https://docs.goVortex.io/template/django/)
+* [handlebars](https://docs.goVortex.io/template/handlebars)
+* [html](https://docs.goVortex.io/template/html)
+* [jet](https://docs.goVortex.io/template/jet)
+* [mustache](https://docs.goVortex.io/template/mustache)
+* [pug](https://docs.goVortex.io/template/pug)
+* [slim](https://docs.goVortex.io/template/slim)
 
 :::info
-Custom template engines can implement the `Views` interface to be supported in Fiber.
+Custom template engines can implement the `Views` interface to be supported in Vortex.
 :::
 
 ```go title="Views interface"
 type Views interface {
-    // Fiber executes Load() on app initialization to load/parse the templates
+    // Vortex executes Load() on app initialization to load/parse the templates
     Load() error
 
     // Outputs a template to the provided buffer using the provided template,
@@ -77,8 +77,8 @@ By default, [**ctx.Render\(\)**](../api/ctx.md#render) searches for the template
 <TabItem value="example" label="Example">
 
 ```go
-app.Get("/", func(c *fiber.Ctx) error {
-    return c.Render("index", fiber.Map{
+app.Get("/", func(c *Vortex.Ctx) error {
+    return c.Render("index", Vortex.Map{
         "Title": "Hello, World!",
     })
 
@@ -103,14 +103,14 @@ app.Get("/", func(c *fiber.Ctx) error {
 </Tabs>
 
 :::caution
-If the Fiber config option `PassLocalsToViews` is enabled, then all locals set using `ctx.Locals(key, value)` will be passed to the template. It is important to avoid clashing keys when using this setting.
+If the Vortex config option `PassLocalsToViews` is enabled, then all locals set using `ctx.Locals(key, value)` will be passed to the template. It is important to avoid clashing keys when using this setting.
 :::
 
 ## Advanced Templating
 
 ### Custom Functions
 
-Fiber supports adding custom functions to templates.
+Vortex supports adding custom functions to templates.
 
 #### AddFunc
 
@@ -130,13 +130,13 @@ engine.AddFunc("ToUpper", func(s string) string {
     return strings.ToUpper(s)
 }
 
-// Initialize Fiber App
-app := fiber.New(fiber.Config{
+// Initialize Vortex App
+app := Vortex.New(Vortex.Config{
     Views: engine,
 })
 
-app.Get("/", func (c *fiber.Ctx) error {
-    return c.Render("index", fiber.Map{
+app.Get("/", func (c *Vortex.Ctx) error {
+    return c.Render("index", Vortex.Map{
         "Content": "hello, world!"
     })
 })
@@ -178,13 +178,13 @@ engine.AddFuncMap(map[string]interface{}{
     },
 })
 
-// Initialize Fiber App
-app := fiber.New(fiber.Config{
+// Initialize Vortex App
+app := Vortex.New(Vortex.Config{
     Views: engine,
 })
 
-app.Get("/", func (c *fiber.Ctx) error {
-    return c.Render("index", fiber.Map{
+app.Get("/", func (c *Vortex.Ctx) error {
+    return c.Render("index", Vortex.Map{
         "Content": "hello, world!"
     })
 })
@@ -206,7 +206,7 @@ app.Get("/", func (c *fiber.Ctx) error {
 </TabItem>
 </Tabs>
 
-* For more advanced template documentation, please visit the [gofiber/template GitHub Repository](https://github.com/gofiber/template).
+* For more advanced template documentation, please visit the [goVortex/template GitHub Repository](https://github.com/goVortex/template).
 
 ## Full Example
 
@@ -218,8 +218,8 @@ package main
 
 import (
     "log"
-    "github.com/gofiber/fiber/v2"
-    "github.com/gofiber/template/html/v2"
+    "github.com/goVortex/Vortex/v2"
+    "github.com/goVortex/template/html/v2"
 )
 
 func main() {
@@ -230,13 +230,13 @@ func main() {
     // Create a new engine with django
 	// engine := django.New("./views", ".django")
 
-    app := fiber.New(fiber.Config{
+    app := Vortex.New(Vortex.Config{
         Views: engine,
     })
-    app.Get("/", func(c *fiber.Ctx) error {
+    app.Get("/", func(c *Vortex.Ctx) error {
         // Render index template
-        return c.Render("index", fiber.Map{
-            "Title": "Go Fiber Template Example",
+        return c.Render("index", Vortex.Map{
+            "Title": "Go Vortex Template Example",
             "Description": "An example template",
             "Greeting": "Hello, world!",
         });
@@ -265,3 +265,4 @@ func main() {
 
 </TabItem>
 </Tabs>
+

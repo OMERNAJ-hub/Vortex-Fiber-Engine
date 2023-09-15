@@ -4,10 +4,10 @@ id: session
 
 # Session
 
-Session middleware for [Fiber](https://github.com/gofiber/fiber).
+Session middleware for [Vortex](https://github.com/goVortex/Vortex).
 
 :::note
-This middleware uses our [Storage](https://github.com/gofiber/storage) package to support various databases through a single interface. The default configuration for this middleware saves data to memory, see the examples below for other databases.
+This middleware uses our [Storage](https://github.com/goVortex/storage) package to support various databases through a single interface. The default configuration for this middleware saves data to memory, see the examples below for other databases.
 :::
 
 ## Signatures
@@ -15,7 +15,7 @@ This middleware uses our [Storage](https://github.com/gofiber/storage) package t
 ```go
 func New(config ...Config) *Store
 func (s *Store) RegisterType(i interface{})
-func (s *Store) Get(c *fiber.Ctx) (*Session, error)
+func (s *Store) Get(c *Vortex.Ctx) (*Session, error)
 func (s *Store) Delete(id string) error
 func (s *Store) Reset() error
 
@@ -36,22 +36,22 @@ Storing `interface{}` values are limited to built-ins Go types.
 :::
 
 ## Examples
-Import the middleware package that is part of the Fiber web framework
+Import the middleware package that is part of the Vortex web framework
 ```go
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/session"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/session"
 )
 ```
 
-After you initiate your Fiber app, you can use the following possibilities:
+After you initiate your Vortex app, you can use the following possibilities:
 
 ```go
 // Initialize default config
 // This stores all of your app's sessions
 store := session.New()
 
-app.Get("/", func(c *fiber.Ctx) error {
+app.Get("/", func(c *Vortex.Ctx) error {
     // Get session from storage
     sess, err := store.Get(c)
     if err != nil {
@@ -92,7 +92,7 @@ app.Get("/", func(c *fiber.Ctx) error {
 | Property                | Type            | Description                                                                                                 | Default               |
 |:------------------------|:----------------|:------------------------------------------------------------------------------------------------------------|:----------------------|
 | Expiration              | `time.Duration` | Allowed session duration.                                                                                   | `24 * time.Hour`      |
-| Storage                 | `fiber.Storage` | Storage interface to store the session data.                                                                | `memory.New()`        |
+| Storage                 | `Vortex.Storage` | Storage interface to store the session data.                                                                | `memory.New()`        |
 | KeyLookup               | `string`        | KeyLookup is a string in the form of "`<source>:<name>`" that is used to extract session id from the request. | `"cookie:session_id"` |
 | CookieDomain            | `string`        | Domain of the cookie.                                                                                       | `""`                  |
 | CookiePath              | `string`        | Path of the cookie.                                                                                         | `""`                  |
@@ -127,13 +127,14 @@ const (
 
 ### Custom Storage/Database
 
-You can use any storage from our [storage](https://github.com/gofiber/storage/) package.
+You can use any storage from our [storage](https://github.com/goVortex/storage/) package.
 
 ```go
-storage := sqlite3.New() // From github.com/gofiber/storage/sqlite3
+storage := sqlite3.New() // From github.com/goVortex/storage/sqlite3
 store := session.New(session.Config{
 	Storage: storage,
 })
 ```
 
 To use the store, see the [Examples](#examples).
+

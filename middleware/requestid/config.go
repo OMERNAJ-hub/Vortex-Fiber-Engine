@@ -1,8 +1,8 @@
 package requestid
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // Config defines the config for middleware.
@@ -10,7 +10,7 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	//
 	// Optional. Default: nil
-	Next func(c *fiber.Ctx) bool
+	Next func(c *Vortex.Ctx) bool
 
 	// Header is the header key where to get/set the unique request ID
 	//
@@ -37,7 +37,7 @@ type Config struct {
 // privacy, use the "utils.UUIDv4" generator.
 var ConfigDefault = Config{
 	Next:       nil,
-	Header:     fiber.HeaderXRequestID,
+	Header:     Vortex.HeaderXRequestID,
 	Generator:  utils.UUID,
 	ContextKey: "requestid",
 }
@@ -64,3 +64,4 @@ func configDefault(config ...Config) Config {
 	}
 	return cfg
 }
+

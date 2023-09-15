@@ -61,3 +61,4 @@ func (d *data) Keys() []string {
 func (d *data) Len() int {
 	return len(d.Data)
 }
+

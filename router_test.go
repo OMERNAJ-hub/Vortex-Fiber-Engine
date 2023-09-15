@@ -1,9 +1,9 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 📃 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 📃 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
 //nolint:bodyclose // Much easier to just ignore memory leaks in tests
-package fiber
+package Vortex
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -942,3 +942,4 @@ func Benchmark_Router_Next_Default_Parallel(b *testing.B) {
 		}
 	})
 }
+

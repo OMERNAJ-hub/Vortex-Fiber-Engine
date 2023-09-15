@@ -1,12 +1,12 @@
-package fiber
+package Vortex
 
 import (
 	"encoding/json"
 	"errors"
 	"testing"
 
-	"github.com/gofiber/fiber/v2/internal/schema"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/internal/schema"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 func TestConversionError(t *testing.T) {
@@ -74,3 +74,4 @@ func TestUnsupportedValeError(t *testing.T) {
 	ok := errors.As(&UnsupportedValueError{}, &e)
 	utils.AssertEqual(t, true, ok)
 }
+

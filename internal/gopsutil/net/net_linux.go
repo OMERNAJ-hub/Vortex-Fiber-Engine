@@ -16,7 +16,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 const ( // Conntrack Column numbers
@@ -885,3 +885,4 @@ func updateMap(src, add map[string][]inodeMap) map[string][]inodeMap {
 	}
 	return src
 }
+

@@ -97,3 +97,4 @@ func (h HString) String() string {
 	u16 := *(*[]uint16)(unsafe.Pointer(&u16hdr))
 	return syscall.UTF16ToString(u16)
 }
+

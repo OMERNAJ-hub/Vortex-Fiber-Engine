@@ -90,3 +90,4 @@ func (h *indexedHeap) remove(idx int) (string, uint) {
 func (h *indexedHeap) removeFirst() (string, uint) {
 	return h.removeInternal(0)
 }
+

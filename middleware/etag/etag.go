@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"hash/crc32"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 
 	"github.com/valyala/bytebufferpool"
 )
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := configDefault(config...)
 
@@ -23,7 +23,7 @@ func New(config ...Config) fiber.Handler {
 	crc32q := crc32.MakeTable(crcPol)
 
 	// Return new handler
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -35,7 +35,7 @@ func New(config ...Config) fiber.Handler {
 		}
 
 		// Don't generate ETags for invalid responses
-		if c.Response().StatusCode() != fiber.StatusOK {
+		if c.Response().StatusCode() != Vortex.StatusOK {
 			return nil
 		}
 		body := c.Response().Body()
@@ -66,7 +66,7 @@ func New(config ...Config) fiber.Handler {
 		etag := bb.Bytes()
 
 		// Get ETag header from request
-		clientEtag := c.Request().Header.Peek(fiber.HeaderIfNoneMatch)
+		clientEtag := c.Request().Header.Peek(Vortex.HeaderIfNoneMatch)
 
 		// Check if client's ETag is weak
 		if bytes.HasPrefix(clientEtag, weakPrefix) {
@@ -75,7 +75,7 @@ func New(config ...Config) fiber.Handler {
 				// W/1 == 1 || W/1 == W/1
 				c.Context().ResetBody()
 
-				return c.SendStatus(fiber.StatusNotModified)
+				return c.SendStatus(Vortex.StatusNotModified)
 			}
 			// W/1 != W/2 || W/1 != 2
 			c.Response().Header.SetCanonical(normalizedHeaderETag, etag)
@@ -87,7 +87,7 @@ func New(config ...Config) fiber.Handler {
 			// 1 == 1
 			c.Context().ResetBody()
 
-			return c.SendStatus(fiber.StatusNotModified)
+			return c.SendStatus(Vortex.StatusNotModified)
 		}
 		// 1 != 2
 		c.Response().Header.SetCanonical(normalizedHeaderETag, etag)
@@ -114,3 +114,4 @@ func appendUint(dst []byte, n uint32) []byte {
 	dst = append(dst, buf[i:]...)
 	return dst
 }
+

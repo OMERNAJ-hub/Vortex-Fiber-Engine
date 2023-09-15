@@ -1,15 +1,15 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 📝 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 📝 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
-package fiber
+package Vortex
 
 import (
 	"fmt"
 	"strings"
 	"testing"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // go test -race -run Test_Path_parseRoute
@@ -346,3 +346,4 @@ func paramsRoute(t *testing.T, n int) string {
 	}
 	return "/" + strings.Join(params, "/")
 }
+

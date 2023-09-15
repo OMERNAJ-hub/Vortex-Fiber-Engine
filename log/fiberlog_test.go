@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 func Test_DefaultSystemLogger(t *testing.T) {
@@ -22,3 +22,4 @@ func Test_SetLogger(t *testing.T) {
 	SetLogger(setLog)
 	utils.AssertEqual(t, logger, setLog)
 }
+

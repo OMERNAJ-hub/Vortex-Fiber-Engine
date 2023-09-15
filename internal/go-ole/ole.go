@@ -155,3 +155,4 @@ type TYPEATTR struct {
 	TdescAlias       TYPEDESC
 	IdldescType      IDLDESC
 }
+

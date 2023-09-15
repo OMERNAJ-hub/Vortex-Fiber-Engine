@@ -117,3 +117,4 @@ func CountsWithContext(ctx context.Context, logical bool) (int, error) {
 
 	return int(count), nil
 }
+

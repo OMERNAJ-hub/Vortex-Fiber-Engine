@@ -4,7 +4,7 @@ id: healthcheck
 
 # Health Check
 
-Liveness and readiness probes middleware for [Fiber](https://github.com/gofiber/fiber) that provides two endpoints for checking the liveness and readiness state of HTTP applications.
+Liveness and readiness probes middleware for [Vortex](https://github.com/goVortex/Vortex) that provides two endpoints for checking the liveness and readiness state of HTTP applications.
 
 ## Overview
 
@@ -23,20 +23,20 @@ Liveness and readiness probes middleware for [Fiber](https://github.com/gofiber/
 ## Signatures
 
 ```go
-func New(config Config) fiber.Handler
+func New(config Config) Vortex.Handler
 ```
 
 ## Examples
 
-Import the middleware package that is part of the [Fiber](https://github.com/gofiber/fiber) web framework
+Import the middleware package that is part of the [Vortex](https://github.com/goVortex/Vortex) web framework
 ```go
 import (
-    "github.com/gofiber/fiber/v2"
-    "github.com/gofiber/fiber/v2/middleware/healthcheck"
+    "github.com/goVortex/Vortex/v2"
+    "github.com/goVortex/Vortex/v2/middleware/healthcheck"
 )
 ```
 
-After you initiate your [Fiber](https://github.com/gofiber/fiber) app, you can use the following possibilities:
+After you initiate your [Vortex](https://github.com/goVortex/Vortex) app, you can use the following possibilities:
 
 ```go
 // Provide a minimal config
@@ -44,11 +44,11 @@ app.Use(healthcheck.New())
 
 // Or extend your config for customization
 app.Use(healthcheck.New(healthcheck.Config{
-    LivenessProbe: func(c *fiber.Ctx) bool {
+    LivenessProbe: func(c *Vortex.Ctx) bool {
         return true
     },
     LivenessEndpoint: "/live",
-    ReadinessProbe: func(c *fiber.Ctx) bool {
+    ReadinessProbe: func(c *Vortex.Ctx) bool {
         return serviceA.Ready() && serviceB.Ready() && ...
     },
     ReadinessEndpoint: "/ready",
@@ -62,13 +62,13 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	//
 	// Optional. Default: nil
-	Next func(c *fiber.Ctx) bool
+	Next func(c *Vortex.Ctx) bool
 
 	// Function used for checking the liveness of the application. Returns true if the application
 	// is running and false if it is not. The liveness probe is typically used to indicate if 
 	// the application is in a state where it can handle requests (e.g., the server is up and running).
 	//
-	// Optional. Default: func(c *fiber.Ctx) bool { return true }
+	// Optional. Default: func(c *Vortex.Ctx) bool { return true }
 	LivenessProbe HealthChecker
 
 	// HTTP endpoint at which the liveness probe will be available.
@@ -80,7 +80,7 @@ type Config struct {
 	// is ready to process requests and false otherwise. The readiness probe typically checks if all necessary
 	// services, databases, and other dependencies are available for the application to function correctly.
 	//
-	// Optional. Default: func(c *fiber.Ctx) bool { return true }
+	// Optional. Default: func(c *Vortex.Ctx) bool { return true }
 	ReadinessProbe HealthChecker
 
 	// HTTP endpoint at which the readiness probe will be available.
@@ -93,9 +93,9 @@ type Config struct {
 
 The default configuration used by this middleware is defined as follows:
 ```go
-func defaultLivenessProbe(*fiber.Ctx) bool { return true }
+func defaultLivenessProbe(*Vortex.Ctx) bool { return true }
 
-func defaultReadinessProbe(*fiber.Ctx) bool { return true }
+func defaultReadinessProbe(*Vortex.Ctx) bool { return true }
 
 var ConfigDefault = Config{
 	LivenessProbe:     defaultLivenessProbe,
@@ -104,3 +104,4 @@ var ConfigDefault = Config{
 	ReadinessEndpoint: "/readyz",
 }
 ```
+

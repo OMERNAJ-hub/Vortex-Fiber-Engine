@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 var (
@@ -292,3 +292,4 @@ func ProtoCounters(protocols []string) ([]ProtoCountersStat, error) {
 func ProtoCountersWithContext(ctx context.Context, protocols []string) ([]ProtoCountersStat, error) {
 	return nil, errors.New("NetProtoCounters not implemented for darwin")
 }
+

@@ -4,7 +4,7 @@ id: monitor
 
 # Monitor
 
-Monitor middleware for [Fiber](https://github.com/gofiber/fiber) that reports server metrics, inspired by [express-status-monitor](https://github.com/RafalWilinski/express-status-monitor)
+Monitor middleware for [Vortex](https://github.com/goVortex/Vortex) that reports server metrics, inspired by [express-status-monitor](https://github.com/RafalWilinski/express-status-monitor)
 
 :::caution
 
@@ -16,20 +16,20 @@ Monitor is still in beta, API might change in the future!
 
 ### Signatures
 ```go
-func New() fiber.Handler
+func New() Vortex.Handler
 ```
 
 ### Examples
-Import the middleware package that is part of the Fiber web framework
+Import the middleware package that is part of the Vortex web framework
 
 ```go
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/monitor"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/monitor"
 )
 ```
 
-After you initiate your Fiber app, you can use the following possibilities:
+After you initiate your Vortex app, you can use the following possibilities:
 ```go
 // Initialize default config (Assign the middleware to /metrics)
 app.Get("/metrics", monitor.New())
@@ -51,10 +51,10 @@ You can also access the API endpoint with
 
 | Property   | Type                    | Description                                                         | Default                                                                     |
 |:-----------|:------------------------|:--------------------------------------------------------------------|:----------------------------------------------------------------------------|
-| Title      | `string`                | Metrics page title                                                  | "Fiber Monitor"                                                             |
+| Title      | `string`                | Metrics page title                                                  | "Vortex Monitor"                                                             |
 | Refresh    | `time.Duration`         | Refresh period                                                      | 3 seconds                                                                   |
 | APIOnly    | `bool`                  | Whether the service should expose only the monitoring API           | false                                                                       |
-| Next       | `func(*fiber.Ctx) bool` | Next defines a function to skip this middleware when returned true. | `nil`                                                                       |
+| Next       | `func(*Vortex.Ctx) bool` | Next defines a function to skip this middleware when returned true. | `nil`                                                                       |
 | CustomHead | `string`                | Custom HTML Code to Head Section(Before End)                        | empty                                                                       |
 | FontURL    | `string`                | FontURL for specify font resource path or URL                       | "https://fonts.googleapis.com/css2?family=Roboto:wght@400;900&display=swap" |
 | ChartJsURL | `string`                | ChartJsURL for specify ChartJS library path or URL                  | "https://cdn.jsdelivr.net/npm/chart.js@2.9/dist/Chart.bundle.min.js"        |
@@ -79,3 +79,4 @@ var ConfigDefault = Config{
 	}),
 }
 ```
+

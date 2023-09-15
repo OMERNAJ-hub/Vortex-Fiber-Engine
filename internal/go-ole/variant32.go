@@ -9,3 +9,4 @@ type VARIANT struct {
 	wReserved3 uint16 //  8
 	Val        int64  // 16
 }
+

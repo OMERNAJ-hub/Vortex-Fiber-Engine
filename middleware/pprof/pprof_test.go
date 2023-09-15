@@ -6,20 +6,20 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 func Test_Non_Pprof_Path(t *testing.T) {
-	app := fiber.New(fiber.Config{DisableStartupMessage: true})
+	app := Vortex.New(Vortex.Config{DisableStartupMessage: true})
 
 	app.Use(New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
@@ -29,15 +29,15 @@ func Test_Non_Pprof_Path(t *testing.T) {
 }
 
 func Test_Non_Pprof_Path_WithPrefix(t *testing.T) {
-	app := fiber.New(fiber.Config{DisableStartupMessage: true})
+	app := Vortex.New(Vortex.Config{DisableStartupMessage: true})
 
-	app.Use(New(Config{Prefix: "/federated-fiber"}))
+	app.Use(New(Config{Prefix: "/federated-Vortex"}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
@@ -47,18 +47,18 @@ func Test_Non_Pprof_Path_WithPrefix(t *testing.T) {
 }
 
 func Test_Pprof_Index(t *testing.T) {
-	app := fiber.New(fiber.Config{DisableStartupMessage: true})
+	app := Vortex.New(Vortex.Config{DisableStartupMessage: true})
 
 	app.Use(New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/debug/pprof/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/debug/pprof/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
-	utils.AssertEqual(t, fiber.MIMETextHTMLCharsetUTF8, resp.Header.Get(fiber.HeaderContentType))
+	utils.AssertEqual(t, Vortex.MIMETextHTMLCharsetUTF8, resp.Header.Get(Vortex.HeaderContentType))
 
 	b, err := io.ReadAll(resp.Body)
 	utils.AssertEqual(t, nil, err)
@@ -66,18 +66,18 @@ func Test_Pprof_Index(t *testing.T) {
 }
 
 func Test_Pprof_Index_WithPrefix(t *testing.T) {
-	app := fiber.New(fiber.Config{DisableStartupMessage: true})
+	app := Vortex.New(Vortex.Config{DisableStartupMessage: true})
 
-	app.Use(New(Config{Prefix: "/federated-fiber"}))
+	app.Use(New(Config{Prefix: "/federated-Vortex"}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/federated-fiber/debug/pprof/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/federated-Vortex/debug/pprof/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
-	utils.AssertEqual(t, fiber.MIMETextHTMLCharsetUTF8, resp.Header.Get(fiber.HeaderContentType))
+	utils.AssertEqual(t, Vortex.MIMETextHTMLCharsetUTF8, resp.Header.Get(Vortex.HeaderContentType))
 
 	b, err := io.ReadAll(resp.Body)
 	utils.AssertEqual(t, nil, err)
@@ -85,11 +85,11 @@ func Test_Pprof_Index_WithPrefix(t *testing.T) {
 }
 
 func Test_Pprof_Subs(t *testing.T) {
-	app := fiber.New(fiber.Config{DisableStartupMessage: true})
+	app := Vortex.New(Vortex.Config{DisableStartupMessage: true})
 
 	app.Use(New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
@@ -105,7 +105,7 @@ func Test_Pprof_Subs(t *testing.T) {
 			if sub == "profile" {
 				target += "?seconds=1"
 			}
-			resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, target, nil), 5000)
+			resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, target, nil), 5000)
 			utils.AssertEqual(t, nil, err)
 			utils.AssertEqual(t, 200, resp.StatusCode)
 		})
@@ -113,11 +113,11 @@ func Test_Pprof_Subs(t *testing.T) {
 }
 
 func Test_Pprof_Subs_WithPrefix(t *testing.T) {
-	app := fiber.New(fiber.Config{DisableStartupMessage: true})
+	app := Vortex.New(Vortex.Config{DisableStartupMessage: true})
 
-	app.Use(New(Config{Prefix: "/federated-fiber"}))
+	app.Use(New(Config{Prefix: "/federated-Vortex"}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
@@ -129,11 +129,11 @@ func Test_Pprof_Subs_WithPrefix(t *testing.T) {
 	for _, sub := range subs {
 		sub := sub
 		t.Run(sub, func(t *testing.T) {
-			target := "/federated-fiber/debug/pprof/" + sub
+			target := "/federated-Vortex/debug/pprof/" + sub
 			if sub == "profile" {
 				target += "?seconds=1"
 			}
-			resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, target, nil), 5000)
+			resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, target, nil), 5000)
 			utils.AssertEqual(t, nil, err)
 			utils.AssertEqual(t, 200, resp.StatusCode)
 		})
@@ -141,60 +141,61 @@ func Test_Pprof_Subs_WithPrefix(t *testing.T) {
 }
 
 func Test_Pprof_Other(t *testing.T) {
-	app := fiber.New(fiber.Config{DisableStartupMessage: true})
+	app := Vortex.New(Vortex.Config{DisableStartupMessage: true})
 
 	app.Use(New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/debug/pprof/302", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/debug/pprof/302", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 302, resp.StatusCode)
 }
 
 func Test_Pprof_Other_WithPrefix(t *testing.T) {
-	app := fiber.New(fiber.Config{DisableStartupMessage: true})
+	app := Vortex.New(Vortex.Config{DisableStartupMessage: true})
 
-	app.Use(New(Config{Prefix: "/federated-fiber"}))
+	app.Use(New(Config{Prefix: "/federated-Vortex"}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/federated-fiber/debug/pprof/302", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/federated-Vortex/debug/pprof/302", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 302, resp.StatusCode)
 }
 
 // go test -run Test_Pprof_Next
 func Test_Pprof_Next(t *testing.T) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(_ *Vortex.Ctx) bool {
 			return true
 		},
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/debug/pprof/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/debug/pprof/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 404, resp.StatusCode)
 }
 
 // go test -run Test_Pprof_Next_WithPrefix
 func Test_Pprof_Next_WithPrefix(t *testing.T) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(_ *Vortex.Ctx) bool {
 			return true
 		},
-		Prefix: "/federated-fiber",
+		Prefix: "/federated-Vortex",
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/federated-fiber/debug/pprof/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/federated-Vortex/debug/pprof/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 404, resp.StatusCode)
 }
+

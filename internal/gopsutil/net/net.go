@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 var invoke common.Invoker = common.Invoke{}
@@ -260,3 +260,4 @@ func getIOCountersAll(n []IOCountersStat) ([]IOCountersStat, error) {
 
 	return []IOCountersStat{r}, nil
 }
+

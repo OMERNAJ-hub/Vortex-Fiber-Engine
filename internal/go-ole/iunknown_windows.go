@@ -56,3 +56,4 @@ func release(unk *IUnknown) int32 {
 		0)
 	return int32(ret)
 }
+

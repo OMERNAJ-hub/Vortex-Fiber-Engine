@@ -4,9 +4,9 @@ id: cors
 
 # CORS
 
-CORS (Cross-Origin Resource Sharing) is a middleware for [Fiber](https://github.com/gofiber/fiber) that allows servers to specify who can access its resources and how. It's not a security feature, but a way to relax the security model of web browsers for cross-origin requests. You can learn more about CORS on [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).
+CORS (Cross-Origin Resource Sharing) is a middleware for [Vortex](https://github.com/goVortex/Vortex) that allows servers to specify who can access its resources and how. It's not a security feature, but a way to relax the security model of web browsers for cross-origin requests. You can learn more about CORS on [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).
 
-This middleware works by adding CORS headers to responses from your Fiber application. These headers specify which origins, methods, and headers are allowed for cross-origin requests. It also handles preflight requests, which are a CORS mechanism to check if the actual request is safe to send.
+This middleware works by adding CORS headers to responses from your Vortex application. These headers specify which origins, methods, and headers are allowed for cross-origin requests. It also handles preflight requests, which are a CORS mechanism to check if the actual request is safe to send.
 
 The middleware uses the `AllowOrigins` option to control which origins can make cross-origin requests. It supports single origin, multiple origins, subdomain matching, and wildcard origin. It also allows programmatic origin validation with the `AllowOriginsFunc` option.
 
@@ -17,21 +17,21 @@ When configuring CORS, it's important to avoid [common pitfalls](#common-pitfall
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Examples
 
-Import the middleware package that is part of the Fiber web framework
+Import the middleware package that is part of the Vortex web framework
 
 ```go
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/cors"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/cors"
 )
 ```
 
-After you initiate your Fiber app, you can use the following possibilities:
+After you initiate your Vortex app, you can use the following possibilities:
 
 ### Basic usage
 
@@ -49,7 +49,7 @@ app.Use(cors.New())
 
 // Or extend your config for customization
 app.Use(cors.New(cors.Config{
-    AllowOrigins: "https://gofiber.io, https://gofiber.net",
+    AllowOrigins: "https://goVortex.io, https://goVortex.net",
     AllowHeaders: "Origin, Content-Type, Accept",
 }))
 ```
@@ -112,7 +112,7 @@ panic: [CORS] 'AllowCredentials' is true, but 'AllowOrigins' cannot be set to `"
 
 | Property         | Type                       | Description                                                                                                                                                                                                                                                                                                                                                        | Default                            |
 |:-----------------|:---------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------|
-| Next             | `func(*fiber.Ctx) bool`    | Next defines a function to skip this middleware when returned true.                                                                                                                                                                                                                                                                                                | `nil`                              |
+| Next             | `func(*Vortex.Ctx) bool`    | Next defines a function to skip this middleware when returned true.                                                                                                                                                                                                                                                                                                | `nil`                              |
 | AllowOriginsFunc | `func(origin string) bool` | `AllowOriginsFunc` is a function that dynamically determines whether to allow a request based on its origin. If this function returns `true`, the 'Access-Control-Allow-Origin' response header will be set to the request's 'origin' header. This function is only used if the request's origin doesn't match any origin in `AllowOrigins`.                       | `nil`                              |
 | AllowOrigins     | `string`                   | AllowOrigins defines a comma separated list of origins that may access the resource. This supports subdomain matching, so you can use a value like "https://*.example.com" to allow any subdomain of example.com to submit requests.                                                                                                                               | `"*"`                              |
 | AllowMethods     | `string`                   | AllowMethods defines a list of methods allowed when accessing the resource. This is used in response to a preflight request.                                                                                                                                                                                                                                       | `"GET,POST,HEAD,PUT,DELETE,PATCH"` |
@@ -129,12 +129,12 @@ var ConfigDefault = Config{
 	AllowOriginsFunc: nil,
 	AllowOrigins: "*",
 	AllowMethods: strings.Join([]string{
-		fiber.MethodGet,
-		fiber.MethodPost,
-		fiber.MethodHead,
-		fiber.MethodPut,
-		fiber.MethodDelete,
-		fiber.MethodPatch,
+		Vortex.MethodGet,
+		Vortex.MethodPost,
+		Vortex.MethodHead,
+		Vortex.MethodPut,
+		Vortex.MethodDelete,
+		Vortex.MethodPatch,
 	}, ","),
 	AllowHeaders:     "",
 	AllowCredentials: false,
@@ -159,7 +159,7 @@ app.Use(cors.New(cors.Config{
 
 # How It Works
 
-The CORS middleware works by adding the necessary CORS headers to responses from your Fiber application. These headers tell browsers what origins, methods, and headers are allowed for cross-origin requests.
+The CORS middleware works by adding the necessary CORS headers to responses from your Vortex application. These headers tell browsers what origins, methods, and headers are allowed for cross-origin requests.
 
 When a request comes in, the middleware first checks if it's a preflight request, which is a CORS mechanism to determine whether the actual request is safe to send. Preflight requests are HTTP OPTIONS requests with specific CORS headers. If it's a preflight request, the middleware responds with the appropriate CORS headers and ends the request.
 

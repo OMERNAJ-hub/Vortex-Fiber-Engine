@@ -1,10 +1,10 @@
-package fiber
+package Vortex
 
 import (
-	"github.com/gofiber/fiber/v2/log"
+	"github.com/goVortex/Vortex/v2/log"
 )
 
-// OnRouteHandler Handlers define a function to create hooks for Fiber.
+// OnRouteHandler Handlers define a function to create hooks for Vortex.
 type (
 	OnRouteHandler     = func(Route) error
 	OnNameHandler      = OnRouteHandler
@@ -216,3 +216,4 @@ func (h *Hooks) executeOnMountHooks(app *App) error {
 
 	return nil
 }
+

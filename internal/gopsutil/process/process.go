@@ -8,9 +8,9 @@ import (
 	"sort"
 	"time"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
-	"github.com/gofiber/fiber/v2/internal/gopsutil/cpu"
-	"github.com/gofiber/fiber/v2/internal/gopsutil/mem"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/cpu"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/mem"
 )
 
 var (
@@ -320,3 +320,4 @@ func (p *Process) CPUPercentWithContext(ctx context.Context) (float64, error) {
 func (p *Process) Groups() ([]int32, error) {
 	return p.GroupsWithContext(context.Background())
 }
+

@@ -10,8 +10,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gofiber/fiber/v2/internal/template/utils"
-	"github.com/gofiber/fiber/v2/log"
+	"github.com/goVortex/Vortex/v2/internal/template/utils"
+	"github.com/goVortex/Vortex/v2/log"
 )
 
 // Engine struct
@@ -41,7 +41,7 @@ type Engine struct {
 	Templates *template.Template
 }
 
-// New returns a HTML render engine for Fiber
+// New returns a HTML render engine for Vortex
 func New(directory, extension string) *Engine {
 	engine := &Engine{
 		left:      "{{",
@@ -204,3 +204,4 @@ func (e *Engine) Render(out io.Writer, template string, binding interface{}, lay
 	}
 	return tmpl.Execute(out, binding)
 }
+

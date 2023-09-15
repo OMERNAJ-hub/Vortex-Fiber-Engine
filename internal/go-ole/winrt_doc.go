@@ -34,3 +34,4 @@ func DeleteHString(hstring HString) (err error) {
 func (h HString) String() string {
 	return ""
 }
+

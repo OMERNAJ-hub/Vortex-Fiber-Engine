@@ -138,3 +138,4 @@ func (sac *SafeArrayConversion) TotalElements(index uint32) (totalElements int32
 func (sac *SafeArrayConversion) Release() {
 	safeArrayDestroy(sac.Array)
 }
+

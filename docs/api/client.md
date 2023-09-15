@@ -1,7 +1,7 @@
 ---
 id: client
 title: 🌎 Client
-description: The Client struct represents the Fiber HTTP Client.
+description: The Client struct represents the Vortex HTTP Client.
 sidebar_position: 5
 ---
 
@@ -19,22 +19,22 @@ func (c *Client) Patch(url string) *Agent
 func (c *Client) Delete(url string) *Agent
 ```
 
-Here we present a brief example demonstrating the simulation of a proxy using our `*fiber.Agent` methods.
+Here we present a brief example demonstrating the simulation of a proxy using our `*Vortex.Agent` methods.
 ```go
 // Get something
-func getSomething(c *fiber.Ctx) (err error) {
-	agent := fiber.Get("<URL>")
+func getSomething(c *Vortex.Ctx) (err error) {
+	agent := Vortex.Get("<URL>")
 	statusCode, body, errs := agent.Bytes()
 	if len(errs) > 0 {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(Vortex.StatusInternalServerError).JSON(Vortex.Map{
 			"errs": errs,
 		})
 	}
 
-	var something fiber.Map
+	var something Vortex.Map
 	err = json.Unmarshal(body, &something)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(Vortex.StatusInternalServerError).JSON(Vortex.Map{
 			"err": err,
 		})
 	}
@@ -43,12 +43,12 @@ func getSomething(c *fiber.Ctx) (err error) {
 }
 
 // Post something
-func createSomething(c *fiber.Ctx) (err error) {
-	agent := fiber.Post("<URL>")
+func createSomething(c *Vortex.Ctx) (err error) {
+	agent := Vortex.Post("<URL>")
 	agent.Body(c.Body()) // set body received by request
 	statusCode, body, errs := agent.Bytes()
 	if len(errs) > 0 {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return c.Status(Vortex.StatusInternalServerError).JSON(Vortex.Map{
 			"errs": errs,
 		})
 	}
@@ -57,7 +57,7 @@ func createSomething(c *fiber.Ctx) (err error) {
 	return c.Status(statusCode).Send(body)
 }
 ```
-Based on this short example, we can perceive that using the `*fiber.Client` is very straightforward and intuitive.
+Based on this short example, we can perceive that using the `*Vortex.Client` is very straightforward and intuitive.
 
 
 ## ✨ Agent
@@ -145,7 +145,7 @@ func (a *Agent) UserAgentBytes(userAgent []byte) *Agent
 ```
 
 ```go title="Example"
-agent.UserAgent("fiber")
+agent.UserAgent("Vortex")
 // ...
 ```
 
@@ -177,7 +177,7 @@ func (a *Agent) RefererBytes(referer []byte) *Agent
 ```
 
 ```go title="Example"
-agent.Referer("https://docs.gofiber.io")
+agent.Referer("https://docs.goVortex.io")
 // ...
 ```
 
@@ -275,7 +275,7 @@ func (a *Agent) JSON(v interface{}, ctype ...string) *Agent
 ```
 
 ```go title="Example"
-agent.JSON(fiber.Map{"success": true})
+agent.JSON(Vortex.Map{"success": true})
 // ...
 ```
 
@@ -288,7 +288,7 @@ func (a *Agent) XML(v interface{}) *Agent
 ```
 
 ```go title="Example"
-agent.XML(fiber.Map{"success": true})
+agent.XML(Vortex.Map{"success": true})
 // ...
 ```
 
@@ -334,7 +334,7 @@ agent.MultipartForm(args)
 ReleaseArgs(args)
 ```
 
-Fiber provides several methods for sending files. Note that they must be called before `MultipartForm`.
+Vortex provides several methods for sending files. Note that they must be called before `MultipartForm`.
 
 #### Boundary
 
@@ -541,11 +541,11 @@ ReleaseResponse(resp)
 <summary>Example handling for response values</summary>
 
 ```go title="Example handling response"
-// Create a Fiber HTTP client agent
-agent := fiber.Get("https://httpbin.org/get")
+// Create a Vortex HTTP client agent
+agent := Vortex.Get("https://httpbin.org/get")
 
 // Acquire a response object to store the result
-resp := fiber.AcquireResponse()
+resp := Vortex.AcquireResponse()
 agent.SetResponse(resp)
 
 // Perform the HTTP GET request
@@ -565,7 +565,7 @@ resp.Header.VisitAll(func(key, value []byte) {
 })
 
 // Release the response to free up resources
-fiber.ReleaseResponse(resp)
+Vortex.ReleaseResponse(resp)
 ```
 
 Output:
@@ -575,7 +575,7 @@ Response Body: {
   "args": {}, 
   "headers": {
     "Host": "httpbin.org", 
-    "User-Agent": "fiber", 
+    "User-Agent": "Vortex", 
     "X-Amzn-Trace-Id": "Root=1-653763d0-2555d5ba3838f1e9092f9f72"
   }, 
   "origin": "83.137.191.1", 
@@ -656,8 +656,9 @@ func (a *Agent) RetryIf(retryIf RetryIfFunc) *Agent
 ```
 
 ```go title="Example"
-agent.Get("https://example.com").RetryIf(func (req *fiber.Request) bool {
+agent.Get("https://example.com").RetryIf(func (req *Vortex.Request) bool {
     return req.URI() == "https://example.com"
 })
 // ...
 ```
+

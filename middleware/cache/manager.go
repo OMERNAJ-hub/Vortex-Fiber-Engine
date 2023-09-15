@@ -4,8 +4,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/internal/memory"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/internal/memory"
 )
 
 // go:generate msgp
@@ -25,10 +25,10 @@ type item struct {
 type manager struct {
 	pool    sync.Pool
 	memory  *memory.Storage
-	storage fiber.Storage
+	storage Vortex.Storage
 }
 
-func newManager(storage fiber.Storage) *manager {
+func newManager(storage Vortex.Storage) *manager {
 	// Create new storage handler
 	manager := &manager{
 		pool: sync.Pool{
@@ -130,3 +130,4 @@ func (m *manager) del(key string) {
 		m.memory.Delete(key)
 	}
 }
+

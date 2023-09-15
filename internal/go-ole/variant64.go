@@ -10,3 +10,4 @@ type VARIANT struct {
 	Val        int64   // 16
 	_          [8]byte // 24
 }
+

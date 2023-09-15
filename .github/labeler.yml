@@ -18,3 +18,4 @@ labels:
     -   label: '🤔 Question'
         matcher:
             title: '\b(question|how)\b'
+

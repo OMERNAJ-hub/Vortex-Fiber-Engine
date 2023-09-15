@@ -6,9 +6,9 @@ import (
 	"context"
 	"syscall"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
-	"github.com/gofiber/fiber/v2/internal/gopsutil/cpu"
-	"github.com/gofiber/fiber/v2/internal/gopsutil/net"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/cpu"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/net"
 )
 
 type MemoryMapsStat struct {
@@ -369,3 +369,4 @@ func (p *Process) Username() (string, error) {
 func (p *Process) UsernameWithContext(ctx context.Context) (string, error) {
 	return "", common.ErrNotImplementedError
 }
+

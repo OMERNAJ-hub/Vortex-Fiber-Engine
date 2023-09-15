@@ -15,3 +15,4 @@ type IConnectionPointContainerVtbl struct {
 func (v *IConnectionPointContainer) VTable() *IConnectionPointContainerVtbl {
 	return (*IConnectionPointContainerVtbl)(unsafe.Pointer(v.RawVTable))
 }
+

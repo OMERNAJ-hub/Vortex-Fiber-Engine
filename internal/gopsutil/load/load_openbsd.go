@@ -15,3 +15,4 @@ func getForkStat() (forkstat, error) {
 	}
 	return *(*forkstat)(unsafe.Pointer((&b[0]))), nil
 }
+

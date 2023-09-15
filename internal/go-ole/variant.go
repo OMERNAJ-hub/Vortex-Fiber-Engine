@@ -103,3 +103,4 @@ func (v *VARIANT) Value() interface{} {
 	}
 	return nil
 }
+

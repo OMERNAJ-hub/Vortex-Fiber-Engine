@@ -22,3 +22,4 @@ func errstr(errno int) string {
 	}
 	return string(utf16.Decode(b[:n]))
 }
+

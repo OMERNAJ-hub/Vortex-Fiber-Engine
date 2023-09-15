@@ -61,3 +61,4 @@ func (enum *IEnumVARIANT) Next(celt uint) (array VARIANT, length uint, err error
 	}
 	return
 }
+

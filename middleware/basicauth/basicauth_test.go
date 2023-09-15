@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -16,21 +16,21 @@ import (
 // go test -run Test_BasicAuth_Next
 func Test_BasicAuth_Next(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(New(Config{
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(_ *Vortex.Ctx) bool {
 			return true
 		},
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
-	utils.AssertEqual(t, fiber.StatusNotFound, resp.StatusCode)
+	utils.AssertEqual(t, Vortex.StatusNotFound, resp.StatusCode)
 }
 
 func Test_Middleware_BasicAuth(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Users: map[string]string{
@@ -40,7 +40,7 @@ func Test_Middleware_BasicAuth(t *testing.T) {
 	}))
 
 	//nolint:forcetypeassert,errcheck // TODO: Do not force-type assert
-	app.Get("/testauth", func(c *fiber.Ctx) error {
+	app.Get("/testauth", func(c *Vortex.Ctx) error {
 		username := c.Locals("username").(string)
 		password := c.Locals("password").(string)
 
@@ -77,7 +77,7 @@ func Test_Middleware_BasicAuth(t *testing.T) {
 		// Base64 encode credentials for http auth header
 		creds := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", tt.username, tt.password)))
 
-		req := httptest.NewRequest(fiber.MethodGet, "/testauth", nil)
+		req := httptest.NewRequest(Vortex.MethodGet, "/testauth", nil)
 		req.Header.Add("Authorization", "Basic "+creds)
 		resp, err := app.Test(req)
 		utils.AssertEqual(t, nil, err)
@@ -95,23 +95,23 @@ func Test_Middleware_BasicAuth(t *testing.T) {
 
 // go test -v -run=^$ -bench=Benchmark_Middleware_BasicAuth -benchmem -count=4
 func Benchmark_Middleware_BasicAuth(b *testing.B) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Users: map[string]string{
 			"john": "doe",
 		},
 	}))
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusTeapot)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusTeapot)
 	})
 
 	h := app.Handler()
 
 	fctx := &fasthttp.RequestCtx{}
-	fctx.Request.Header.SetMethod(fiber.MethodGet)
+	fctx.Request.Header.SetMethod(Vortex.MethodGet)
 	fctx.Request.SetRequestURI("/")
-	fctx.Request.Header.Set(fiber.HeaderAuthorization, "basic am9objpkb2U=") // john:doe
+	fctx.Request.Header.Set(Vortex.HeaderAuthorization, "basic am9objpkb2U=") // john:doe
 
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -120,28 +120,28 @@ func Benchmark_Middleware_BasicAuth(b *testing.B) {
 		h(fctx)
 	}
 
-	utils.AssertEqual(b, fiber.StatusTeapot, fctx.Response.Header.StatusCode())
+	utils.AssertEqual(b, Vortex.StatusTeapot, fctx.Response.Header.StatusCode())
 }
 
 // go test -v -run=^$ -bench=Benchmark_Middleware_BasicAuth -benchmem -count=4
 func Benchmark_Middleware_BasicAuth_Upper(b *testing.B) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Users: map[string]string{
 			"john": "doe",
 		},
 	}))
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusTeapot)
+	app.Get("/", func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusTeapot)
 	})
 
 	h := app.Handler()
 
 	fctx := &fasthttp.RequestCtx{}
-	fctx.Request.Header.SetMethod(fiber.MethodGet)
+	fctx.Request.Header.SetMethod(Vortex.MethodGet)
 	fctx.Request.SetRequestURI("/")
-	fctx.Request.Header.Set(fiber.HeaderAuthorization, "Basic am9objpkb2U=") // john:doe
+	fctx.Request.Header.Set(Vortex.HeaderAuthorization, "Basic am9objpkb2U=") // john:doe
 
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -150,5 +150,6 @@ func Benchmark_Middleware_BasicAuth_Upper(b *testing.B) {
 		h(fctx)
 	}
 
-	utils.AssertEqual(b, fiber.StatusTeapot, fctx.Response.Header.StatusCode())
+	utils.AssertEqual(b, Vortex.StatusTeapot, fctx.Response.Header.StatusCode())
 }
+

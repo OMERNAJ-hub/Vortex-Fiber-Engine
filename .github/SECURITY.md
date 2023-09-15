@@ -1,14 +1,14 @@
 # Security Policy
 
 1. [Supported Versions](#versions)
-2. [Reporting security problems to Fiber](#reporting)
+2. [Reporting security problems to Vortex](#reporting)
 3. [Security Point of Contact](#contact)
 4. [Incident Response Process](#process)
 
 <a name="versions"></a>
 ## Supported Versions
 
-The table below shows the supported versions for Fiber which include security updates.
+The table below shows the supported versions for Vortex which include security updates.
 
 | Version   | Supported          |
 | --------- | ------------------ |
@@ -16,11 +16,11 @@ The table below shows the supported versions for Fiber which include security up
 | < 1.12.6  | :x:                |
 
 <a name="reporting"></a>
-## Reporting security problems to Fiber
+## Reporting security problems to Vortex
 
 **DO NOT CREATE AN ISSUE** to report a security problem. Instead, please
-send us an e-mail at `team@gofiber.io` or join our discord server via
-[this invite link](https://gofiber.io/discord) and send a private message
+send us an e-mail at `team@goVortex.io` or join our discord server via
+[this invite link](https://goVortex.io/discord) and send a private message
 to Fenny or any of the maintainers.
 
 <a name="contact"></a>
@@ -31,8 +31,8 @@ to security incident reports as fast as possible, within one business day at the
 latest.
 
 In case Fenny does not respond within a reasonable time, the secondary point
-of contact are any of the [@maintainers](https://github.com/orgs/gofiber/teams/maintainers).
-The maintainers are the only other persons with administrative access to Fiber's source code.
+of contact are any of the [@maintainers](https://github.com/orgs/goVortex/teams/maintainers).
+The maintainers are the only other persons with administrative access to Vortex's source code.
 
 <a name="process"></a>
 ## Incident Response Process
@@ -65,7 +65,7 @@ it from happening again.
 
 ### Secure accounts with access
 
-The [Fiber Organization](https://github.com/gofiber) requires 2FA authorization
+The [Vortex Organization](https://github.com/goVortex) requires 2FA authorization
 for all of it's members.
 
 ### Critical Updates And Security Notices
@@ -74,3 +74,4 @@ We learn about critical software updates and security threats from these sources
 
 1. GitHub Security Alerts
 2. GitHub: https://status.github.com/ & [@githubstatus](https://twitter.com/githubstatus)
+

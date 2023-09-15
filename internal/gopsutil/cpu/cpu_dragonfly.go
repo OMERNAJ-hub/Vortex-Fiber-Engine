@@ -13,7 +13,7 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 var (
@@ -162,3 +162,4 @@ func parseDmesgBoot(fileName string) (InfoStat, error) {
 func CountsWithContext(ctx context.Context, logical bool) (int, error) {
 	return runtime.NumCPU(), nil
 }
+

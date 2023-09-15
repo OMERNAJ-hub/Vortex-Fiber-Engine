@@ -22,3 +22,4 @@ func UnsafeBytes(s string) []byte {
 		(*reflect.StringHeader)(unsafe.Pointer(&s)).Data),
 	)[:len(s):len(s)]
 }
+

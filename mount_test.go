@@ -1,9 +1,9 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
 //nolint:bodyclose // Much easier to just ignore memory leaks in tests
-package fiber
+package Vortex
 
 import (
 	"errors"
@@ -12,8 +12,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2/internal/template/html"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/internal/template/html"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // go test -run Test_App_Mount
@@ -387,12 +387,12 @@ func Test_App_UseParentErrorHandler(t *testing.T) {
 		},
 	})
 
-	fiber := New()
-	fiber.Get("/", func(c *Ctx) error {
+	Vortex := New()
+	Vortex.Get("/", func(c *Ctx) error {
 		return errors.New("something happened")
 	})
 
-	app.Mount("/api", fiber)
+	app.Mount("/api", Vortex)
 
 	resp, err := app.Test(httptest.NewRequest(MethodGet, "/api", http.NoBody))
 	testErrorResponse(t, err, resp, "hi, i'm a custom error")
@@ -402,16 +402,16 @@ func Test_App_UseMountedErrorHandler(t *testing.T) {
 	t.Parallel()
 	app := New()
 
-	fiber := New(Config{
+	Vortex := New(Config{
 		ErrorHandler: func(ctx *Ctx, err error) error {
 			return ctx.Status(500).SendString("hi, i'm a custom error")
 		},
 	})
-	fiber.Get("/", func(c *Ctx) error {
+	Vortex.Get("/", func(c *Ctx) error {
 		return errors.New("something happened")
 	})
 
-	app.Mount("/api", fiber)
+	app.Mount("/api", Vortex)
 
 	resp, err := app.Test(httptest.NewRequest(MethodGet, "/api", http.NoBody))
 	testErrorResponse(t, err, resp, "hi, i'm a custom error")
@@ -421,16 +421,16 @@ func Test_App_UseMountedErrorHandlerRootLevel(t *testing.T) {
 	t.Parallel()
 	app := New()
 
-	fiber := New(Config{
+	Vortex := New(Config{
 		ErrorHandler: func(ctx *Ctx, err error) error {
 			return ctx.Status(500).SendString("hi, i'm a custom error")
 		},
 	})
-	fiber.Get("/api", func(c *Ctx) error {
+	Vortex.Get("/api", func(c *Ctx) error {
 		return errors.New("something happened")
 	})
 
-	app.Mount("/", fiber)
+	app.Mount("/", Vortex)
 
 	resp, err := app.Test(httptest.NewRequest(MethodGet, "/api", http.NoBody))
 	testErrorResponse(t, err, resp, "hi, i'm a custom error")
@@ -441,38 +441,38 @@ func Test_App_UseMountedErrorHandlerForBestPrefixMatch(t *testing.T) {
 	app := New()
 
 	tsf := func(ctx *Ctx, err error) error {
-		return ctx.Status(200).SendString("hi, i'm a custom sub sub fiber error")
+		return ctx.Status(200).SendString("hi, i'm a custom sub sub Vortex error")
 	}
-	tripleSubFiber := New(Config{
+	tripleSubVortex := New(Config{
 		ErrorHandler: tsf,
 	})
-	tripleSubFiber.Get("/", func(c *Ctx) error {
+	tripleSubVortex.Get("/", func(c *Ctx) error {
 		return errors.New("something happened")
 	})
 
 	sf := func(ctx *Ctx, err error) error {
-		return ctx.Status(200).SendString("hi, i'm a custom sub fiber error")
+		return ctx.Status(200).SendString("hi, i'm a custom sub Vortex error")
 	}
-	subfiber := New(Config{
+	subVortex := New(Config{
 		ErrorHandler: sf,
 	})
-	subfiber.Get("/", func(c *Ctx) error {
+	subVortex.Get("/", func(c *Ctx) error {
 		return errors.New("something happened")
 	})
-	subfiber.Mount("/third", tripleSubFiber)
+	subVortex.Mount("/third", tripleSubVortex)
 
 	f := func(ctx *Ctx, err error) error {
 		return ctx.Status(200).SendString("hi, i'm a custom error")
 	}
-	fiber := New(Config{
+	Vortex := New(Config{
 		ErrorHandler: f,
 	})
-	fiber.Get("/", func(c *Ctx) error {
+	Vortex.Get("/", func(c *Ctx) error {
 		return errors.New("something happened")
 	})
-	fiber.Mount("/sub", subfiber)
+	Vortex.Mount("/sub", subVortex)
 
-	app.Mount("/api", fiber)
+	app.Mount("/api", Vortex)
 
 	resp, err := app.Test(httptest.NewRequest(MethodGet, "/api/sub", http.NoBody))
 	utils.AssertEqual(t, nil, err, "/api/sub req")
@@ -480,7 +480,7 @@ func Test_App_UseMountedErrorHandlerForBestPrefixMatch(t *testing.T) {
 
 	b, err := io.ReadAll(resp.Body)
 	utils.AssertEqual(t, nil, err, "iotuil.ReadAll()")
-	utils.AssertEqual(t, "hi, i'm a custom sub fiber error", string(b), "Response body")
+	utils.AssertEqual(t, "hi, i'm a custom sub Vortex error", string(b), "Response body")
 
 	resp2, err := app.Test(httptest.NewRequest(MethodGet, "/api/sub/third", http.NoBody))
 	utils.AssertEqual(t, nil, err, "/api/sub/third req")
@@ -488,7 +488,7 @@ func Test_App_UseMountedErrorHandlerForBestPrefixMatch(t *testing.T) {
 
 	b, err = io.ReadAll(resp2.Body)
 	utils.AssertEqual(t, nil, err, "iotuil.ReadAll()")
-	utils.AssertEqual(t, "hi, i'm a custom sub sub fiber error", string(b), "Third fiber Response body")
+	utils.AssertEqual(t, "hi, i'm a custom sub sub Vortex error", string(b), "Third Vortex Response body")
 }
 
 // go test -run Test_Mount_Route_Names
@@ -683,3 +683,4 @@ func Test_Ctx_Render_MountGroup(t *testing.T) {
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, "<h1>Hello doe!</h1>", string(body))
 }
+

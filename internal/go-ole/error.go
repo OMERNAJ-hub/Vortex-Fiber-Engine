@@ -49,3 +49,4 @@ func (v *OleError) Description() string {
 func (v *OleError) SubError() error {
 	return v.subError
 }
+

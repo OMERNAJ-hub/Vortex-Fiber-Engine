@@ -6,21 +6,21 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 func Test_Non_Expvar_Path(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
 
@@ -31,18 +31,18 @@ func Test_Non_Expvar_Path(t *testing.T) {
 
 func Test_Expvar_Index(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/debug/vars", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/debug/vars", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
-	utils.AssertEqual(t, fiber.MIMEApplicationJSONCharsetUTF8, resp.Header.Get(fiber.HeaderContentType))
+	utils.AssertEqual(t, Vortex.MIMEApplicationJSONCharsetUTF8, resp.Header.Get(Vortex.HeaderContentType))
 
 	b, err := io.ReadAll(resp.Body)
 	utils.AssertEqual(t, nil, err)
@@ -52,18 +52,18 @@ func Test_Expvar_Index(t *testing.T) {
 
 func Test_Expvar_Filter(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/debug/vars?r=cmd", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/debug/vars?r=cmd", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, resp.StatusCode)
-	utils.AssertEqual(t, fiber.MIMEApplicationJSONCharsetUTF8, resp.Header.Get(fiber.HeaderContentType))
+	utils.AssertEqual(t, Vortex.MIMEApplicationJSONCharsetUTF8, resp.Header.Get(Vortex.HeaderContentType))
 
 	b, err := io.ReadAll(resp.Body)
 	utils.AssertEqual(t, nil, err)
@@ -73,15 +73,15 @@ func Test_Expvar_Filter(t *testing.T) {
 
 func Test_Expvar_Other_Path(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("escaped")
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/debug/vars/302", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/debug/vars/302", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 302, resp.StatusCode)
 }
@@ -89,15 +89,16 @@ func Test_Expvar_Other_Path(t *testing.T) {
 // go test -run Test_Expvar_Next
 func Test_Expvar_Next(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(_ *Vortex.Ctx) bool {
 			return true
 		},
 	}))
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/debug/vars", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/debug/vars", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 404, resp.StatusCode)
 }
+

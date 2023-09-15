@@ -1,4 +1,4 @@
-package fiber
+package Vortex
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/bytebufferpool"
 )
@@ -286,3 +286,4 @@ func Test_Hook_OnMount(t *testing.T) {
 
 	app.Mount("/sub", subApp)
 }
+

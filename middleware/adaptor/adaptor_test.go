@@ -14,12 +14,12 @@ import (
 
 	"github.com/valyala/fasthttp"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 func Test_HTTPHandler(t *testing.T) {
-	expectedMethod := fiber.MethodPost
+	expectedMethod := Vortex.MethodPost
 	expectedProto := "HTTP/1.1"
 	expectedProtoMajor := 1
 	expectedProtoMinor := 1
@@ -69,8 +69,8 @@ func Test_HTTPHandler(t *testing.T) {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "request body is %q", body)
 	}
-	fiberH := HTTPHandlerFunc(http.HandlerFunc(nethttpH))
-	fiberH = setFiberContextValueMiddleware(fiberH, expectedContextKey, expectedContextValue)
+	VortexH := HTTPHandlerFunc(http.HandlerFunc(nethttpH))
+	VortexH = setVortexContextValueMiddleware(VortexH, expectedContextKey, expectedContextValue)
 
 	var fctx fasthttp.RequestCtx
 	var req fasthttp.Request
@@ -87,11 +87,11 @@ func Test_HTTPHandler(t *testing.T) {
 	utils.AssertEqual(t, nil, err)
 
 	fctx.Init(&req, remoteAddr, nil)
-	app := fiber.New()
+	app := Vortex.New()
 	ctx := app.AcquireCtx(&fctx)
 	defer app.ReleaseCtx(ctx)
 
-	err = fiberH(ctx)
+	err = VortexH(ctx)
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 1, callsCount, "callsCount")
 
@@ -158,9 +158,9 @@ func Test_HTTPMiddleware(t *testing.T) {
 		})
 	}
 
-	app := fiber.New()
+	app := Vortex.New()
 	app.Use(HTTPMiddleware(nethttpMW))
-	app.Post("/", func(c *fiber.Ctx) error {
+	app.Post("/", func(c *Vortex.Ctx) error {
 		value := c.Context().Value(TestContextKey)
 		val, ok := value.(string)
 		if !ok {
@@ -177,7 +177,7 @@ func Test_HTTPMiddleware(t *testing.T) {
 			}
 			c.Set("context_second_okay", val)
 		}
-		return c.SendStatus(fiber.StatusOK)
+		return c.SendStatus(Vortex.StatusOK)
 	})
 
 	for _, tt := range tests {
@@ -190,7 +190,7 @@ func Test_HTTPMiddleware(t *testing.T) {
 		utils.AssertEqual(t, tt.statusCode, resp.StatusCode, "StatusCode")
 	}
 
-	req, err := http.NewRequestWithContext(context.Background(), fiber.MethodPost, "/", nil)
+	req, err := http.NewRequestWithContext(context.Background(), Vortex.MethodPost, "/", nil)
 	req.Host = expectedHost
 	utils.AssertEqual(t, nil, err)
 
@@ -200,26 +200,26 @@ func Test_HTTPMiddleware(t *testing.T) {
 	utils.AssertEqual(t, resp.Header.Get("context_second_okay"), "okay")
 }
 
-func Test_FiberHandler(t *testing.T) {
-	testFiberToHandlerFunc(t, false)
+func Test_VortexHandler(t *testing.T) {
+	testVortexToHandlerFunc(t, false)
 }
 
-func Test_FiberApp(t *testing.T) {
-	testFiberToHandlerFunc(t, false, fiber.New())
+func Test_VortexApp(t *testing.T) {
+	testVortexToHandlerFunc(t, false, Vortex.New())
 }
 
-func Test_FiberHandlerDefaultPort(t *testing.T) {
-	testFiberToHandlerFunc(t, true)
+func Test_VortexHandlerDefaultPort(t *testing.T) {
+	testVortexToHandlerFunc(t, true)
 }
 
-func Test_FiberAppDefaultPort(t *testing.T) {
-	testFiberToHandlerFunc(t, true, fiber.New())
+func Test_VortexAppDefaultPort(t *testing.T) {
+	testVortexToHandlerFunc(t, true, Vortex.New())
 }
 
-func testFiberToHandlerFunc(t *testing.T, checkDefaultPort bool, app ...*fiber.App) {
+func testVortexToHandlerFunc(t *testing.T, checkDefaultPort bool, app ...*Vortex.App) {
 	t.Helper()
 
-	expectedMethod := fiber.MethodPost
+	expectedMethod := Vortex.MethodPost
 	expectedRequestURI := "/foo/bar?baz=123"
 	expectedBody := "body 123 foo bar baz"
 	expectedContentLength := len(expectedBody)
@@ -237,7 +237,7 @@ func testFiberToHandlerFunc(t *testing.T, checkDefaultPort bool, app ...*fiber.A
 	utils.AssertEqual(t, nil, err)
 
 	callsCount := 0
-	fiberH := func(c *fiber.Ctx) error {
+	VortexH := func(c *Vortex.Ctx) error {
 		callsCount++
 		utils.AssertEqual(t, expectedMethod, c.Method(), "Method")
 		utils.AssertEqual(t, expectedRequestURI, string(c.Context().RequestURI()), "RequestURI")
@@ -258,17 +258,17 @@ func testFiberToHandlerFunc(t *testing.T, checkDefaultPort bool, app ...*fiber.A
 
 		c.Set("Header1", "value1")
 		c.Set("Header2", "value2")
-		c.Status(fiber.StatusBadRequest)
+		c.Status(Vortex.StatusBadRequest)
 		_, err := c.Write([]byte(fmt.Sprintf("request body is %q", body)))
 		return err
 	}
 
 	var handlerFunc http.HandlerFunc
 	if len(app) > 0 {
-		app[0].Post("/foo/bar", fiberH)
-		handlerFunc = FiberApp(app[0])
+		app[0].Post("/foo/bar", VortexH)
+		handlerFunc = VortexApp(app[0])
 	} else {
-		handlerFunc = FiberHandlerFunc(fiberH)
+		handlerFunc = VortexHandlerFunc(VortexH)
 	}
 
 	var r http.Request
@@ -300,20 +300,20 @@ func testFiberToHandlerFunc(t *testing.T, checkDefaultPort bool, app ...*fiber.A
 	utils.AssertEqual(t, expectedResponseBody, string(w.body), "Body")
 }
 
-func setFiberContextValueMiddleware(next fiber.Handler, key, value interface{}) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func setVortexContextValueMiddleware(next Vortex.Handler, key, value interface{}) Vortex.Handler {
+	return func(c *Vortex.Ctx) error {
 		c.Locals(key, value)
 		return next(c)
 	}
 }
 
-func Test_FiberHandler_RequestNilBody(t *testing.T) {
-	expectedMethod := fiber.MethodGet
+func Test_VortexHandler_RequestNilBody(t *testing.T) {
+	expectedMethod := Vortex.MethodGet
 	expectedRequestURI := "/foo/bar"
 	expectedContentLength := 0
 
 	callsCount := 0
-	fiberH := func(c *fiber.Ctx) error {
+	VortexH := func(c *Vortex.Ctx) error {
 		callsCount++
 		utils.AssertEqual(t, expectedMethod, c.Method(), "Method")
 		utils.AssertEqual(t, expectedRequestURI, string(c.Context().RequestURI()), "RequestURI")
@@ -322,7 +322,7 @@ func Test_FiberHandler_RequestNilBody(t *testing.T) {
 		_, err := c.Write([]byte("request body is nil"))
 		return err
 	}
-	nethttpH := FiberHandler(fiberH)
+	nethttpH := VortexHandler(VortexH)
 
 	var r http.Request
 
@@ -386,9 +386,9 @@ func (w *netHTTPResponseWriter) Write(p []byte) (int, error) {
 func Test_ConvertRequest(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New()
+	app := Vortex.New()
 
-	app.Get("/test", func(c *fiber.Ctx) error {
+	app.Get("/test", func(c *Vortex.Ctx) error {
 		httpReq, err := ConvertRequest(c, false)
 		if err != nil {
 			return err
@@ -397,7 +397,7 @@ func Test_ConvertRequest(t *testing.T) {
 		return c.SendString("Request URL: " + httpReq.URL.String())
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/test?hello=world&another=test", http.NoBody))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/test?hello=world&another=test", http.NoBody))
 	utils.AssertEqual(t, nil, err, "app.Test(req)")
 	utils.AssertEqual(t, http.StatusOK, resp.StatusCode, "Status code")
 
@@ -406,12 +406,12 @@ func Test_ConvertRequest(t *testing.T) {
 	utils.AssertEqual(t, "Request URL: /test?hello=world&another=test", string(body))
 }
 
-// Benchmark for FiberHandlerFunc
-func Benchmark_FiberHandlerFunc_1MB(b *testing.B) {
-	fiberH := func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+// Benchmark for VortexHandlerFunc
+func Benchmark_VortexHandlerFunc_1MB(b *testing.B) {
+	VortexH := func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	}
-	handlerFunc := FiberHandlerFunc(fiberH)
+	handlerFunc := VortexHandlerFunc(VortexH)
 
 	// Create body content
 	bodyContent := make([]byte, 1*1024*1024)
@@ -435,11 +435,11 @@ func Benchmark_FiberHandlerFunc_1MB(b *testing.B) {
 	}
 }
 
-func Benchmark_FiberHandlerFunc_10MB(b *testing.B) {
-	fiberH := func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+func Benchmark_VortexHandlerFunc_10MB(b *testing.B) {
+	VortexH := func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	}
-	handlerFunc := FiberHandlerFunc(fiberH)
+	handlerFunc := VortexHandlerFunc(VortexH)
 
 	// Create body content
 	bodyContent := make([]byte, 10*1024*1024)
@@ -463,11 +463,11 @@ func Benchmark_FiberHandlerFunc_10MB(b *testing.B) {
 	}
 }
 
-func Benchmark_FiberHandlerFunc_50MB(b *testing.B) {
-	fiberH := func(c *fiber.Ctx) error {
-		return c.SendStatus(fiber.StatusOK)
+func Benchmark_VortexHandlerFunc_50MB(b *testing.B) {
+	VortexH := func(c *Vortex.Ctx) error {
+		return c.SendStatus(Vortex.StatusOK)
 	}
-	handlerFunc := FiberHandlerFunc(fiberH)
+	handlerFunc := VortexHandlerFunc(VortexH)
 
 	// Create body content
 	bodyContent := make([]byte, 50*1024*1024)
@@ -490,3 +490,4 @@ func Benchmark_FiberHandlerFunc_50MB(b *testing.B) {
 		handlerFunc.ServeHTTP(w, &r)
 	}
 }
+

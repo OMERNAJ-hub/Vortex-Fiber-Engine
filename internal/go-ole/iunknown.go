@@ -55,3 +55,4 @@ func (v *IUnknown) AddRef() int32 {
 func (v *IUnknown) Release() int32 {
 	return release(v)
 }
+

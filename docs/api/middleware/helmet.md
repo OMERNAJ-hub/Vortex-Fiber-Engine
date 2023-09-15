@@ -9,7 +9,7 @@ Helmet middleware helps secure your apps by setting various HTTP headers.
 ## Signatures
 
 ```go
-func New(config ...Config) fiber.Handler
+func New(config ...Config) Vortex.Handler
 ```
 
 ## Examples
@@ -17,16 +17,16 @@ func New(config ...Config) fiber.Handler
 package main
 
 import (
-  "github.com/gofiber/fiber/v2"
-  "github.com/gofiber/fiber/v2/middleware/helmet"
+  "github.com/goVortex/Vortex/v2"
+  "github.com/goVortex/Vortex/v2/middleware/helmet"
 )
 
 func main() {
-  app := fiber.New()
+  app := Vortex.New()
 
   app.Use(helmet.New())
 
-  app.Get("/", func(c *fiber.Ctx) error {
+  app.Get("/", func(c *Vortex.Ctx) error {
     return c.SendString("Welcome!")
   })
 
@@ -44,7 +44,7 @@ curl -I http://localhost:3000
 
 | Property                  | Type                    | Description                                 | Default          |
 |:--------------------------|:------------------------|:--------------------------------------------|:-----------------|
-| Next                      | `func(*fiber.Ctx) bool` | Next defines a function to skip middleware. | `nil`            |
+| Next                      | `func(*Vortex.Ctx) bool` | Next defines a function to skip middleware. | `nil`            |
 | XSSProtection             | `string`                | XSSProtection                               | "0"              |
 | ContentTypeNosniff        | `string`                | ContentTypeNosniff                          | "nosniff"        |
 | XFrameOptions             | `string`                | XFrameOptions                               | "SAMEORIGIN"     |
@@ -80,3 +80,4 @@ var ConfigDefault = Config{
 	XPermittedCrossDomain:     "none",
 }
 ```
+

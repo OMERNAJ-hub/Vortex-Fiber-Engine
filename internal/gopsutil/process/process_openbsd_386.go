@@ -199,3 +199,4 @@ type KinfoVmentry struct {
 	Flags          uint8
 	Pad_cgo_0      [3]byte
 }
+

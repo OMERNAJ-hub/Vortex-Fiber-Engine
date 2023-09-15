@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 
 	"github.com/valyala/fasthttp"
 )
@@ -14,7 +14,7 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	//
 	// Optional. Default: nil
-	Next func(c *fiber.Ctx) bool
+	Next func(c *Vortex.Ctx) bool
 
 	// Servers defines a list of <scheme>://<host> HTTP servers,
 	//
@@ -27,12 +27,12 @@ type Config struct {
 	// ModifyRequest allows you to alter the request
 	//
 	// Optional. Default: nil
-	ModifyRequest fiber.Handler
+	ModifyRequest Vortex.Handler
 
 	// ModifyResponse allows you to alter the response
 	//
 	// Optional. Default: nil
-	ModifyResponse fiber.Handler
+	ModifyResponse Vortex.Handler
 
 	// Timeout is the request timeout used when calling the proxy client
 	//
@@ -86,3 +86,4 @@ func configDefault(config ...Config) Config {
 	}
 	return cfg
 }
+

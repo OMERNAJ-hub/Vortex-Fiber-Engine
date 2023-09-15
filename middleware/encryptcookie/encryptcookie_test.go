@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -15,17 +15,17 @@ var testKey = GenerateKey()
 
 func Test_Middleware_Encrypt_Cookie(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Key: testKey,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("value=" + c.Cookies("test"))
 	})
-	app.Post("/", func(c *fiber.Ctx) error {
-		c.Cookie(&fiber.Cookie{
+	app.Post("/", func(c *Vortex.Ctx) error {
+		c.Cookie(&Vortex.Cookie{
 			Name:  "test",
 			Value: "SomeThing",
 		})
@@ -36,14 +36,14 @@ func Test_Middleware_Encrypt_Cookie(t *testing.T) {
 
 	// Test empty cookie
 	ctx := &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
 	utils.AssertEqual(t, "value=", string(ctx.Response.Body()))
 
 	// Test invalid cookie
 	ctx = &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	ctx.Request.Header.SetCookie("test", "Invalid")
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
@@ -55,7 +55,7 @@ func Test_Middleware_Encrypt_Cookie(t *testing.T) {
 
 	// Test valid cookie
 	ctx = &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
 
@@ -67,7 +67,7 @@ func Test_Middleware_Encrypt_Cookie(t *testing.T) {
 	utils.AssertEqual(t, "SomeThing", decryptedCookieValue)
 
 	ctx = &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	ctx.Request.Header.SetCookie("test", string(encryptedCookie.Value()))
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
@@ -76,31 +76,31 @@ func Test_Middleware_Encrypt_Cookie(t *testing.T) {
 
 func Test_Encrypt_Cookie_Next(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Key: testKey,
-		Next: func(_ *fiber.Ctx) bool {
+		Next: func(_ *Vortex.Ctx) bool {
 			return true
 		},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		c.Cookie(&fiber.Cookie{
+	app.Get("/", func(c *Vortex.Ctx) error {
+		c.Cookie(&Vortex.Cookie{
 			Name:  "test",
 			Value: "SomeThing",
 		})
 		return nil
 	})
 
-	resp, err := app.Test(httptest.NewRequest(fiber.MethodGet, "/", nil))
+	resp, err := app.Test(httptest.NewRequest(Vortex.MethodGet, "/", nil))
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, "SomeThing", resp.Cookies()[0].Value)
 }
 
 func Test_Encrypt_Cookie_Except(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Key: testKey,
@@ -109,12 +109,12 @@ func Test_Encrypt_Cookie_Except(t *testing.T) {
 		},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		c.Cookie(&fiber.Cookie{
+	app.Get("/", func(c *Vortex.Ctx) error {
+		c.Cookie(&Vortex.Cookie{
 			Name:  "test1",
 			Value: "SomeThing",
 		})
-		c.Cookie(&fiber.Cookie{
+		c.Cookie(&Vortex.Cookie{
 			Name:  "test2",
 			Value: "SomeThing",
 		})
@@ -125,7 +125,7 @@ func Test_Encrypt_Cookie_Except(t *testing.T) {
 	h := app.Handler()
 
 	ctx := &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
 
@@ -144,7 +144,7 @@ func Test_Encrypt_Cookie_Except(t *testing.T) {
 
 func Test_Encrypt_Cookie_Custom_Encryptor(t *testing.T) {
 	t.Parallel()
-	app := fiber.New()
+	app := Vortex.New()
 
 	app.Use(New(Config{
 		Key: testKey,
@@ -157,11 +157,11 @@ func Test_Encrypt_Cookie_Custom_Encryptor(t *testing.T) {
 		},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/", func(c *Vortex.Ctx) error {
 		return c.SendString("value=" + c.Cookies("test"))
 	})
-	app.Post("/", func(c *fiber.Ctx) error {
-		c.Cookie(&fiber.Cookie{
+	app.Post("/", func(c *Vortex.Ctx) error {
+		c.Cookie(&Vortex.Cookie{
 			Name:  "test",
 			Value: "SomeThing",
 		})
@@ -172,7 +172,7 @@ func Test_Encrypt_Cookie_Custom_Encryptor(t *testing.T) {
 	h := app.Handler()
 
 	ctx := &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodPost)
+	ctx.Request.Header.SetMethod(Vortex.MethodPost)
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
 
@@ -184,9 +184,10 @@ func Test_Encrypt_Cookie_Custom_Encryptor(t *testing.T) {
 	utils.AssertEqual(t, "SomeThing", string(decodedBytes))
 
 	ctx = &fasthttp.RequestCtx{}
-	ctx.Request.Header.SetMethod(fiber.MethodGet)
+	ctx.Request.Header.SetMethod(Vortex.MethodGet)
 	ctx.Request.Header.SetCookie("test", string(encryptedCookie.Value()))
 	h(ctx)
 	utils.AssertEqual(t, 200, ctx.Response.StatusCode())
 	utils.AssertEqual(t, "value=SomeThing", string(ctx.Response.Body()))
 }
+

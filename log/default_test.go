@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 const work = "work"
@@ -210,3 +210,4 @@ func Test_SetLevel(t *testing.T) {
 	utils.AssertEqual(t, 8, int(setLogger.level))
 	utils.AssertEqual(t, "[?8] ", setLogger.level.toString())
 }
+

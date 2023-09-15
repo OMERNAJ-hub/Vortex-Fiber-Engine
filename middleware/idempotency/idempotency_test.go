@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/idempotency"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/middleware/idempotency"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -23,14 +23,14 @@ import (
 func Test_Idempotency(t *testing.T) {
 	t.Parallel()
 
-	app := fiber.New()
+	app := Vortex.New()
 
-	app.Use(func(c *fiber.Ctx) error {
+	app.Use(func(c *Vortex.Ctx) error {
 		if err := c.Next(); err != nil {
 			return err
 		}
 
-		isMethodSafe := fiber.IsMethodSafe(c.Method())
+		isMethodSafe := Vortex.IsMethodSafe(c.Method())
 		isIdempotent := idempotency.IsFromCache(c) || idempotency.WasPutToCache(c)
 		hasReqHeader := c.Get("X-Idempotency-Key") != ""
 
@@ -70,7 +70,7 @@ func Test_Idempotency(t *testing.T) {
 	}()
 
 	{
-		handler := func(c *fiber.Ctx) error {
+		handler := func(c *Vortex.Ctx) error {
 			return c.SendString(strconv.Itoa(nextCount()))
 		}
 
@@ -78,7 +78,7 @@ func Test_Idempotency(t *testing.T) {
 		app.Post("/", handler)
 	}
 
-	app.Post("/slow", func(c *fiber.Ctx) error {
+	app.Post("/slow", func(c *Vortex.Ctx) error {
 		time.Sleep(2 * lifetime)
 
 		return c.SendString(strconv.Itoa(nextCount()))
@@ -93,28 +93,28 @@ func Test_Idempotency(t *testing.T) {
 		utils.AssertEqual(t, nil, err)
 		body, err := io.ReadAll(resp.Body)
 		utils.AssertEqual(t, nil, err)
-		utils.AssertEqual(t, fiber.StatusOK, resp.StatusCode, string(body))
+		utils.AssertEqual(t, Vortex.StatusOK, resp.StatusCode, string(body))
 		return string(body)
 	}
 
-	utils.AssertEqual(t, "1", doReq(fiber.MethodGet, "/", ""))
-	utils.AssertEqual(t, "2", doReq(fiber.MethodGet, "/", ""))
+	utils.AssertEqual(t, "1", doReq(Vortex.MethodGet, "/", ""))
+	utils.AssertEqual(t, "2", doReq(Vortex.MethodGet, "/", ""))
 
-	utils.AssertEqual(t, "3", doReq(fiber.MethodPost, "/", ""))
-	utils.AssertEqual(t, "4", doReq(fiber.MethodPost, "/", ""))
+	utils.AssertEqual(t, "3", doReq(Vortex.MethodPost, "/", ""))
+	utils.AssertEqual(t, "4", doReq(Vortex.MethodPost, "/", ""))
 
-	utils.AssertEqual(t, "5", doReq(fiber.MethodGet, "/", "00000000-0000-0000-0000-000000000000"))
-	utils.AssertEqual(t, "6", doReq(fiber.MethodGet, "/", "00000000-0000-0000-0000-000000000000"))
+	utils.AssertEqual(t, "5", doReq(Vortex.MethodGet, "/", "00000000-0000-0000-0000-000000000000"))
+	utils.AssertEqual(t, "6", doReq(Vortex.MethodGet, "/", "00000000-0000-0000-0000-000000000000"))
 
-	utils.AssertEqual(t, "7", doReq(fiber.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
-	utils.AssertEqual(t, "7", doReq(fiber.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
-	utils.AssertEqual(t, "8", doReq(fiber.MethodPost, "/", ""))
-	utils.AssertEqual(t, "9", doReq(fiber.MethodPost, "/", "11111111-1111-1111-1111-111111111111"))
+	utils.AssertEqual(t, "7", doReq(Vortex.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
+	utils.AssertEqual(t, "7", doReq(Vortex.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
+	utils.AssertEqual(t, "8", doReq(Vortex.MethodPost, "/", ""))
+	utils.AssertEqual(t, "9", doReq(Vortex.MethodPost, "/", "11111111-1111-1111-1111-111111111111"))
 
-	utils.AssertEqual(t, "7", doReq(fiber.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
+	utils.AssertEqual(t, "7", doReq(Vortex.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
 	time.Sleep(2 * lifetime)
-	utils.AssertEqual(t, "10", doReq(fiber.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
-	utils.AssertEqual(t, "10", doReq(fiber.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
+	utils.AssertEqual(t, "10", doReq(Vortex.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
+	utils.AssertEqual(t, "10", doReq(Vortex.MethodPost, "/", "00000000-0000-0000-0000-000000000000"))
 
 	// Test raciness
 	{
@@ -123,19 +123,19 @@ func Test_Idempotency(t *testing.T) {
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
-				utils.AssertEqual(t, "11", doReq(fiber.MethodPost, "/slow", "22222222-2222-2222-2222-222222222222"))
+				utils.AssertEqual(t, "11", doReq(Vortex.MethodPost, "/slow", "22222222-2222-2222-2222-222222222222"))
 			}()
 		}
 		wg.Wait()
-		utils.AssertEqual(t, "11", doReq(fiber.MethodPost, "/slow", "22222222-2222-2222-2222-222222222222"))
+		utils.AssertEqual(t, "11", doReq(Vortex.MethodPost, "/slow", "22222222-2222-2222-2222-222222222222"))
 	}
 	time.Sleep(2 * lifetime)
-	utils.AssertEqual(t, "12", doReq(fiber.MethodPost, "/slow", "22222222-2222-2222-2222-222222222222"))
+	utils.AssertEqual(t, "12", doReq(Vortex.MethodPost, "/slow", "22222222-2222-2222-2222-222222222222"))
 }
 
 // go test -v -run=^$ -bench=Benchmark_Idempotency -benchmem -count=4
 func Benchmark_Idempotency(b *testing.B) {
-	app := fiber.New()
+	app := Vortex.New()
 
 	// Needs to be at least a second as the memory storage doesn't support shorter durations.
 	const lifetime = 1 * time.Second
@@ -144,7 +144,7 @@ func Benchmark_Idempotency(b *testing.B) {
 		Lifetime: lifetime,
 	}))
 
-	app.Post("/", func(c *fiber.Ctx) error {
+	app.Post("/", func(c *Vortex.Ctx) error {
 		return nil
 	})
 
@@ -152,7 +152,7 @@ func Benchmark_Idempotency(b *testing.B) {
 
 	b.Run("hit", func(b *testing.B) {
 		c := &fasthttp.RequestCtx{}
-		c.Request.Header.SetMethod(fiber.MethodPost)
+		c.Request.Header.SetMethod(Vortex.MethodPost)
 		c.Request.SetRequestURI("/")
 		c.Request.Header.Set("X-Idempotency-Key", "00000000-0000-0000-0000-000000000000")
 
@@ -165,7 +165,7 @@ func Benchmark_Idempotency(b *testing.B) {
 
 	b.Run("skip", func(b *testing.B) {
 		c := &fasthttp.RequestCtx{}
-		c.Request.Header.SetMethod(fiber.MethodPost)
+		c.Request.Header.SetMethod(Vortex.MethodPost)
 		c.Request.SetRequestURI("/")
 
 		b.ReportAllocs()
@@ -175,3 +175,4 @@ func Benchmark_Idempotency(b *testing.B) {
 		}
 	})
 }
+

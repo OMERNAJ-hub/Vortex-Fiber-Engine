@@ -67,3 +67,4 @@ func SwapMemoryWithContext(ctx context.Context) (*SwapMemoryStat, error) {
 
 	return ret, nil
 }
+

@@ -6,7 +6,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
 // Config defines the config for middleware.
@@ -14,7 +14,7 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	//
 	// Optional. Default: nil
-	Next func(c *fiber.Ctx) bool
+	Next func(c *Vortex.Ctx) bool
 
 	// Raw data of the favicon file
 	//
@@ -59,7 +59,7 @@ const (
 )
 
 // New creates a new middleware handler
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	// Set default config
 	cfg := ConfigDefault
 
@@ -110,7 +110,7 @@ func New(config ...Config) fiber.Handler {
 	}
 
 	// Return new handler
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
@@ -122,25 +122,26 @@ func New(config ...Config) fiber.Handler {
 		}
 
 		// Only allow GET, HEAD and OPTIONS requests
-		if c.Method() != fiber.MethodGet && c.Method() != fiber.MethodHead {
-			if c.Method() != fiber.MethodOptions {
-				c.Status(fiber.StatusMethodNotAllowed)
+		if c.Method() != Vortex.MethodGet && c.Method() != Vortex.MethodHead {
+			if c.Method() != Vortex.MethodOptions {
+				c.Status(Vortex.StatusMethodNotAllowed)
 			} else {
-				c.Status(fiber.StatusOK)
+				c.Status(Vortex.StatusOK)
 			}
-			c.Set(fiber.HeaderAllow, hAllow)
-			c.Set(fiber.HeaderContentLength, hZero)
+			c.Set(Vortex.HeaderAllow, hAllow)
+			c.Set(Vortex.HeaderContentLength, hZero)
 			return nil
 		}
 
 		// Serve cached favicon
 		if len(icon) > 0 {
-			c.Set(fiber.HeaderContentLength, iconLen)
-			c.Set(fiber.HeaderContentType, hType)
-			c.Set(fiber.HeaderCacheControl, cfg.CacheControl)
-			return c.Status(fiber.StatusOK).Send(icon)
+			c.Set(Vortex.HeaderContentLength, iconLen)
+			c.Set(Vortex.HeaderContentType, hType)
+			c.Set(Vortex.HeaderCacheControl, cfg.CacheControl)
+			return c.Status(Vortex.StatusOK).Send(icon)
 		}
 
-		return c.SendStatus(fiber.StatusNoContent)
+		return c.SendStatus(Vortex.StatusNoContent)
 	}
 }
+

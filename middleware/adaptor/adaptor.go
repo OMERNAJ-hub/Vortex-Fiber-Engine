@@ -10,27 +10,27 @@ import (
 	"github.com/valyala/fasthttp"
 	"github.com/valyala/fasthttp/fasthttpadaptor"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
-// HTTPHandlerFunc wraps net/http handler func to fiber handler
-func HTTPHandlerFunc(h http.HandlerFunc) fiber.Handler {
+// HTTPHandlerFunc wraps net/http handler func to Vortex handler
+func HTTPHandlerFunc(h http.HandlerFunc) Vortex.Handler {
 	return HTTPHandler(h)
 }
 
-// HTTPHandler wraps net/http handler to fiber handler
-func HTTPHandler(h http.Handler) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+// HTTPHandler wraps net/http handler to Vortex handler
+func HTTPHandler(h http.Handler) Vortex.Handler {
+	return func(c *Vortex.Ctx) error {
 		handler := fasthttpadaptor.NewFastHTTPHandler(h)
 		handler(c.Context())
 		return nil
 	}
 }
 
-// ConvertRequest converts a fiber.Ctx to a http.Request.
+// ConvertRequest converts a Vortex.Ctx to a http.Request.
 // forServer should be set to true when the http.Request is going to be passed to a http.Handler.
-func ConvertRequest(c *fiber.Ctx, forServer bool) (*http.Request, error) {
+func ConvertRequest(c *Vortex.Ctx, forServer bool) (*http.Request, error) {
 	var req http.Request
 	if err := fasthttpadaptor.ConvertRequest(c.Context(), &req, forServer); err != nil {
 		return nil, err //nolint:wrapcheck // This must not be wrapped
@@ -38,8 +38,8 @@ func ConvertRequest(c *fiber.Ctx, forServer bool) (*http.Request, error) {
 	return &req, nil
 }
 
-// CopyContextToFiberContext copies the values of context.Context to a fasthttp.RequestCtx
-func CopyContextToFiberContext(context interface{}, requestContext *fasthttp.RequestCtx) {
+// CopyContextToVortexContext copies the values of context.Context to a fasthttp.RequestCtx
+func CopyContextToVortexContext(context interface{}, requestContext *fasthttp.RequestCtx) {
 	contextValues := reflect.ValueOf(context).Elem()
 	contextKeys := reflect.TypeOf(context).Elem()
 	if contextKeys.Kind() == reflect.Struct {
@@ -54,7 +54,7 @@ func CopyContextToFiberContext(context interface{}, requestContext *fasthttp.Req
 			if reflectField.Name == "noCopy" {
 				break
 			} else if reflectField.Name == "Context" {
-				CopyContextToFiberContext(reflectValue.Interface(), requestContext)
+				CopyContextToVortexContext(reflectValue.Interface(), requestContext)
 			} else if reflectField.Name == "key" {
 				lastKey = reflectValue.Interface()
 			} else if lastKey != nil && reflectField.Name == "val" {
@@ -66,9 +66,9 @@ func CopyContextToFiberContext(context interface{}, requestContext *fasthttp.Req
 	}
 }
 
-// HTTPMiddleware wraps net/http middleware to fiber middleware
-func HTTPMiddleware(mw func(http.Handler) http.Handler) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+// HTTPMiddleware wraps net/http middleware to Vortex middleware
+func HTTPMiddleware(mw func(http.Handler) http.Handler) Vortex.Handler {
+	return func(c *Vortex.Ctx) error {
 		var next bool
 		nextHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			next = true
@@ -82,7 +82,7 @@ func HTTPMiddleware(mw func(http.Handler) http.Handler) fiber.Handler {
 					c.Request().Header.Set(key, v)
 				}
 			}
-			CopyContextToFiberContext(r.Context(), c.Context())
+			CopyContextToVortexContext(r.Context(), c.Context())
 		})
 
 		if err := HTTPHandler(mw(nextHandler))(c); err != nil {
@@ -96,22 +96,22 @@ func HTTPMiddleware(mw func(http.Handler) http.Handler) fiber.Handler {
 	}
 }
 
-// FiberHandler wraps fiber handler to net/http handler
-func FiberHandler(h fiber.Handler) http.Handler {
-	return FiberHandlerFunc(h)
+// VortexHandler wraps Vortex handler to net/http handler
+func VortexHandler(h Vortex.Handler) http.Handler {
+	return VortexHandlerFunc(h)
 }
 
-// FiberHandlerFunc wraps fiber handler to net/http handler func
-func FiberHandlerFunc(h fiber.Handler) http.HandlerFunc {
-	return handlerFunc(fiber.New(), h)
+// VortexHandlerFunc wraps Vortex handler to net/http handler func
+func VortexHandlerFunc(h Vortex.Handler) http.HandlerFunc {
+	return handlerFunc(Vortex.New(), h)
 }
 
-// FiberApp wraps fiber app to net/http handler func
-func FiberApp(app *fiber.App) http.HandlerFunc {
+// VortexApp wraps Vortex app to net/http handler func
+func VortexApp(app *Vortex.App) http.HandlerFunc {
 	return handlerFunc(app)
 }
 
-func handlerFunc(app *fiber.App, h ...fiber.Handler) http.HandlerFunc {
+func handlerFunc(app *Vortex.App, h ...Vortex.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// New fasthttp request
 		req := fasthttp.AcquireRequest()
@@ -122,7 +122,7 @@ func handlerFunc(app *fiber.App, h ...fiber.Handler) http.HandlerFunc {
 			req.Header.SetContentLength(int(n))
 
 			if err != nil {
-				http.Error(w, utils.StatusMessage(fiber.StatusInternalServerError), fiber.StatusInternalServerError)
+				http.Error(w, utils.StatusMessage(Vortex.StatusInternalServerError), Vortex.StatusInternalServerError)
 				return
 			}
 		}
@@ -140,7 +140,7 @@ func handlerFunc(app *fiber.App, h ...fiber.Handler) http.HandlerFunc {
 		}
 		remoteAddr, err := net.ResolveTCPAddr("tcp", r.RemoteAddr)
 		if err != nil {
-			http.Error(w, utils.StatusMessage(fiber.StatusInternalServerError), fiber.StatusInternalServerError)
+			http.Error(w, utils.StatusMessage(Vortex.StatusInternalServerError), Vortex.StatusInternalServerError)
 			return
 		}
 
@@ -148,10 +148,10 @@ func handlerFunc(app *fiber.App, h ...fiber.Handler) http.HandlerFunc {
 		var fctx fasthttp.RequestCtx
 		fctx.Init(req, remoteAddr, nil)
 		if len(h) > 0 {
-			// New fiber Ctx
+			// New Vortex Ctx
 			ctx := app.AcquireCtx(&fctx)
 			defer app.ReleaseCtx(ctx)
-			// Execute fiber Ctx
+			// Execute Vortex Ctx
 			err := h[0](ctx)
 			if err != nil {
 				_ = app.Config().ErrorHandler(ctx, err) //nolint:errcheck // not needed
@@ -169,3 +169,4 @@ func handlerFunc(app *fiber.App, h ...fiber.Handler) http.HandlerFunc {
 		_, _ = w.Write(fctx.Response.Body()) //nolint:errcheck // not needed
 	}
 }
+

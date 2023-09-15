@@ -151,3 +151,4 @@ const (
 	FADF_VARIANT     = 0x0800
 	FADF_RESERVED    = 0xF008
 )
+

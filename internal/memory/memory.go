@@ -21,7 +21,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 type Storage struct {
@@ -139,3 +139,4 @@ func (s *Storage) gc(sleep time.Duration) {
 		s.Unlock()
 	}
 }
+

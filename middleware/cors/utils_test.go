@@ -3,7 +3,7 @@ package cors
 import (
 	"testing"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // go test -run -v Test_normalizeOrigin
@@ -194,3 +194,4 @@ func Test_CORS_SubdomainMatch(t *testing.T) {
 		})
 	}
 }
+

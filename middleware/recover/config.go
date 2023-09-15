@@ -1,7 +1,7 @@
 package recover //nolint:predeclared // TODO: Rename to some non-builtin
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/goVortex/Vortex/v2"
 )
 
 // Config defines the config for middleware.
@@ -9,7 +9,7 @@ type Config struct {
 	// Next defines a function to skip this middleware when returned true.
 	//
 	// Optional. Default: nil
-	Next func(c *fiber.Ctx) bool
+	Next func(c *Vortex.Ctx) bool
 
 	// EnableStackTrace enables handling stack trace
 	//
@@ -19,7 +19,7 @@ type Config struct {
 	// StackTraceHandler defines a function to handle stack trace
 	//
 	// Optional. Default: defaultStackTraceHandler
-	StackTraceHandler func(c *fiber.Ctx, e interface{})
+	StackTraceHandler func(c *Vortex.Ctx, e interface{})
 }
 
 // ConfigDefault is the default config
@@ -45,3 +45,4 @@ func configDefault(config ...Config) Config {
 
 	return cfg
 }
+

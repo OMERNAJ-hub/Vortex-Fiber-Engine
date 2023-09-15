@@ -1,7 +1,7 @@
 ---
 id: app
 title: 🚀 App
-description: The app instance conventionally denotes the Fiber application.
+description: The app instance conventionally denotes the Vortex application.
 sidebar_position: 2
 ---
 
@@ -47,13 +47,13 @@ app.Static("/static", "./public")
 // => http://localhost:3000/static/css/style.css
 ```
 
-If you want to have a little bit more control regarding the settings for serving static files. You could use the `fiber.Static` struct to enable specific settings.
+If you want to have a little bit more control regarding the settings for serving static files. You could use the `Vortex.Static` struct to enable specific settings.
 
-```go title="fiber.Static{}"
+```go title="Vortex.Static{}"
 // Static defines configuration options when defining static assets.
 type Static struct {
     // When set to true, the server tries minimizing CPU usage by caching compressed files.
-    // This works differently than the github.com/gofiber/compression middleware.
+    // This works differently than the github.com/goVortex/compression middleware.
     // Optional. Default value false
     Compress bool `json:"compress"`
 
@@ -99,7 +99,7 @@ type Static struct {
 
 ```go title="Example"
 // Custom config
-app.Static("/", "./public", fiber.Static{
+app.Static("/", "./public", Vortex.Static{
   Compress:      true,
   ByteRange:     true,
   Browse:        true,
@@ -115,7 +115,7 @@ app.Static("/", "./public", fiber.Static{
 
 ## Mount
 
-You can Mount Fiber instance by creating a `*Mount`
+You can Mount Vortex instance by creating a `*Mount`
 
 ```go title="Signature"
 func (a *App) Mount(prefix string, app *App) Router
@@ -123,12 +123,12 @@ func (a *App) Mount(prefix string, app *App) Router
 
 ```go title="Examples"
 func main() {
-    app := fiber.New()
-    micro := fiber.New()
+    app := Vortex.New()
+    micro := Vortex.New()
     app.Mount("/john", micro) // GET /john/doe -> 200 OK
 
-    micro.Get("/doe", func(c *fiber.Ctx) error {
-        return c.SendStatus(fiber.StatusOK)
+    micro.Get("/doe", func(c *Vortex.Ctx) error {
+        return c.SendStatus(Vortex.StatusOK)
     })
 
     log.Fatal(app.Listen(":3000"))
@@ -145,10 +145,10 @@ func (app *App) MountPath() string
 
 ```go title="Examples"
 func main() {
-	app := fiber.New()
-	one := fiber.New()
-	two := fiber.New()
-	three := fiber.New()
+	app := Vortex.New()
+	one := Vortex.New()
+	two := Vortex.New()
+	three := Vortex.New()
 
 	two.Mount("/three", three)
 	one.Mount("/two", two)
@@ -175,7 +175,7 @@ func (app *App) Group(prefix string, handlers ...Handler) Router
 
 ```go title="Examples"
 func main() {
-  app := fiber.New()
+  app := Vortex.New()
 
   api := app.Group("/api", handler)  // /api
 
@@ -201,9 +201,9 @@ func (app *App) Route(prefix string, fn func(router Router), name ...string) Rou
 
 ```go title="Examples"
 func main() {
-  app := fiber.New()
+  app := Vortex.New()
 
-  app.Route("/test", func(api fiber.Router) {
+  app.Route("/test", func(api Vortex.Router) {
       api.Get("/foo", handler).Name("foo") // /test/foo (name: test.foo)
       api.Get("/bar", handler).Name("bar") // /test/bar (name: test.bar)
   }, "test.")
@@ -222,7 +222,7 @@ func (app *App) Server() *fasthttp.Server
 
 ```go title="Examples"
 func main() {
-    app := fiber.New()
+    app := Vortex.New()
 
     app.Server().MaxConnsPerIP = 1
 
@@ -261,10 +261,10 @@ func (app *App) Stack() [][]*Route
 ```
 
 ```go title="Examples"
-var handler = func(c *fiber.Ctx) error { return nil }
+var handler = func(c *Vortex.Ctx) error { return nil }
 
 func main() {
-    app := fiber.New()
+    app := Vortex.New()
 
     app.Get("/john/:age", handler)
     app.Post("/register", handler)
@@ -315,10 +315,10 @@ func (app *App) Name(name string) Router
 ```
 
 ```go title="Examples"
-var handler = func(c *fiber.Ctx) error { return nil }
+var handler = func(c *Vortex.Ctx) error { return nil }
 
 func main() {
-    app := fiber.New()
+    app := Vortex.New()
 
     app.Get("/", handler)
     app.Name("index")
@@ -417,10 +417,10 @@ func (app *App) GetRoute(name string) Route
 ```
 
 ```go title="Examples"
-var handler = func(c *fiber.Ctx) error { return nil }
+var handler = func(c *Vortex.Ctx) error { return nil }
 
 func main() {
-    app := fiber.New()
+    app := Vortex.New()
 
     app.Get("/", handler).Name("index")
     
@@ -453,8 +453,8 @@ func (app *App) GetRoutes(filterUseOption ...bool) []Route
 When filterUseOption equal to true, it will filter the routes registered by the middleware.
 ```go title="Examples"
 func main() {
-	app := fiber.New()
-	app.Post("/", func (c *fiber.Ctx) error {
+	app := Vortex.New()
+	app.Post("/", func (c *Vortex.Ctx) error {
 		return c.SendString("Hello, World!")
 	}).Name("index")
 	data, _ := json.MarshalIndent(app.GetRoutes(true), "", "  ")
@@ -627,7 +627,7 @@ func (app *App) Test(req *http.Request, msTimeout ...int) (*http.Response, error
 
 ```go title="Examples"
 // Create route with GET method for test:
-app.Get("/", func(c *fiber.Ctx) error {
+app.Get("/", func(c *Vortex.Ctx) error {
   fmt.Println(c.BaseURL())              // => http://google.com
   fmt.Println(c.Get("X-Custom-Header")) // => hi
 
@@ -642,7 +642,7 @@ req.Header.Set("X-Custom-Header", "hi")
 resp, _ := app.Test(req)
 
 // Do something with results:
-if resp.StatusCode == fiber.StatusOK {
+if resp.StatusCode == Vortex.StatusOK {
   body, _ := io.ReadAll(resp.Body)
   fmt.Println(string(body)) // => Hello, World!
 }

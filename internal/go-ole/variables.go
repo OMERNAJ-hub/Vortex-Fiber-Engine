@@ -13,3 +13,4 @@ var (
 	modoleaut32 = windows.NewLazySystemDLL("oleaut32.dll")
 	moduser32   = windows.NewLazySystemDLL("user32.dll")
 )
+

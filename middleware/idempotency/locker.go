@@ -66,3 +66,4 @@ func NewMemoryLock() *MemoryLock {
 }
 
 var _ Locker = (*MemoryLock)(nil)
+

@@ -18,7 +18,7 @@
 .idea
 
 # Misc
-*.fiber.gz
+*.Vortex.gz
 *.fasthttp.gz
 *.pprof
 *.workspace

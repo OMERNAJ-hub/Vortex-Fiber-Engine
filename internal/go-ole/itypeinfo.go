@@ -32,3 +32,4 @@ type ITypeInfoVtbl struct {
 func (v *ITypeInfo) VTable() *ITypeInfoVtbl {
 	return (*ITypeInfoVtbl)(unsafe.Pointer(v.RawVTable))
 }
+

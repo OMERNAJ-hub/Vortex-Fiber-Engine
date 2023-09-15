@@ -1,6 +1,6 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
 package utils
 
@@ -27,7 +27,7 @@ func Benchmark_ToLowerBytes(b *testing.B) {
 	path := []byte(largeStr)
 	want := []byte(lowerStr)
 	var res []byte
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = ToLowerBytes(path)
 		}
@@ -59,7 +59,7 @@ func Benchmark_ToUpperBytes(b *testing.B) {
 	path := []byte(largeStr)
 	want := []byte(upperStr)
 	var res []byte
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = ToUpperBytes(path)
 		}
@@ -94,7 +94,7 @@ func Test_TrimRightBytes(t *testing.T) {
 func Benchmark_TrimRightBytes(b *testing.B) {
 	var res []byte
 
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = TrimRightBytes([]byte("foobar  "), ' ')
 		}
@@ -129,7 +129,7 @@ func Test_TrimLeftBytes(t *testing.T) {
 func Benchmark_TrimLeftBytes(b *testing.B) {
 	var res []byte
 
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = TrimLeftBytes([]byte("  foobar"), ' ')
 		}
@@ -167,7 +167,7 @@ func Test_TrimBytes(t *testing.T) {
 func Benchmark_TrimBytes(b *testing.B) {
 	var res []byte
 
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = TrimBytes([]byte("  foobar   "), ' ')
 		}
@@ -185,7 +185,7 @@ func Benchmark_EqualFoldBytes(b *testing.B) {
 	left := []byte(upperStr)
 	right := []byte(lowerStr)
 	var res bool
-	b.Run("fiber", func(b *testing.B) {
+	b.Run("Vortex", func(b *testing.B) {
 		for n := 0; n < b.N; n++ {
 			res = EqualFoldBytes(left, right)
 		}
@@ -216,3 +216,4 @@ func Test_EqualFoldBytes(t *testing.T) {
 	res = EqualFoldBytes([]byte("/MY4/NAME/IS/:PARAM/*"), []byte("/my4/nAME/IS/:param/*"))
 	AssertEqual(t, true, res)
 }
+

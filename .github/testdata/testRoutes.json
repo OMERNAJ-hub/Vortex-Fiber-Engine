@@ -41,15 +41,15 @@
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/events"
+      "path": "/repos/fenny/Vortex/events"
     },
     {
       "method": "GET",
-      "path": "/networks/fenny/fiber/events"
+      "path": "/networks/fenny/Vortex/events"
     },
     {
       "method": "GET",
-      "path": "/orgs/gofiber/events"
+      "path": "/orgs/goVortex/events"
     },
     {
       "method": "GET",
@@ -69,7 +69,7 @@
     },
     {
       "method": "GET",
-      "path": "/users/fenny/events/orgs/gofiber"
+      "path": "/users/fenny/events/orgs/goVortex"
     },
     {
       "method": "GET",
@@ -81,7 +81,7 @@
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/notifications"
+      "path": "/repos/fenny/Vortex/notifications"
     },
     {
       "method": "PUT",
@@ -89,7 +89,7 @@
     },
     {
       "method": "PUT",
-      "path": "/repos/fenny/fiber/notifications"
+      "path": "/repos/fenny/Vortex/notifications"
     },
     {
       "method": "GET",
@@ -113,7 +113,7 @@
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/stargazers"
+      "path": "/repos/fenny/Vortex/stargazers"
     },
     {
       "method": "GET",
@@ -125,19 +125,19 @@
     },
     {
       "method": "GET",
-      "path": "/user/starred/fenny/fiber"
+      "path": "/user/starred/fenny/Vortex"
     },
     {
       "method": "PUT",
-      "path": "/user/starred/fenny/fiber"
+      "path": "/user/starred/fenny/Vortex"
     },
     {
       "method": "DELETE",
-      "path": "/user/starred/fenny/fiber"
+      "path": "/user/starred/fenny/Vortex"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/subscribers"
+      "path": "/repos/fenny/Vortex/subscribers"
     },
     {
       "method": "GET",
@@ -149,27 +149,27 @@
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/subscription"
+      "path": "/repos/fenny/Vortex/subscription"
     },
     {
       "method": "PUT",
-      "path": "/repos/fenny/fiber/subscription"
+      "path": "/repos/fenny/Vortex/subscription"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/subscription"
+      "path": "/repos/fenny/Vortex/subscription"
     },
     {
       "method": "GET",
-      "path": "/user/subscriptions/fenny/fiber"
+      "path": "/user/subscriptions/fenny/Vortex"
     },
     {
       "method": "PUT",
-      "path": "/user/subscriptions/fenny/fiber"
+      "path": "/user/subscriptions/fenny/Vortex"
     },
     {
       "method": "DELETE",
-      "path": "/user/subscriptions/fenny/fiber"
+      "path": "/user/subscriptions/fenny/Vortex"
     },
     {
       "method": "GET",
@@ -221,55 +221,55 @@
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/git/blobs/v948b24g98ubngw9082bn02giub"
+      "path": "/repos/fenny/Vortex/git/blobs/v948b24g98ubngw9082bn02giub"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/git/blobs"
+      "path": "/repos/fenny/Vortex/git/blobs"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/git/commits/v948b24g98ubngw9082bn02giub"
+      "path": "/repos/fenny/Vortex/git/commits/v948b24g98ubngw9082bn02giub"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/git/commits"
+      "path": "/repos/fenny/Vortex/git/commits"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/git/refs/im/a/wildcard"
+      "path": "/repos/fenny/Vortex/git/refs/im/a/wildcard"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/git/refs"
+      "path": "/repos/fenny/Vortex/git/refs"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/git/refs"
+      "path": "/repos/fenny/Vortex/git/refs"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/git/refs/im/a/wildcard"
+      "path": "/repos/fenny/Vortex/git/refs/im/a/wildcard"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/git/refs/im/a/wildcard"
+      "path": "/repos/fenny/Vortex/git/refs/im/a/wildcard"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/git/tags/v948b24g98ubngw9082bn02giub"
+      "path": "/repos/fenny/Vortex/git/tags/v948b24g98ubngw9082bn02giub"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/git/tags"
+      "path": "/repos/fenny/Vortex/git/tags"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/git/trees/v948b24g98ubngw9082bn02giub"
+      "path": "/repos/fenny/Vortex/git/trees/v948b24g98ubngw9082bn02giub"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/git/trees"
+      "path": "/repos/fenny/Vortex/git/trees"
     },
     {
       "method": "GET",
@@ -281,131 +281,131 @@
     },
     {
       "method": "GET",
-      "path": "/orgs/gofiber/issues"
+      "path": "/orgs/goVortex/issues"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/issues"
+      "path": "/repos/fenny/Vortex/issues"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/issues/1000"
+      "path": "/repos/fenny/Vortex/issues/1000"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/issues"
+      "path": "/repos/fenny/Vortex/issues"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/issues/1000"
+      "path": "/repos/fenny/Vortex/issues/1000"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/assignees"
+      "path": "/repos/fenny/Vortex/assignees"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/assignees/nic"
+      "path": "/repos/fenny/Vortex/assignees/nic"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/issues/1000/comments"
+      "path": "/repos/fenny/Vortex/issues/1000/comments"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/issues/comments"
+      "path": "/repos/fenny/Vortex/issues/comments"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/issues/comments/1337"
+      "path": "/repos/fenny/Vortex/issues/comments/1337"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/issues/1000/comments"
+      "path": "/repos/fenny/Vortex/issues/1000/comments"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/issues/comments/1337"
+      "path": "/repos/fenny/Vortex/issues/comments/1337"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/issues/comments/1337"
+      "path": "/repos/fenny/Vortex/issues/comments/1337"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/issues/1000/events"
+      "path": "/repos/fenny/Vortex/issues/1000/events"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/issues/events"
+      "path": "/repos/fenny/Vortex/issues/events"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/issues/events/1337"
+      "path": "/repos/fenny/Vortex/issues/events/1337"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/labels"
+      "path": "/repos/fenny/Vortex/labels"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/labels/john"
+      "path": "/repos/fenny/Vortex/labels/john"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/labels"
+      "path": "/repos/fenny/Vortex/labels"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/labels/john"
+      "path": "/repos/fenny/Vortex/labels/john"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/labels/john"
+      "path": "/repos/fenny/Vortex/labels/john"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/issues/1000/labels"
+      "path": "/repos/fenny/Vortex/issues/1000/labels"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/issues/1000/labels"
+      "path": "/repos/fenny/Vortex/issues/1000/labels"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/issues/1000/labels/john"
+      "path": "/repos/fenny/Vortex/issues/1000/labels/john"
     },
     {
       "method": "PUT",
-      "path": "/repos/fenny/fiber/issues/1000/labels"
+      "path": "/repos/fenny/Vortex/issues/1000/labels"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/issues/1000/labels"
+      "path": "/repos/fenny/Vortex/issues/1000/labels"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/milestones/1000/labels"
+      "path": "/repos/fenny/Vortex/milestones/1000/labels"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/milestones"
+      "path": "/repos/fenny/Vortex/milestones"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/milestones/1000"
+      "path": "/repos/fenny/Vortex/milestones/1000"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/milestones"
+      "path": "/repos/fenny/Vortex/milestones"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/milestones/1000"
+      "path": "/repos/fenny/Vortex/milestones/1000"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/milestones/1000"
+      "path": "/repos/fenny/Vortex/milestones/1000"
     },
     {
       "method": "GET",
@@ -445,43 +445,43 @@
     },
     {
       "method": "GET",
-      "path": "/orgs/gofiber"
+      "path": "/orgs/goVortex"
     },
     {
       "method": "PATCH",
-      "path": "/orgs/gofiber"
+      "path": "/orgs/goVortex"
     },
     {
       "method": "GET",
-      "path": "/orgs/gofiber/members"
+      "path": "/orgs/goVortex/members"
     },
     {
       "method": "GET",
-      "path": "/orgs/gofiber/members/fenny"
+      "path": "/orgs/goVortex/members/fenny"
     },
     {
       "method": "DELETE",
-      "path": "/orgs/gofiber/members/fenny"
+      "path": "/orgs/goVortex/members/fenny"
     },
     {
       "method": "GET",
-      "path": "/orgs/gofiber/public_members"
+      "path": "/orgs/goVortex/public_members"
     },
     {
       "method": "GET",
-      "path": "/orgs/gofiber/public_members/fenny"
+      "path": "/orgs/goVortex/public_members/fenny"
     },
     {
       "method": "PUT",
-      "path": "/orgs/gofiber/public_members/fenny"
+      "path": "/orgs/goVortex/public_members/fenny"
     },
     {
       "method": "DELETE",
-      "path": "/orgs/gofiber/public_members/fenny"
+      "path": "/orgs/goVortex/public_members/fenny"
     },
     {
       "method": "GET",
-      "path": "/orgs/gofiber/teams"
+      "path": "/orgs/goVortex/teams"
     },
     {
       "method": "GET",
@@ -489,7 +489,7 @@
     },
     {
       "method": "POST",
-      "path": "/orgs/gofiber/teams"
+      "path": "/orgs/goVortex/teams"
     },
     {
       "method": "PATCH",
@@ -521,15 +521,15 @@
     },
     {
       "method": "GET",
-      "path": "/teams/1337/repos/fenny/fiber"
+      "path": "/teams/1337/repos/fenny/Vortex"
     },
     {
       "method": "PUT",
-      "path": "/teams/1337/repos/fenny/fiber"
+      "path": "/teams/1337/repos/fenny/Vortex"
     },
     {
       "method": "DELETE",
-      "path": "/teams/1337/repos/fenny/fiber"
+      "path": "/teams/1337/repos/fenny/Vortex"
     },
     {
       "method": "GET",
@@ -537,59 +537,59 @@
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/pulls"
+      "path": "/repos/fenny/Vortex/pulls"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/pulls/1000"
+      "path": "/repos/fenny/Vortex/pulls/1000"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/pulls"
+      "path": "/repos/fenny/Vortex/pulls"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/pulls/1000"
+      "path": "/repos/fenny/Vortex/pulls/1000"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/pulls/1000/commits"
+      "path": "/repos/fenny/Vortex/pulls/1000/commits"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/pulls/1000/files"
+      "path": "/repos/fenny/Vortex/pulls/1000/files"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/pulls/1000/merge"
+      "path": "/repos/fenny/Vortex/pulls/1000/merge"
     },
     {
       "method": "PUT",
-      "path": "/repos/fenny/fiber/pulls/1000/merge"
+      "path": "/repos/fenny/Vortex/pulls/1000/merge"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/pulls/1000/comments"
+      "path": "/repos/fenny/Vortex/pulls/1000/comments"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/pulls/comments"
+      "path": "/repos/fenny/Vortex/pulls/comments"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/pulls/comments/1000"
+      "path": "/repos/fenny/Vortex/pulls/comments/1000"
     },
     {
       "method": "PUT",
-      "path": "/repos/fenny/fiber/pulls/1000/comments"
+      "path": "/repos/fenny/Vortex/pulls/1000/comments"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/pulls/comments/1000"
+      "path": "/repos/fenny/Vortex/pulls/comments/1000"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/pulls/comments/1000"
+      "path": "/repos/fenny/Vortex/pulls/comments/1000"
     },
     {
       "method": "GET",
@@ -601,7 +601,7 @@
     },
     {
       "method": "GET",
-      "path": "/orgs/gofiber/repos"
+      "path": "/orgs/goVortex/repos"
     },
     {
       "method": "GET",
@@ -613,231 +613,231 @@
     },
     {
       "method": "POST",
-      "path": "/orgs/gofiber/repos"
+      "path": "/orgs/goVortex/repos"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber"
+      "path": "/repos/fenny/Vortex"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber"
+      "path": "/repos/fenny/Vortex"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/contributors"
+      "path": "/repos/fenny/Vortex/contributors"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/languages"
+      "path": "/repos/fenny/Vortex/languages"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/teams"
+      "path": "/repos/fenny/Vortex/teams"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/tags"
+      "path": "/repos/fenny/Vortex/tags"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/branches"
+      "path": "/repos/fenny/Vortex/branches"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/branches/master"
+      "path": "/repos/fenny/Vortex/branches/master"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber"
+      "path": "/repos/fenny/Vortex"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/collaborators"
+      "path": "/repos/fenny/Vortex/collaborators"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/collaborators/fenny"
+      "path": "/repos/fenny/Vortex/collaborators/fenny"
     },
     {
       "method": "PUT",
-      "path": "/repos/fenny/fiber/collaborators/fenny"
+      "path": "/repos/fenny/Vortex/collaborators/fenny"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/collaborators/fenny"
+      "path": "/repos/fenny/Vortex/collaborators/fenny"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/comments"
+      "path": "/repos/fenny/Vortex/comments"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/commits/v948b24g98ubngw9082bn02giub/comments"
+      "path": "/repos/fenny/Vortex/commits/v948b24g98ubngw9082bn02giub/comments"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/commits/v948b24g98ubngw9082bn02giub/comments"
+      "path": "/repos/fenny/Vortex/commits/v948b24g98ubngw9082bn02giub/comments"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/comments/1337"
+      "path": "/repos/fenny/Vortex/comments/1337"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/comments/1337"
+      "path": "/repos/fenny/Vortex/comments/1337"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/comments/1337"
+      "path": "/repos/fenny/Vortex/comments/1337"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/commits"
+      "path": "/repos/fenny/Vortex/commits"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/commits/v948b24g98ubngw9082bn02giub"
+      "path": "/repos/fenny/Vortex/commits/v948b24g98ubngw9082bn02giub"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/readme"
+      "path": "/repos/fenny/Vortex/readme"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/contents/im/a/wildcard"
+      "path": "/repos/fenny/Vortex/contents/im/a/wildcard"
     },
     {
       "method": "PUT",
-      "path": "/repos/fenny/fiber/contents/im/a/wildcard"
+      "path": "/repos/fenny/Vortex/contents/im/a/wildcard"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/contents/im/a/wildcard"
+      "path": "/repos/fenny/Vortex/contents/im/a/wildcard"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/gzip/google"
+      "path": "/repos/fenny/Vortex/gzip/google"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/keys"
+      "path": "/repos/fenny/Vortex/keys"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/keys/1337"
+      "path": "/repos/fenny/Vortex/keys/1337"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/keys"
+      "path": "/repos/fenny/Vortex/keys"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/keys/1337"
+      "path": "/repos/fenny/Vortex/keys/1337"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/keys/1337"
+      "path": "/repos/fenny/Vortex/keys/1337"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/downloads"
+      "path": "/repos/fenny/Vortex/downloads"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/downloads/1337"
+      "path": "/repos/fenny/Vortex/downloads/1337"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/downloads/1337"
+      "path": "/repos/fenny/Vortex/downloads/1337"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/forks"
+      "path": "/repos/fenny/Vortex/forks"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/forks"
+      "path": "/repos/fenny/Vortex/forks"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/hooks"
+      "path": "/repos/fenny/Vortex/hooks"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/hooks/1337"
+      "path": "/repos/fenny/Vortex/hooks/1337"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/hooks"
+      "path": "/repos/fenny/Vortex/hooks"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/hooks/1337"
+      "path": "/repos/fenny/Vortex/hooks/1337"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/hooks/1337/tests"
+      "path": "/repos/fenny/Vortex/hooks/1337/tests"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/hooks/1337"
+      "path": "/repos/fenny/Vortex/hooks/1337"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/merges"
+      "path": "/repos/fenny/Vortex/merges"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/releases"
+      "path": "/repos/fenny/Vortex/releases"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/releases/1337"
+      "path": "/repos/fenny/Vortex/releases/1337"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/releases"
+      "path": "/repos/fenny/Vortex/releases"
     },
     {
       "method": "PATCH",
-      "path": "/repos/fenny/fiber/releases/1337"
+      "path": "/repos/fenny/Vortex/releases/1337"
     },
     {
       "method": "DELETE",
-      "path": "/repos/fenny/fiber/releases/1337"
+      "path": "/repos/fenny/Vortex/releases/1337"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/releases/1337/assets"
+      "path": "/repos/fenny/Vortex/releases/1337/assets"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/stats/contributors"
+      "path": "/repos/fenny/Vortex/stats/contributors"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/stats/commit_activity"
+      "path": "/repos/fenny/Vortex/stats/commit_activity"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/stats/code_frequency"
+      "path": "/repos/fenny/Vortex/stats/code_frequency"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/stats/participation"
+      "path": "/repos/fenny/Vortex/stats/participation"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/stats/punch_card"
+      "path": "/repos/fenny/Vortex/stats/punch_card"
     },
     {
       "method": "GET",
-      "path": "/repos/fenny/fiber/statuses/google"
+      "path": "/repos/fenny/Vortex/statuses/google"
     },
     {
       "method": "POST",
-      "path": "/repos/fenny/fiber/statuses/google"
+      "path": "/repos/fenny/Vortex/statuses/google"
     },
     {
       "method": "GET",
@@ -857,7 +857,7 @@
     },
     {
       "method": "GET",
-      "path": "/legacy/issues/search/fenny/fibersitory/locked/finish"
+      "path": "/legacy/issues/search/fenny/Vortexsitory/locked/finish"
     },
     {
       "method": "GET",
@@ -869,7 +869,7 @@
     },
     {
       "method": "GET",
-      "path": "/legacy/user/email/info@gofiber.io"
+      "path": "/legacy/user/email/info@goVortex.io"
     },
     {
       "method": "GET",
@@ -1914,3 +1914,4 @@
     }
   ]
 }
+

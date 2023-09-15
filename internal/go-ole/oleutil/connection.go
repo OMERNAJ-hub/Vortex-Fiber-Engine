@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"unsafe"
 
-	ole "github.com/gofiber/fiber/v2/internal/go-ole"
+	ole "github.com/goVortex/Vortex/v2/internal/go-ole"
 )
 
 type stdDispatch struct {
@@ -98,3 +98,4 @@ func dispInvoke(this *ole.IDispatch, dispid int32, riid *ole.GUID, lcid int, fla
 	}
 	return ole.E_NOTIMPL
 }
+

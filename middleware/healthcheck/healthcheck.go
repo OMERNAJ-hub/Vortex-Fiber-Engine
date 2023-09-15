@@ -1,43 +1,43 @@
 package healthcheck
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // HealthChecker defines a function to check liveness or readiness of the application
-type HealthChecker func(*fiber.Ctx) bool
+type HealthChecker func(*Vortex.Ctx) bool
 
 // ProbeCheckerHandler defines a function that returns a ProbeChecker
-type HealthCheckerHandler func(HealthChecker) fiber.Handler
+type HealthCheckerHandler func(HealthChecker) Vortex.Handler
 
-func healthCheckerHandler(checker HealthChecker) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func healthCheckerHandler(checker HealthChecker) Vortex.Handler {
+	return func(c *Vortex.Ctx) error {
 		if checker == nil {
 			return c.Next()
 		}
 
 		if checker(c) {
-			return c.SendStatus(fiber.StatusOK)
+			return c.SendStatus(Vortex.StatusOK)
 		}
 
-		return c.SendStatus(fiber.StatusServiceUnavailable)
+		return c.SendStatus(Vortex.StatusServiceUnavailable)
 	}
 }
 
-func New(config ...Config) fiber.Handler {
+func New(config ...Config) Vortex.Handler {
 	cfg := defaultConfig(config...)
 
 	isLiveHandler := healthCheckerHandler(cfg.LivenessProbe)
 	isReadyHandler := healthCheckerHandler(cfg.ReadinessProbe)
 
-	return func(c *fiber.Ctx) error {
+	return func(c *Vortex.Ctx) error {
 		// Don't execute middleware if Next returns true
 		if cfg.Next != nil && cfg.Next(c) {
 			return c.Next()
 		}
 
-		if c.Method() != fiber.MethodGet {
+		if c.Method() != Vortex.MethodGet {
 			return c.Next()
 		}
 
@@ -59,3 +59,4 @@ func New(config ...Config) fiber.Handler {
 		return c.Next()
 	}
 }
+

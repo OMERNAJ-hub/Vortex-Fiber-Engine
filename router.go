@@ -1,8 +1,8 @@
-// ⚡️ Fiber is an Express inspired web framework written in Go with ☕️
-// 🤖 Github Repository: https://github.com/gofiber/fiber
-// 📌 API Documentation: https://docs.gofiber.io
+// ⚡️ Vortex is an Express inspired web framework written in Go with ☕️
+// 🤖 Github Repository: https://github.com/goVortex/Vortex
+// 📌 API Documentation: https://docs.goVortex.io
 
-package fiber
+package Vortex
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2/utils"
 
 	"github.com/valyala/fasthttp"
 )
@@ -39,7 +39,7 @@ type Router interface {
 
 	Route(prefix string, fn func(router Router), name ...string) Router
 
-	Mount(prefix string, fiber *App) Router
+	Mount(prefix string, Vortex *App) Router
 
 	Name(name string) Router
 }
@@ -532,3 +532,4 @@ func (app *App) buildTree() *App {
 	app.routesRefreshed = false
 	return app
 }
+

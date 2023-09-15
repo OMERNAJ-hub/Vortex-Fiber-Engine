@@ -175,7 +175,7 @@ func isEmptyFields(fields []fieldWithPrefix, src map[string][]string) bool {
 			}
 			for key := range src {
 				// issue references:
-				// https://github.com/gofiber/fiber/issues/1414
+				// https://github.com/goVortex/Vortex/issues/1414
 				// https://github.com/gorilla/schema/issues/176
 				nested := strings.IndexByte(key, '.') != -1
 
@@ -549,3 +549,4 @@ func (e MultiError) merge(errors MultiError) {
 		}
 	}
 }
+

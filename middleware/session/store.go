@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/internal/storage/memory"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/goVortex/Vortex/v2"
+	"github.com/goVortex/Vortex/v2/internal/storage/memory"
+	"github.com/goVortex/Vortex/v2/utils"
 )
 
 // ErrEmptySessionID is an error that occurs when the session ID is empty.
@@ -45,7 +45,7 @@ func (*Store) RegisterType(i interface{}) {
 }
 
 // Get retrieves or creates a session for the given context.
-func (s *Store) Get(c *fiber.Ctx) (*Session, error) {
+func (s *Store) Get(c *Vortex.Ctx) (*Session, error) {
 	var rawData []byte
 	var err error
 
@@ -99,7 +99,7 @@ func (s *Store) Get(c *fiber.Ctx) (*Session, error) {
 }
 
 // getSessionID returns the session ID from cookies, headers, or query string.
-func (s *Store) getSessionID(c *fiber.Ctx) string {
+func (s *Store) getSessionID(c *Vortex.Ctx) string {
 	id := c.Cookies(s.sessionName)
 	if len(id) > 0 {
 		return utils.CopyString(id)
@@ -134,3 +134,4 @@ func (s *Store) Delete(id string) error {
 	}
 	return s.Storage.Delete(id)
 }
+

@@ -37,8 +37,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gofiber/fiber/v2/internal/go-ole"
-	"github.com/gofiber/fiber/v2/internal/go-ole/oleutil"
+	"github.com/goVortex/Vortex/v2/internal/go-ole"
+	"github.com/goVortex/Vortex/v2/internal/go-ole/oleutil"
 )
 
 var l = log.New(os.Stdout, "", log.LstdFlags)
@@ -499,3 +499,4 @@ func CreateQuery(src interface{}, where string) string {
 	b.WriteString(" " + where)
 	return b.String()
 }
+

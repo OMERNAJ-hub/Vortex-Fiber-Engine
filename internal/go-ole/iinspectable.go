@@ -16,3 +16,4 @@ type IInspectableVtbl struct {
 func (v *IInspectable) VTable() *IInspectableVtbl {
 	return (*IInspectableVtbl)(unsafe.Pointer(v.RawVTable))
 }
+

@@ -20,3 +20,4 @@ func GetVariantDate(value uint64) (time.Time, error) {
 	}
 	return time.Now(), errors.New("Could not convert to time, passing current time.")
 }
+

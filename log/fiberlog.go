@@ -139,3 +139,4 @@ func SetOutput(w io.Writer) {
 func SetLevel(lv Level) {
 	logger.SetLevel(lv)
 }
+

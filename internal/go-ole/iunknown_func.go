@@ -17,3 +17,4 @@ func addRef(unk *IUnknown) int32 {
 func release(unk *IUnknown) int32 {
 	return 0
 }
+

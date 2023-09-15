@@ -1,4 +1,4 @@
-module github.com/gofiber/fiber/v2
+module github.com/goVortex/Vortex/v2
 
 go 1.20
 
@@ -20,3 +20,4 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 )
+

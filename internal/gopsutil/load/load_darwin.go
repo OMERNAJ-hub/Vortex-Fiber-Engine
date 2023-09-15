@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/gofiber/fiber/v2/internal/gopsutil/common"
+	"github.com/goVortex/Vortex/v2/internal/gopsutil/common"
 )
 
 var invoke common.Invoker = common.Invoke{}
@@ -73,3 +73,4 @@ func MiscWithContext(ctx context.Context) (*MiscStat, error) {
 
 	return &ret, nil
 }
+

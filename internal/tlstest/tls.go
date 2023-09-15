@@ -18,7 +18,7 @@ func GetTLSConfigs() (serverTLSConf, clientTLSConf *tls.Config, err error) {
 	ca := &x509.Certificate{
 		SerialNumber: big.NewInt(2021),
 		Subject: pkix.Name{
-			Organization:  []string{"Fiber"},
+			Organization:  []string{"Vortex"},
 			Country:       []string{"NL"},
 			Province:      []string{""},
 			Locality:      []string{"Amsterdam"},
@@ -62,7 +62,7 @@ func GetTLSConfigs() (serverTLSConf, clientTLSConf *tls.Config, err error) {
 	cert := &x509.Certificate{
 		SerialNumber: big.NewInt(2021),
 		Subject: pkix.Name{
-			Organization:  []string{"Fiber"},
+			Organization:  []string{"Vortex"},
 			Country:       []string{"NL"},
 			Province:      []string{""},
 			Locality:      []string{"Amsterdam"},
@@ -116,3 +116,4 @@ func GetTLSConfigs() (serverTLSConf, clientTLSConf *tls.Config, err error) {
 
 	return serverTLSConf, clientTLSConf, nil
 }
+

@@ -9,3 +9,4 @@ type Token struct {
 	Raw        []byte    `json:"raw"`
 	Expiration time.Time `json:"expiration"`
 }
+
