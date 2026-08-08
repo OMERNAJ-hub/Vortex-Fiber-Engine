@@ -49,7 +49,7 @@ jobs:
       # whole run as a suspected panic and refuse to rerun. Race detection runs
       # in the separate non-blocking Race job below.
       - name: Run Test
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v4
         with:
           max_attempts: 3
           timeout_minutes: 15
