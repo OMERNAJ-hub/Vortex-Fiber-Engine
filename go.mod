@@ -1,6 +1,6 @@
 module github.com/goVortex/Vortex/v2
 
-go 1.20
+go 1.25.0
 
 require (
 	github.com/google/uuid v1.6.0
@@ -10,7 +10,7 @@ require (
 	github.com/tinylib/msgp v1.2.5
 	github.com/valyala/bytebufferpool v1.0.0
 	github.com/valyala/fasthttp v1.51.0
-	golang.org/x/sys v0.28.0
+	golang.org/x/sys v0.47.0
 )
 
 require (
@@ -20,4 +20,3 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 )
-
